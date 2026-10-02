@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Qisket</string>
+    <string name="title_activity_main">Qisket</string>
+    <string name="package_name">com.qisket.app</string>
+    <string name="custom_url_scheme">com.qisket.app</string>
+</resources>
