@@ -7,9 +7,11 @@ import {
   Trophy, 
   Sparkles, 
   CheckCircle2, 
-  Atom
-} from 'lucide-react';
+  Award,
+  Calendar,
+  Layers
 
+} from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'games' | 'sims' | 'learn' | 'progress'>('home');
@@ -17,39 +19,56 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
-      {/* Top Header */}
+      {/* Top Event Branding Header */}
       <header style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 16px',
-        borderBottom: '1px solid var(--border-card)',
-        background: 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(10px)',
+        padding: '10px 14px',
+        borderBottom: '1px solid var(--qff-border)',
+        background: 'rgba(10, 14, 40, 0.92)',
+        backdropFilter: 'blur(12px)',
         zIndex: 10
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Origami Quantum Logo */}
           <div style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))',
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: 'linear-gradient(135deg, #00d2ff, #ff4081 50%, #8a3ffc)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 0 15px rgba(0, 210, 255, 0.4)'
           }}>
-            <Atom size={20} color="#080c14" />
+            <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#090d24' }}>Q</span>
           </div>
+
           <div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-main)' }}>
-              Qisket
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: '0.95rem', fontWeight: 800, letterSpacing: '0.04em', color: '#ffffff' }}>
+                QISKIT
+              </span>
+              <span style={{
+                fontSize: '0.62rem',
+                fontWeight: 700,
+                color: 'var(--qff-pink)',
+                background: 'rgba(255, 64, 129, 0.15)',
+                padding: '1px 6px',
+                borderRadius: 4,
+                border: '1px solid rgba(255, 64, 129, 0.3)'
+              }}>
+                FALL FEST '26
+              </span>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Phase 0 • Setup
+            <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontWeight: 500 }}>
+              NMIMS MPSTME × IBM Quantum
             </div>
           </div>
         </div>
 
+        {/* AI Tutor Button */}
         <button 
           onClick={() => setTutorOpen(!tutorOpen)}
           style={{
@@ -58,124 +77,200 @@ export default function App() {
             gap: 6,
             padding: '6px 12px',
             borderRadius: 20,
-            background: tutorOpen ? 'var(--accent-purple)' : 'rgba(192, 132, 252, 0.15)',
-            border: '1px solid rgba(192, 132, 252, 0.4)',
-            color: tutorOpen ? '#080c14' : 'var(--accent-purple)',
-            fontSize: '0.8rem',
-            fontWeight: 600,
+            background: tutorOpen 
+              ? 'linear-gradient(135deg, var(--qff-pink), var(--qff-purple))' 
+              : 'rgba(138, 63, 252, 0.18)',
+            border: '1px solid rgba(138, 63, 252, 0.45)',
+            color: tutorOpen ? '#ffffff' : 'var(--qff-cyan)',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            boxShadow: tutorOpen ? '0 0 15px rgba(255, 64, 129, 0.5)' : 'none',
             transition: 'all 0.2s ease'
           }}
         >
-          <Sparkles size={14} />
+          <Sparkles size={13} color={tutorOpen ? '#ffffff' : 'var(--qff-cyan)'} />
           <span>Ask Tutor</span>
         </button>
       </header>
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingBottom: '80px' }}>
+      {/* Main Scrollable Content */}
+      <main style={{ flex: 1, overflowY: 'auto', padding: '14px', paddingBottom: '76px' }}>
         {activeTab === 'home' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Hero Card */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {/* Hackathon Event Banner Card */}
             <div style={{
-              background: 'linear-gradient(145deg, #131d36, #0f172a)',
+              background: 'linear-gradient(145deg, rgba(26, 34, 88, 0.9), rgba(15, 21, 56, 0.95))',
               borderRadius: 16,
-              padding: '20px',
-              border: '1px solid rgba(56, 189, 248, 0.2)',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)'
+              padding: '18px',
+              border: '1px solid var(--qff-border)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              {/* Background Glow Ring */}
+              <div style={{
+                position: 'absolute',
+                top: -30,
+                right: -30,
+                width: 120,
+                height: 120,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(0,210,255,0.2) 0%, transparent 70%)',
+                pointerEvents: 'none'
+              }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Award size={14} color="var(--qff-gold)" />
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--qff-gold)', letterSpacing: '0.05em' }}>
+                    OFFICIAL HACKATHON ENTRY
+                  </span>
+                </div>
                 <span style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.62rem',
+                  color: 'var(--qff-cyan)',
+                  background: 'rgba(0, 210, 255, 0.12)',
                   padding: '2px 8px',
                   borderRadius: 10,
-                  background: 'rgba(52, 211, 153, 0.15)',
-                  color: 'var(--accent-green)',
-                  fontWeight: 600
+                  border: '1px solid rgba(0, 210, 255, 0.25)'
                 }}>
-                  SETUP VERIFIED
+                  Round 1 Active
                 </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>v0.1.0</span>
               </div>
-              <h1 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: 6, lineHeight: 1.2 }}>
-                Quantum Computing, Hands-On
+
+              <h1 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: 6, lineHeight: 1.25, letterSpacing: '-0.01em' }}>
+                Qiskit Learning Environment
               </h1>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: 16 }}>
-                Play it for intuition. Experiment with simulations. Study structured lessons with an in-course AI tutor.
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.45, marginBottom: 14 }}>
+                Three interconnected pathways to quantum intuition: <b style={{ color: 'var(--qff-cyan)' }}>Play</b>, <b style={{ color: 'var(--qff-pink)' }}>Experiment</b>, and <b style={{ color: '#c084fc' }}>Study</b>.
               </p>
 
+              {/* Event Meta Ribbon */}
               <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                display: 'flex',
+                alignItems: 'center',
                 gap: 8,
-                padding: '10px',
-                borderRadius: 12,
-                background: 'rgba(8, 12, 20, 0.6)'
+                padding: '8px 12px',
+                borderRadius: 8,
+                background: 'rgba(9, 13, 36, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                fontSize: '0.72rem',
+                color: 'var(--text-muted)'
               }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>19</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Games</div>
-                </div>
-                <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border-card)', borderRight: '1px solid var(--border-card)' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-green)' }}>21</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Simulations</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-purple)' }}>3</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Parts (Learn)</div>
-                </div>
+                <Calendar size={13} color="var(--qff-pink)" />
+                <span>12th Sept – 25th Oct 2026 • CSI @ MPSTME</span>
               </div>
             </div>
 
-            {/* Phase 0 Checklist */}
+            {/* Mode Selector Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              {[
+                { 
+                  title: 'Play', 
+                  count: '19 Games', 
+                  color: 'var(--qff-cyan)', 
+                  bg: 'rgba(0, 210, 255, 0.1)',
+                  tab: 'games',
+                  desc: 'Intuition'
+                },
+                { 
+                  title: 'Experiment', 
+                  count: '21 Labs', 
+                  color: 'var(--qff-pink)', 
+                  bg: 'rgba(255, 64, 129, 0.1)',
+                  tab: 'sims',
+                  desc: 'Simulation'
+                },
+                { 
+                  title: 'Study', 
+                  count: '3 Parts', 
+                  color: '#c084fc', 
+                  bg: 'rgba(138, 63, 252, 0.15)',
+                  tab: 'learn',
+                  desc: 'Curriculum'
+                }
+              ].map((m, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveTab(m.tab as any)}
+                  style={{
+                    background: 'var(--qff-card)',
+                    border: '1px solid var(--qff-border)',
+                    borderRadius: 12,
+                    padding: '12px 8px',
+                    textAlign: 'center',
+                    transition: 'transform 0.15s ease',
+                    position: 'relative'
+                  }}
+                >
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: m.color, marginBottom: 2 }}>
+                    {m.title}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', fontWeight: 600, color: '#ffffff' }}>
+                    {m.count}
+                  </div>
+                  <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: 2 }}>
+                    {m.desc}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Architecture / Verification Card */}
             <div style={{
-              background: 'var(--bg-card)',
+              background: 'var(--qff-card)',
               borderRadius: 14,
               padding: '16px',
-              border: '1px solid var(--border-card)'
+              border: '1px solid var(--qff-border)'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <CheckCircle2 size={18} color="var(--accent-green)" />
-                <h2 style={{ fontSize: '0.95rem', fontWeight: 700 }}>Phase 0: Setup Checklist</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckCircle2 size={17} color="var(--qff-green)" />
+                  <h2 style={{ fontSize: '0.9rem', fontWeight: 700 }}>Phase 0: Setup Verified</h2>
+                </div>
+                <span style={{ fontSize: '0.65rem', color: 'var(--qff-green)', fontWeight: 600 }}>Pass (100%)</span>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
-                  { label: 'Vite + React 19 + TypeScript', ready: true },
-                  { label: 'Capacitor Android Project (com.qisket.app)', ready: true },
-                  { label: 'Vitest Unit Test Runner', ready: true },
-                  { label: 'Antigravity Rules & Folder Scaffold', ready: true },
-                  { label: 'Git Repo Connected & Synced with Remote', ready: true },
-                  { label: 'Runs in Chrome Browser & Mobile Device', ready: true }
-                ].map((item, idx) => (
-                  <div key={idx} style={{
+                  'React 19 + TypeScript + Vite Scaffolding',
+                  'Capacitor 7 Android Native Build (com.qisket.app)',
+                  'Vitest Simulation Test Runner Configured',
+                  'Antigravity Physics Rules (RULES.md)',
+                  'Qiskit Fall Fest 2026 Theme Applied'
+                ].map((item, i) => (
+                  <div key={i} style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 10,
-                    fontSize: '0.8rem',
-                    color: 'var(--text-main)',
-                    padding: '8px 10px',
-                    borderRadius: 8,
-                    background: 'var(--bg-card-subtle)'
+                    gap: 8,
+                    fontSize: '0.78rem',
+                    color: 'var(--text-muted)',
+                    padding: '6px 10px',
+                    borderRadius: 6,
+                    background: 'var(--qff-card-subtle)'
                   }}>
-                    <CheckCircle2 size={16} color="var(--accent-green)" />
-                    <span>{item.label}</span>
+                    <CheckCircle2 size={14} color="var(--qff-green)" />
+                    <span>{item}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Quick Action Preview */}
+            {/* Next Step Preview */}
             <div style={{
-              background: 'var(--bg-card)',
+              background: 'linear-gradient(135deg, rgba(15, 98, 254, 0.15), rgba(138, 63, 252, 0.15))',
               borderRadius: 14,
-              padding: '16px',
-              border: '1px solid var(--border-card)'
+              padding: '14px 16px',
+              border: '1px solid rgba(15, 98, 254, 0.35)'
             }}>
-              <h3 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Up Next: Phase 1 (Foundations)
-              </h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: 12 }}>
-                Building State-Vector Engine (H, X, Z, S, T, CNOT), Born-rule measurement, Bloch coordinates, content schema, and localStorage progress.
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <Layers size={14} color="var(--qff-cyan)" />
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--qff-cyan)', textTransform: 'uppercase' }}>
+                  Next: Phase 1 Foundations
+                </span>
+              </div>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.45 }}>
+                Ready to build the State-Vector Circuit Engine (H, X, Z, S, T, CNOT), Bloch coordinates calculator, and curriculum content schema.
               </p>
             </div>
           </div>
@@ -183,24 +278,47 @@ export default function App() {
 
         {activeTab === 'games' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>🎮 Games Catalog</h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              19 games designed to build intuition through low-friction play.
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 800 }}>🎮 Quantum Games</h2>
+              <span style={{ fontSize: '0.7rem', color: 'var(--qff-cyan)', fontWeight: 600 }}>19 Planned</span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Hands-on intuitive puzzles. Each game features visible Honesty Tags distinguishing analogies from literal physics.
             </p>
-            {['Quantum Heist', "Schrödinger's Stealth", 'Bloch Runner', 'Photon Escape Room', 'Alice & Bob'].map((title, i) => (
+
+            {[
+              { name: 'Quantum Heist', tag: 'Analogy', focus: 'Qubits & Superposition', phase: 'Phase 2' },
+              { name: "Schrödinger's Stealth", tag: 'Simplified', focus: 'Measurement & Probability', phase: 'Phase 5' },
+              { name: 'Bloch Runner', tag: 'Accurate', focus: 'Single-Qubit Gate Rotations', phase: 'Phase 5' },
+              { name: 'Photon Escape Room', tag: 'Accurate', focus: 'Interference & Phase Shifters', phase: 'Phase 8' },
+              { name: 'Alice & Bob: Escape Together', tag: 'Accurate', focus: 'Entanglement & CHSH Game', phase: 'Phase 6' },
+              { name: 'Qubit Surgeon', tag: 'Simplified', focus: 'Syndromes & Error Correction', phase: 'Phase 7' }
+            ].map((g, i) => (
               <div key={i} style={{
-                background: 'var(--bg-card)',
+                background: 'var(--qff-card)',
                 padding: '12px 14px',
-                borderRadius: 10,
-                border: '1px solid var(--border-card)',
+                borderRadius: 12,
+                border: '1px solid var(--qff-border)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{title}</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: 6 }}>
-                  Phase {i === 0 ? '2' : i + 2}
-                </span>
+                <div>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#ffffff' }}>{g.name}</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{g.focus}</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                  <span style={{
+                    fontSize: '0.62rem',
+                    color: 'var(--qff-cyan)',
+                    background: 'rgba(0, 210, 255, 0.12)',
+                    padding: '2px 6px',
+                    borderRadius: 4
+                  }}>
+                    {g.tag}
+                  </span>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{g.phase}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -208,23 +326,44 @@ export default function App() {
 
         {activeTab === 'sims' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>🔬 Simulation Labs</h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              21 quantitative laboratories across 3 specialized engine archetypes.
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 800 }}>🔬 Simulation Labs</h2>
+              <span style={{ fontSize: '0.7rem', color: 'var(--qff-pink)', fontWeight: 600 }}>21 Labs</span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Quantitative physics laboratories powered by three specialized simulation engines.
             </p>
-            {['Single-Qubit Lab', 'Measurement Shots & Histogram', 'Circuit Lab + Bloch Sphere', 'Mach–Zehnder Lab', 'Two-Qubit Lab'].map((title, i) => (
+
+            {[
+              { name: 'Single-Qubit Lab', engine: 'State-Vector', feature: 'Amplitudes & Bloch Sphere' },
+              { name: 'Measurement Shots & Histogram', engine: 'State-Vector', feature: 'Born Rule Sampling' },
+              { name: 'Circuit Lab + Bloch Rotation', engine: 'State-Vector', feature: 'Unitary Matrices' },
+              { name: 'Mach–Zehnder Optical Lab', engine: 'Interferometer', feature: 'Phase Interference' },
+              { name: 'Bell & CHSH Explorer', engine: 'State-Vector', feature: 'Non-classical Correlation' },
+              { name: 'Repetition Code Noise Lab', engine: 'Stabilizer', feature: 'Syndrome Parity Checks' }
+            ].map((s, i) => (
               <div key={i} style={{
-                background: 'var(--bg-card)',
+                background: 'var(--qff-card)',
                 padding: '12px 14px',
-                borderRadius: 10,
-                border: '1px solid var(--border-card)',
+                borderRadius: 12,
+                border: '1px solid var(--qff-border)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{title}</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--accent-green)', background: 'rgba(52, 211, 153, 0.1)', padding: '2px 8px', borderRadius: 6 }}>
-                  Lab {i + 1}
+                <div>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#ffffff' }}>{s.name}</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{s.feature}</div>
+                </div>
+                <span style={{
+                  fontSize: '0.65rem',
+                  color: 'var(--qff-pink)',
+                  background: 'rgba(255, 64, 129, 0.12)',
+                  padding: '3px 8px',
+                  borderRadius: 6,
+                  fontWeight: 600
+                }}>
+                  {s.engine}
                 </span>
               </div>
             ))}
@@ -233,19 +372,40 @@ export default function App() {
 
         {activeTab === 'learn' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>📚 Structured Curriculum</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ background: 'var(--bg-card)', padding: '12px', borderRadius: 10, border: '1px solid var(--border-card)' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>Part 1: Concepts</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>8 modules (0–7) • Superposition, measurement, gates, entanglement</div>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 800 }}>📚 Structured Curriculum</h2>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Rigorous, misconception-targeted lessons with embedded video notes and quizzes.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ background: 'var(--qff-card)', padding: '14px', borderRadius: 12, border: '1px solid var(--qff-border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--qff-cyan)' }}>Part 1: Concepts</span>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Modules 0–7</span>
+                </div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                  Qubits, measurement, gates, phase & interference, entanglement, circuits, and error correction.
+                </div>
               </div>
-              <div style={{ background: 'var(--bg-card)', padding: '12px', borderRadius: 10, border: '1px solid var(--border-card)' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-purple)' }}>Part 2: Hardware Modalities</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>10 modules (0–9) • Superconducting, trapped ion, neutral atoms, photonics</div>
+
+              <div style={{ background: 'var(--qff-card)', padding: '14px', borderRadius: 12, border: '1px solid var(--qff-border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--qff-pink)' }}>Part 2: Hardware Modalities</span>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Modules 0–9</span>
+                </div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                  Superconducting (IBM/Google), Trapped Ion, Neutral Atoms, Photonics, Silicon Spin, and Annealing.
+                </div>
               </div>
-              <div style={{ background: 'var(--bg-card)', padding: '12px', borderRadius: 10, border: '1px solid var(--border-card)' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-green)' }}>Part 3: Math Companion</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Week 0 primer + 5 lessons • State vectors, matrices, Grover geometry</div>
+
+              <div style={{ background: 'var(--qff-card)', padding: '14px', borderRadius: 12, border: '1px solid var(--qff-border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#c084fc' }}>Part 3: Math Companion</span>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>5 Lessons</span>
+                </div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                  Dirac notation, unitary matrices, tensor products, Born rule projectors, and Grover 2D geometry.
+                </div>
               </div>
             </div>
           </div>
@@ -253,56 +413,80 @@ export default function App() {
 
         {activeTab === 'progress' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>🏆 Mastery Progress</h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Concepts tracked through Familiar (Play), Explored (Simulate), and Mastered (Learn).
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 800 }}>🏆 Mastery Progress</h2>
+              <span style={{ fontSize: '0.7rem', color: 'var(--qff-gold)', fontWeight: 600 }}>Local-First Sync</span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Concepts transition through three mastery tiers based on your interactive actions.
             </p>
-            <div style={{ background: 'var(--bg-card)', padding: '14px', borderRadius: 10, border: '1px solid var(--border-card)' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: 4 }}>Qubits & Superposition</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)' }}>Status: Ready for Phase 1 Foundations</div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, margin: '4px 0' }}>
+              <div style={{ background: 'var(--qff-card)', padding: '10px', borderRadius: 10, textAlign: 'center', border: '1px solid var(--qff-border)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--qff-cyan)' }}>Familiar</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>Completed Game</div>
+              </div>
+              <div style={{ background: 'var(--qff-card)', padding: '10px', borderRadius: 10, textAlign: 'center', border: '1px solid var(--qff-border)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--qff-pink)' }}>Explored</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>Ran Simulation</div>
+              </div>
+              <div style={{ background: 'var(--qff-card)', padding: '10px', borderRadius: 10, textAlign: 'center', border: '1px solid var(--qff-border)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--qff-green)' }}>Mastered</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>Quiz ≥ 80%</div>
+              </div>
             </div>
           </div>
         )}
       </main>
 
-      {/* Floating Tutor Drawer Preview */}
+      {/* Floating AI Tutor Drawer */}
       {tutorOpen && (
         <div style={{
           position: 'absolute',
-          bottom: 60,
+          bottom: 58,
           left: 0,
           right: 0,
-          maxHeight: '60%',
-          background: 'rgba(15, 23, 42, 0.98)',
-          borderTop: '1px solid var(--accent-purple)',
+          maxHeight: '65%',
+          background: 'rgba(10, 14, 40, 0.98)',
+          borderTop: '2px solid var(--qff-purple)',
           padding: '16px',
-          boxShadow: '0 -10px 40px rgba(0,0,0,0.8)',
+          boxShadow: '0 -10px 40px rgba(0,0,0,0.85)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 10,
+          gap: 12,
           zIndex: 20
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Sparkles size={16} color="var(--accent-purple)" />
-              <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>Unified AI Tutor (Preview)</span>
+              <Sparkles size={16} color="var(--qff-cyan)" />
+              <span style={{ fontSize: '0.85rem', fontWeight: 800 }}>Unified AI Tutor</span>
+              <span style={{ fontSize: '0.62rem', color: 'var(--qff-pink)', background: 'rgba(255, 64, 129, 0.15)', padding: '1px 6px', borderRadius: 4 }}>
+                Course-Grounded
+              </span>
             </div>
             <button 
               onClick={() => setTutorOpen(false)}
-              style={{ background: 'transparent', color: 'var(--text-muted)', fontSize: '0.8rem', padding: '4px 8px' }}
+              style={{ background: 'transparent', color: 'var(--text-dim)', fontSize: '0.75rem', padding: '4px 8px' }}
             >
               Close
             </button>
           </div>
+
           <div style={{
-            fontSize: '0.75rem',
+            fontSize: '0.78rem',
             color: 'var(--text-muted)',
-            background: 'var(--bg-card-subtle)',
-            padding: '10px',
-            borderRadius: 8,
-            lineHeight: 1.5
+            background: 'var(--qff-card-solid)',
+            padding: '12px',
+            borderRadius: 10,
+            lineHeight: 1.5,
+            border: '1px solid var(--qff-border)'
           }}>
-            👋 Hello! I will answer your quantum questions using only verified course content and lessons. (Full serverless integration in Phase 3).
+            👋 Welcome to <b>Qiskit Fall Fest 2026</b>! I answer quantum questions using verified lesson text and video notes.
+            <div style={{ marginTop: 8, fontSize: '0.7rem', color: 'var(--qff-cyan)' }}>
+              • Common misconception detection enabled<br />
+              • Beginner, Intermediate, and Math-ready levels<br />
+              • Grounded citations for every response
+            </div>
           </div>
         </div>
       )}
@@ -313,14 +497,14 @@ export default function App() {
         bottom: 0,
         left: 0,
         right: 0,
-        height: 60,
-        background: 'rgba(15, 23, 42, 0.95)',
-        backdropFilter: 'blur(10px)',
-        borderTop: '1px solid var(--border-card)',
+        height: 58,
+        background: 'rgba(10, 14, 40, 0.96)',
+        backdropFilter: 'blur(12px)',
+        borderTop: '1px solid var(--qff-border)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: '0 8px',
+        padding: '0 4px',
         zIndex: 10
       }}>
         {[
@@ -342,15 +526,15 @@ export default function App() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 4,
-                width: 60,
-                height: 48,
-                color: isActive ? 'var(--accent-cyan)' : 'var(--text-dim)',
+                gap: 3,
+                width: 62,
+                height: 46,
+                color: isActive ? 'var(--qff-cyan)' : 'var(--text-dim)',
                 transition: 'color 0.15s ease'
               }}
             >
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span style={{ fontSize: '0.65rem', fontWeight: isActive ? 700 : 500 }}>
+              <Icon size={19} strokeWidth={isActive ? 2.6 : 1.8} color={isActive ? 'var(--qff-cyan)' : 'currentColor'} />
+              <span style={{ fontSize: '0.64rem', fontWeight: isActive ? 800 : 500 }}>
                 {tab.label}
               </span>
             </button>
