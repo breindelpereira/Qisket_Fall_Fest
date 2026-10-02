@@ -13,7 +13,8 @@ import {
   ChevronUp,
   ChevronDown,
   Volume2,
-  VolumeX
+  VolumeX,
+  Footprints
 } from 'lucide-react';
 
 interface Checkpoint {
@@ -21,9 +22,11 @@ interface Checkpoint {
   name: string;
   basis: 'Z' | 'X';
   requiredState: '0' | '1' | '+' | '-';
+  shape: '|' | '—' | '/' | '\\';
   beamColor: string;
-  basisLabel: string;
-  description: string;
+  laserTitle: string;
+  slotName: string;
+  instruction: string;
 }
 
 export const SchrodingersStealth: React.FC = () => {
@@ -31,88 +34,103 @@ export const SchrodingersStealth: React.FC = () => {
 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [sector, setSector] = useState<1 | 2 | 3>(1);
-  const [currentStep, setCurrentStep] = useState<number>(0); // 0 = start of corridor, 1 = checkpoint 1 passed, 2 = checkpoint 2 passed
+  const [currentStep, setCurrentStep] = useState<number>(0); // 0 = checkpoint 1, 1 = checkpoint 2, etc.
   const [alarmLevel, setAlarmLevel] = useState<number>(0); // 0% to 100%
   const [score, setScore] = useState<number>(600);
   const [gameState, setGameState] = useState<'playing' | 'checkpoint_passed' | 'alarm_alert' | 'sector_cleared' | 'game_over' | 'victory'>('playing');
-  const [feedback, setFeedback] = useState<string>('Welcome, Agent Schrödinger! Security lasers ahead measure quantum states. Match your state to the scanner basis before advancing!');
+  const [feedback, setFeedback] = useState<string>('Welcome, Agent Schrödinger! Laser scanners detect your quantum angle. Align your stance to match the slot before walking through!');
   const [showHandbook, setShowHandbook] = useState<boolean>(false);
+  const [showAnalogy, setShowAnalogy] = useState<boolean>(true);
   const [showPhysics, setShowPhysics] = useState<boolean>(false);
 
   // Quantum State of Agent Schrödinger (Single Qubit)
-  // Initialized to |0>
+  // Initialized to |0> (Vertical)
   const [alpha, setAlpha] = useState<Complex>(Complex.one());
   const [beta, setBeta] = useState<Complex>(Complex.zero());
 
-  // Sector Checkpoints definition
+  // 3 Infiltration Sectors with intuitive shape & basis models
   const sectorCheckpoints: Record<1 | 2 | 3, Checkpoint[]> = {
     1: [
       {
         id: 1,
-        name: 'Checkpoint Alpha',
+        name: 'Checkpoint 1: Ground Floor',
         basis: 'Z',
         requiredState: '0',
+        shape: '|',
         beamColor: '#00d2ff',
-        basisLabel: 'Z-BASIS (Computational)',
-        description: 'Detects along {|0⟩, |1⟩}. Pass condition: State |0⟩'
+        laserTitle: 'BLUE SENSOR (Z-Basis)',
+        slotName: 'Vertical Slot (|0⟩)',
+        instruction: 'Stand Vertical (|0⟩). Slip straight through!'
       },
       {
         id: 2,
-        name: 'Checkpoint Beta',
+        name: 'Checkpoint 2: Inverted Gate',
         basis: 'Z',
         requiredState: '1',
+        shape: '—',
         beamColor: '#00d2ff',
-        basisLabel: 'Z-BASIS (Computational)',
-        description: 'Detects along {|0⟩, |1⟩}. Inverted sensor: Pass condition: State |1⟩'
+        laserTitle: 'BLUE SENSOR (Z-Basis)',
+        slotName: 'Horizontal Slot (|1⟩)',
+        instruction: 'Use [X] INVERT to switch to Horizontal (|1⟩)!'
       }
     ],
     2: [
       {
         id: 1,
-        name: 'Checkpoint Gamma',
+        name: 'Checkpoint 1: High Security Corridor',
         basis: 'Z',
         requiredState: '0',
+        shape: '|',
         beamColor: '#00d2ff',
-        basisLabel: 'Z-BASIS (Computational)',
-        description: 'Measures {|0⟩, |1⟩}. Pass condition: State |0⟩'
+        laserTitle: 'BLUE SENSOR (Z-Basis)',
+        slotName: 'Vertical Slot (|0⟩)',
+        instruction: 'Stand Vertical (|0⟩) to match the blue vertical beams.'
       },
       {
         id: 2,
-        name: 'Checkpoint Delta',
+        name: 'Checkpoint 2: The Diagonal Laser Grid',
         basis: 'X',
         requiredState: '+',
+        shape: '/',
         beamColor: '#ff4081',
-        basisLabel: 'X-BASIS (Hadamard / Diagonal)',
-        description: 'Measures {|+⟩, |−⟩}. Pass condition: State |+⟩ (Use [H] Lens!)'
+        laserTitle: 'PINK SENSOR (X-Basis)',
+        slotName: '45° Diagonal Slot (|+⟩)',
+        instruction: 'Use [H] LENS to tilt yourself 45° diagonal (|+⟩)!'
       }
     ],
     3: [
       {
         id: 1,
-        name: 'Vault Gate 1',
+        name: 'Core Perimeter: Diagonal Barrier',
         basis: 'X',
         requiredState: '+',
+        shape: '/',
         beamColor: '#ff4081',
-        basisLabel: 'X-BASIS (Diagonal)',
-        description: 'Pass condition: State |+⟩'
+        laserTitle: 'PINK SENSOR (X-Basis)',
+        slotName: '45° Diagonal Slot (|+⟩)',
+        instruction: 'Use [H] LENS to tilt diagonal (|+⟩)!'
       },
       {
         id: 2,
-        name: 'Vault Gate 2',
+        name: 'Internal Air Lock: Vertical Barrier',
         basis: 'Z',
         requiredState: '0',
+        shape: '|',
         beamColor: '#00d2ff',
-        basisLabel: 'Z-BASIS (Computational)',
-        description: 'Pass condition: State |0⟩ (Use [H] to return to Z-basis!)'
+        laserTitle: 'BLUE SENSOR (Z-Basis)',
+        slotName: 'Vertical Slot (|0⟩)',
+        instruction: 'Use [H] LENS again to return to Vertical (|0⟩)!'
       },
       {
         id: 3,
-        name: 'Master Vault Core',
+        name: 'Master Vault Core: Anti-Phase Terminal',
         basis: 'X',
         requiredState: '-',
+        shape: '\\',
         beamColor: '#c084fc',
-        basisLabel: 'X-BASIS (Anti-Phase)',
-        description: 'Pass condition: State |−⟩ (Superposition + Negative Phase)'
+        laserTitle: 'PURPLE SENSOR (Anti-Phase X)',
+        slotName: 'Negative Diagonal Slot (|−⟩)',
+        instruction: 'Use [H] then [Z] to invert your quantum phase (|−⟩)!'
       }
     ]
   };
@@ -120,12 +138,11 @@ export const SchrodingersStealth: React.FC = () => {
   const currentSectorCheckpoints = sectorCheckpoints[sector];
   const activeCheckpoint = currentSectorCheckpoints[currentStep] || currentSectorCheckpoints[currentSectorCheckpoints.length - 1];
 
-  // Helper to compute overlap / probability of passing the current active checkpoint
+  // Helper to compute stealth probability (quantum inner product overlap)
   const getStealthProbability = (): number => {
     if (!activeCheckpoint) return 1.0;
     const { requiredState } = activeCheckpoint;
 
-    // Target state amplitude definition
     let targetAlpha = Complex.zero();
     let targetBeta = Complex.zero();
 
@@ -144,7 +161,6 @@ export const SchrodingersStealth: React.FC = () => {
       targetBeta = Complex.create(-inv, 0);
     }
 
-    // Inner product: <target | psi> = targetAlpha* . alpha + targetBeta* . beta
     const innerRe = targetAlpha.re * alpha.re + targetAlpha.im * alpha.im + targetBeta.re * beta.re + targetBeta.im * beta.im;
     const innerIm = targetAlpha.re * alpha.im - targetAlpha.im * alpha.re + targetBeta.re * beta.im - targetBeta.im * beta.re;
     const prob = innerRe * innerRe + innerIm * innerIm;
@@ -152,8 +168,9 @@ export const SchrodingersStealth: React.FC = () => {
   };
 
   const stealthProb = getStealthProbability();
+  const isAligned = stealthProb > 0.95;
 
-  // Quantum Gadgets
+  // Quantum Gadget operations
   const applyHadamard = () => {
     if (soundEnabled) sound.playGate();
     const inv = 1 / Math.SQRT2;
@@ -175,36 +192,32 @@ export const SchrodingersStealth: React.FC = () => {
     setBeta(Complex.scale(beta, -1));
   };
 
-  // Advance Agent Schrödinger through current checkpoint
+  // Advance Agent through the laser scanner
   const advanceThroughCheckpoint = () => {
     if (soundEnabled) sound.playFootstep();
 
-    // Measurement simulation according to the Born rule
-    const isSuccess = Math.random() < stealthProb;
-
-    if (isSuccess && stealthProb > 0.95) {
-      // 100% Deterministic Eigenstate Match!
+    // If aligned, 100% deterministic stealth pass
+    if (isAligned) {
       if (soundEnabled) sound.playSuccess();
       setScore((s) => s + 350);
 
       const nextStep = currentStep + 1;
       if (nextStep >= currentSectorCheckpoints.length) {
-        // Sector completed!
         if (sector === 3) {
           setGameState('victory');
-          setFeedback('MISSION ACCOMPLISHED! Agent Schrödinger infiltrated the core quantum vault undetected!');
+          setFeedback('MISSION ACCOMPLISHED! Agent Schrödinger slipped past all laser bases and secured the Quantum Drive!');
           completeGame('schrodinger_stealth', 'concept_qubits');
         } else {
           setGameState('sector_cleared');
-          setFeedback(`SECTOR ${sector} CLEARED! Perfect basis match—zero wave collapse detected!`);
+          setFeedback(`SECTOR ${sector} CLEARED! Perfect alignment—zero wave function collapse!`);
         }
       } else {
         setCurrentStep(nextStep);
         setGameState('checkpoint_passed');
-        setFeedback(`CLEARED CHECKPOINT ${currentStep + 1}! State matched detector basis perfectly. Advance to next checkpoint!`);
+        setFeedback(`CLEARED CHECKPOINT ${currentStep + 1}! You slipped through the slot undetected. Next laser ahead!`);
       }
     } else {
-      // Stochastic Wave Collapse or Direct Mismatch!
+      // Mismatch! Random Born-rule collapse
       if (soundEnabled) sound.playAlert();
       const penalty = stealthProb === 0 ? 40 : 25;
       const nextAlarm = alarmLevel + penalty;
@@ -212,11 +225,11 @@ export const SchrodingersStealth: React.FC = () => {
       if (nextAlarm >= 100) {
         setAlarmLevel(100);
         setGameState('game_over');
-        setFeedback('ALARM 100%! Security guards converged on Agent Schrödinger! Wave function collapse triggered maximum alert!');
+        setFeedback('ALARM 100%! You hit the laser bars! The wave function collapsed with a loud alarm sound and guards caught you!');
       } else {
         setAlarmLevel(nextAlarm);
         setGameState('alarm_alert');
-        setFeedback(`WAVE COLLAPSE DETECTED! Scanner basis was mismatched. State collapsed randomly and tripped the alarm (+${penalty}%)!`);
+        setFeedback(`COLLAPSE ALARM! Your quantum stance did not match the slot. The laser forced your wave function to collapse (+${penalty}% Alarm)!`);
       }
     }
   };
@@ -227,17 +240,17 @@ export const SchrodingersStealth: React.FC = () => {
     setAlpha(Complex.one());
     setBeta(Complex.zero());
     setGameState('playing');
-    setFeedback(`Entered Sector ${sector + 1}. Check the scanner basis before each move!`);
+    setFeedback(`Entered Sector ${sector + 1}. Check the laser color and angle before advancing!`);
   };
 
   const restartSector = () => {
-    sound.playClick();
+    if (soundEnabled) sound.playClick();
     setCurrentStep(0);
     setAlarmLevel(0);
     setAlpha(Complex.one());
     setBeta(Complex.zero());
     setGameState('playing');
-    setFeedback('Corridor reset! Prepare the correct eigenstate before stepping through!');
+    setFeedback('Corridor reset! Align your stance with the slot before stepping through.');
   };
 
   const fullRestart = () => {
@@ -246,14 +259,16 @@ export const SchrodingersStealth: React.FC = () => {
     restartSector();
   };
 
-  // State Name Helper
-  const getStateName = (): string => {
-    if (Complex.absSq(alpha) > 0.98) return '|0⟩ (Ground)';
-    if (Complex.absSq(beta) > 0.98) return '|1⟩ (Excited)';
-    if (Math.abs(alpha.re - beta.re) < 0.05 && alpha.re > 0.6) return '|+⟩ (Diagonal)';
-    if (Math.abs(alpha.re + beta.re) < 0.05 && alpha.re > 0.6) return '|−⟩ (Anti-Phase)';
-    return 'Custom |ψ⟩';
+  // Helper for agent stance name and visual shape
+  const getAgentStance = (): { name: string; shape: string; badgeColor: string } => {
+    if (Complex.absSq(alpha) > 0.98) return { name: 'Vertical |0⟩', shape: '|', badgeColor: '#00d2ff' };
+    if (Complex.absSq(beta) > 0.98) return { name: 'Horizontal |1⟩', shape: '—', badgeColor: '#00d2ff' };
+    if (Math.abs(alpha.re - beta.re) < 0.05 && alpha.re > 0.6) return { name: '45° Diagonal |+⟩', shape: '/', badgeColor: '#ff4081' };
+    if (Math.abs(alpha.re + beta.re) < 0.05 && alpha.re > 0.6) return { name: 'Negative Diagonal |−⟩', shape: '\\', badgeColor: '#c084fc' };
+    return { name: 'Tilted Superposition', shape: '∿', badgeColor: '#fbbf24' };
   };
+
+  const currentStance = getAgentStance();
 
   return (
     <div style={{
@@ -262,7 +277,7 @@ export const SchrodingersStealth: React.FC = () => {
       gap: 12,
       fontFamily: "'Space Grotesk', -apple-system, sans-serif"
     }}>
-      {/* Tactical Espionage HUD Cabinet */}
+      {/* Tactical Espionage HUD Shell */}
       <div style={{
         background: 'linear-gradient(165deg, #070d1e 0%, #030611 100%)',
         border: '3px solid #00d2ff',
@@ -272,15 +287,6 @@ export const SchrodingersStealth: React.FC = () => {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        {/* Tactical Scanline & Cyber Grid */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.04) 0%, transparent 80%)',
-          pointerEvents: 'none',
-          zIndex: 4
-        }} />
-
         {/* Top Espionage Header */}
         <div style={{
           display: 'flex',
@@ -332,14 +338,14 @@ export const SchrodingersStealth: React.FC = () => {
                 fontFamily: "'Press Start 2P', monospace"
               }}
             >
-              BRIEFING
+              RULES
             </button>
             <HonestyTagBadge tag="Accurate" />
           </div>
         </div>
 
         {/* Title */}
-        <div style={{ textAlign: 'center', marginBottom: 12, position: 'relative', zIndex: 6 }}>
+        <div style={{ textAlign: 'center', marginBottom: 10, position: 'relative', zIndex: 6 }}>
           <h2 style={{
             fontSize: '1.15rem',
             fontWeight: 800,
@@ -350,65 +356,91 @@ export const SchrodingersStealth: React.FC = () => {
             🐾 Schrödinger's Stealth
           </h2>
           <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-            Quantum Measurement & Basis Infiltration • Observe without Collapsing
+            Quantum Measurement & Basis Infiltration • Slip through without collapsing
           </p>
         </div>
 
-        {/* Alert Level Progress Bar */}
+        {/* ============================================================== */}
+        {/* 1. THE SIMPLE KEYHOLE ANALOGY: HOW THIS GAME WORKS             */}
+        {/* ============================================================== */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.8)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 12,
-          padding: '10px 14px',
+          background: 'rgba(0, 210, 255, 0.08)',
+          border: '1px solid rgba(0, 210, 255, 0.3)',
+          borderRadius: 14,
+          padding: '10px 12px',
           marginBottom: 12,
           position: 'relative',
           zIndex: 6
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <button
+            onClick={() => setShowAnalogy(!showAnalogy)}
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'transparent',
+              color: '#00d2ff',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              padding: 0
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <ShieldAlert size={14} color={alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'} />
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.52rem',
-                color: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'
-              }}>
-                ALARM DETECTION METER:
-              </span>
+              <Lightbulb size={14} color="#00d2ff" />
+              <span>THE SIMPLE RULE: MATCH THE KEYHOLE!</span>
             </div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: alarmLevel > 60 ? '#f43f5e' : '#fff' }}>
-              {alarmLevel}%
-            </span>
-          </div>
+            {showAnalogy ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+          </button>
 
-          <div style={{
-            height: 8,
-            background: 'rgba(255, 255, 255, 0.08)',
-            borderRadius: 4,
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              width: `${alarmLevel}%`,
-              height: '100%',
-              background: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e',
-              transition: 'width 0.3s ease'
-            }} />
-          </div>
+          {showAnalogy && (
+            <div style={{ marginTop: 8, fontSize: '0.74rem', color: '#cbd5e1', lineHeight: 1.45 }}>
+              <p>
+                Think of each security scanner like a <b>shaped slit or keyhole</b>:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 6 }}>
+                <div style={{
+                  background: 'rgba(0, 210, 255, 0.12)',
+                  border: '1px solid rgba(0, 210, 255, 0.3)',
+                  borderRadius: 8,
+                  padding: '6px 8px'
+                }}>
+                  <b style={{ color: '#00d2ff' }}>🟦 Blue Laser (Z-Basis):</b>
+                  <div style={{ fontSize: '0.68rem', marginTop: 2 }}>
+                    Has a <b>Vertical Slot (|)</b>. Agent must stand <b>Vertical (|0⟩)</b> to slip through!
+                  </div>
+                </div>
+
+                <div style={{
+                  background: 'rgba(255, 64, 129, 0.12)',
+                  border: '1px solid rgba(255, 64, 129, 0.3)',
+                  borderRadius: 8,
+                  padding: '6px 8px'
+                }}>
+                  <b style={{ color: '#ff4081' }}>🟪 Pink Laser (X-Basis):</b>
+                  <div style={{ fontSize: '0.68rem', marginTop: 2 }}>
+                    Has a <b>Diagonal Slot (/)</b>. Tap <b>[H] LENS</b> to tilt <b>Diagonal (|+⟩)</b>!
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ============================================================== */}
-        {/* 1. TACTICAL TOP-DOWN SECURITY CORRIDOR ARENA                   */}
+        {/* 2. THE INTERACTIVE TACTICAL CORRIDOR ARENA                     */}
         {/* ============================================================== */}
         <div style={{
           background: 'radial-gradient(circle at 50% 30%, #0d163d 0%, #050818 85%)',
           border: '2px solid rgba(0, 210, 255, 0.4)',
           borderRadius: 16,
-          padding: '16px 12px',
+          padding: '16px 12px 14px',
           marginBottom: 12,
           position: 'relative',
           overflow: 'hidden',
           zIndex: 6
         }}>
-          {/* Corridor Track Progress */}
+          {/* Corridor Steps Map */}
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -417,12 +449,7 @@ export const SchrodingersStealth: React.FC = () => {
             position: 'relative'
           }}>
             {/* Start Pod */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 5
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
               <div style={{
                 width: 38,
                 height: 38,
@@ -438,82 +465,43 @@ export const SchrodingersStealth: React.FC = () => {
               }}>
                 🐱
               </div>
-              <span style={{ fontSize: '0.6rem', color: '#94a3b8', marginTop: 4, fontWeight: 700 }}>
+              <span style={{ fontSize: '0.58rem', color: '#94a3b8', marginTop: 4, fontWeight: 700 }}>
                 AGENT
               </span>
             </div>
 
-            {/* Laser Checkpoint 1 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 5
-            }}>
-              <div style={{
-                width: 42,
-                height: 42,
-                borderRadius: 12,
-                background: currentStep > 0
-                  ? 'rgba(34, 197, 94, 0.2)'
-                  : currentStep === 0
-                  ? 'rgba(0, 210, 255, 0.2)'
-                  : 'rgba(15, 23, 42, 0.9)',
-                border: `2px solid ${currentSectorCheckpoints[0]?.beamColor || '#00d2ff'}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                boxShadow: currentStep === 0 ? `0 0 16px ${currentSectorCheckpoints[0]?.beamColor}` : 'none'
-              }}>
-                {currentStep > 0 ? '✅' : '⚡ 1'}
+            {/* Checkpoints */}
+            {currentSectorCheckpoints.map((cp, idx) => (
+              <div key={cp.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
+                <div style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: currentStep > idx
+                    ? 'rgba(34, 197, 94, 0.25)'
+                    : currentStep === idx
+                    ? `${cp.beamColor}33`
+                    : 'rgba(15, 23, 42, 0.9)',
+                  border: `2px solid ${currentStep > idx ? '#22c55e' : cp.beamColor}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  fontWeight: 900,
+                  boxShadow: currentStep === idx ? `0 0 18px ${cp.beamColor}` : 'none',
+                  transition: 'all 0.25s ease'
+                }}>
+                  {currentStep > idx ? '✅' : cp.shape}
+                </div>
+                <span style={{ fontSize: '0.58rem', color: cp.beamColor, marginTop: 4, fontWeight: 700 }}>
+                  GATE {idx + 1}
+                </span>
               </div>
-              <span style={{ fontSize: '0.58rem', color: currentSectorCheckpoints[0]?.beamColor, marginTop: 4, fontWeight: 700 }}>
-                {currentSectorCheckpoints[0]?.basis} BASIS
-              </span>
-            </div>
-
-            {/* Laser Checkpoint 2 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 5
-            }}>
-              <div style={{
-                width: 42,
-                height: 42,
-                borderRadius: 12,
-                background: currentStep > 1
-                  ? 'rgba(34, 197, 94, 0.2)'
-                  : currentStep === 1
-                  ? 'rgba(255, 64, 129, 0.2)'
-                  : 'rgba(15, 23, 42, 0.9)',
-                border: `2px solid ${currentSectorCheckpoints[1]?.beamColor || '#ff4081'}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                boxShadow: currentStep === 1 ? `0 0 16px ${currentSectorCheckpoints[1]?.beamColor}` : 'none'
-              }}>
-                {currentStep > 1 ? '✅' : '⚡ 2'}
-              </div>
-              <span style={{ fontSize: '0.58rem', color: currentSectorCheckpoints[1]?.beamColor, marginTop: 4, fontWeight: 700 }}>
-                {currentSectorCheckpoints[1]?.basis} BASIS
-              </span>
-            </div>
+            ))}
 
             {/* Core Terminal Goal */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 5
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
               <div style={{
                 width: 38,
                 height: 38,
@@ -528,113 +516,148 @@ export const SchrodingersStealth: React.FC = () => {
               }}>
                 💾
               </div>
-              <span style={{ fontSize: '0.6rem', color: '#fbbf24', marginTop: 4, fontWeight: 700 }}>
+              <span style={{ fontSize: '0.58rem', color: '#fbbf24', marginTop: 4, fontWeight: 700 }}>
                 CORE
               </span>
             </div>
           </div>
 
-          {/* Current Laser Scanner Readout */}
+          {/* ACTIVE CHECKPOINT VISUAL COMPARISON BOX */}
           <div style={{
-            background: 'rgba(0, 0, 0, 0.55)',
-            border: `1.5px solid ${activeCheckpoint.beamColor}`,
-            borderRadius: 10,
-            padding: '10px 12px',
+            background: 'rgba(0, 0, 0, 0.65)',
+            border: `2px solid ${isAligned ? '#22c55e' : activeCheckpoint.beamColor}`,
+            borderRadius: 12,
+            padding: '12px',
             display: 'flex',
             flexDirection: 'column',
-            gap: 4
+            gap: 8,
+            boxShadow: isAligned ? '0 0 15px rgba(34, 197, 94, 0.3)' : 'none'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.55rem',
-                color: activeCheckpoint.beamColor
+            {/* Split Comparison: Door Slot vs Agent Stance */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 8, alignItems: 'center' }}>
+              {/* Door Slot */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: `1px solid ${activeCheckpoint.beamColor}`,
+                borderRadius: 10,
+                padding: '8px',
+                textAlign: 'center'
               }}>
-                SCANNER: {activeCheckpoint.basisLabel}
-              </span>
-              <span style={{
-                fontSize: '0.62rem',
-                fontWeight: 800,
-                color: '#fff',
-                background: 'rgba(255,255,255,0.1)',
-                padding: '2px 6px',
-                borderRadius: 4
-              }}>
-                TARGET: |{activeCheckpoint.requiredState}⟩
-              </span>
-            </div>
+                <div style={{ fontSize: '0.58rem', color: activeCheckpoint.beamColor, fontWeight: 800 }}>
+                  SCANNER KEYHOLE
+                </div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#fff', margin: '2px 0' }}>
+                  {activeCheckpoint.shape}
+                </div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#e2e8f0' }}>
+                  {activeCheckpoint.slotName}
+                </div>
+              </div>
 
-            <div style={{ fontSize: '0.74rem', color: '#cbd5e1' }}>
-              {activeCheckpoint.description}
-            </div>
-
-            {/* Stealth Odds Meter */}
-            <div style={{
-              marginTop: 4,
-              paddingTop: 6,
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
-                Your Stealth Rating:
-              </span>
-              <span style={{
-                fontSize: '0.75rem',
+              {/* Match indicator */}
+              <div style={{
+                fontSize: '1.2rem',
                 fontWeight: 900,
-                color: stealthProb > 0.95 ? '#86efac' : stealthProb > 0.4 ? '#fde047' : '#fca5a5'
+                color: isAligned ? '#22c55e' : '#ef4444'
               }}>
-                {(stealthProb * 100).toFixed(0)}% {stealthProb > 0.95 ? '🛡️ (ZERO COLLAPSE RISK)' : '⚠️ (COLLAPSE RISK!)'}
+                {isAligned ? '==' : '≠'}
+              </div>
+
+              {/* Agent Stance */}
+              <div style={{
+                background: isAligned ? 'rgba(34, 197, 94, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                border: `1px solid ${isAligned ? '#22c55e' : '#ef4444'}`,
+                borderRadius: 10,
+                padding: '8px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '0.58rem', color: isAligned ? '#86efac' : '#fca5a5', fontWeight: 800 }}>
+                  YOUR STANCE
+                </div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#fff', margin: '2px 0' }}>
+                  {currentStance.shape}
+                </div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#e2e8f0' }}>
+                  {currentStance.name}
+                </div>
+              </div>
+            </div>
+
+            {/* Plain English Action Instruction */}
+            <div style={{
+              background: isAligned ? 'rgba(34, 197, 94, 0.15)' : 'rgba(251, 191, 36, 0.15)',
+              border: `1px solid ${isAligned ? '#22c55e' : '#fbbf24'}`,
+              borderRadius: 8,
+              padding: '6px 10px',
+              fontSize: '0.72rem',
+              color: isAligned ? '#86efac' : '#fef08a',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <span>
+                {isAligned
+                  ? '🟢 PERFECT MATCH! Safe to slip through undetected.'
+                  : `⚠️ ${activeCheckpoint.instruction}`}
+              </span>
+              <span style={{ fontWeight: 800 }}>
+                {isAligned ? '100% STEALTH' : `${(stealthProb * 100).toFixed(0)}% CHANCE`}
               </span>
             </div>
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 2. AGENT QUANTUM STATUS CARD                                   */}
-        {/* ============================================================== */}
+        {/* Alarm Detection Meter */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.7)',
-          border: '1px solid rgba(0, 210, 255, 0.25)',
+          background: 'rgba(15, 23, 42, 0.8)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 12,
-          padding: '10px 14px',
+          padding: '8px 12px',
           marginBottom: 12,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
           position: 'relative',
           zIndex: 6
         }}>
-          <div>
-            <div style={{ fontSize: '0.62rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
-              Agent Schrödinger's State:
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <ShieldAlert size={14} color={alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'} />
+              <span style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: '0.5rem',
+                color: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'
+              }}>
+                ALARM DETECTION METER:
+              </span>
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 900, color: 'var(--accent-cyan)' }}>
-              {getStateName()}
-            </div>
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: alarmLevel > 60 ? '#f43f5e' : '#fff' }}>
+              {alarmLevel}%
+            </span>
           </div>
 
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.62rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
-              Amplitudes (α, β):
-            </div>
-            <div style={{ fontSize: '0.76rem', color: '#fff', fontFamily: 'monospace' }}>
-              [{alpha.re.toFixed(2)}, {beta.re.toFixed(2)}]
-            </div>
+          <div style={{
+            height: 6,
+            background: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: 3,
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: `${alarmLevel}%`,
+              height: '100%',
+              background: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e',
+              transition: 'width 0.3s ease'
+            }} />
           </div>
         </div>
 
-        {/* Feedback Alert Bar */}
+        {/* Narrative Feedback Banner */}
         {feedback && (
           <div style={{
-            background: gameState === 'game_over' || gameState === 'alarm_alert' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(0, 210, 255, 0.15)',
+            background: gameState === 'game_over' || gameState === 'alarm_alert' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(0, 210, 255, 0.12)',
             border: `1.5px solid ${gameState === 'game_over' || gameState === 'alarm_alert' ? '#f43f5e' : '#00d2ff'}`,
             borderRadius: 10,
-            padding: '10px 12px',
-            fontSize: '0.74rem',
+            padding: '8px 12px',
+            fontSize: '0.73rem',
             color: gameState === 'game_over' || gameState === 'alarm_alert' ? '#fca5a5' : '#e2e8f0',
-            lineHeight: 1.45,
+            lineHeight: 1.4,
             marginBottom: 12,
             position: 'relative',
             zIndex: 6
@@ -644,7 +667,7 @@ export const SchrodingersStealth: React.FC = () => {
         )}
 
         {/* ============================================================== */}
-        {/* 3. QUANTUM UTILITY BELT (GATES / LENSES)                       */}
+        {/* 3. QUANTUM UTILITY BELT (GADGETS TO CHANGE YOUR STANCE)        */}
         {/* ============================================================== */}
         {gameState !== 'game_over' && gameState !== 'victory' && (
           <div style={{ marginBottom: 12, position: 'relative', zIndex: 6 }}>
@@ -659,36 +682,41 @@ export const SchrodingersStealth: React.FC = () => {
                 fontSize: '0.52rem',
                 color: '#94a3b8'
               }}>
-                UTILITY GADGETS:
+                YOUR UTILITY GADGETS:
               </span>
-              <span style={{ fontSize: '0.68rem', color: 'var(--accent-cyan)' }}>
-                Tap to rotate quantum state
+              <span style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)' }}>
+                Tap to rotate your stance
               </span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {/* Hadamard Basis Lens */}
+              {/* Hadamard Tilt Lens */}
               <button
                 onClick={applyHadamard}
                 style={{
                   background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
                   color: '#050714',
-                  padding: '10px 6px',
+                  padding: '10px 4px',
                   borderRadius: 10,
                   border: '2px solid #fff',
-                  boxShadow: (activeCheckpoint.basis === 'X' && Complex.absSq(alpha) > 0.8) ? '0 0 16px #00d2ff' : '0 4px 12px rgba(0, 210, 255, 0.3)',
+                  boxShadow: (!isAligned && activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (!isAligned && activeCheckpoint.basis === 'Z' && currentStance.shape === '/')
+                    ? '0 0 16px #00d2ff'
+                    : '0 4px 12px rgba(0, 210, 255, 0.3)',
+                  animation: (!isAligned && ((activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (activeCheckpoint.basis === 'Z' && currentStance.shape === '/')))
+                    ? 'pulseGlow 2s infinite'
+                    : 'none',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3
+                  gap: 2
                 }}
               >
-                <Zap size={16} fill="#050714" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
-                  [H] LENS
+                <Zap size={15} fill="#050714" />
+                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
+                  [H] TILT
                 </span>
-                <span style={{ fontSize: '0.6rem', fontWeight: 800 }}>
-                  Z ↔ X Basis
+                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
+                  Vertical ↔ 45°
                 </span>
               </button>
 
@@ -698,21 +726,26 @@ export const SchrodingersStealth: React.FC = () => {
                 style={{
                   background: 'linear-gradient(180deg, #ec4899 0%, #be185d 100%)',
                   color: '#fff',
-                  padding: '10px 6px',
+                  padding: '10px 4px',
                   borderRadius: 10,
                   border: '2px solid #fff',
-                  boxShadow: (activeCheckpoint.requiredState === '1' && Complex.absSq(alpha) > 0.8) ? '0 0 16px #ec4899' : '0 4px 12px rgba(236, 72, 153, 0.3)',
+                  boxShadow: (!isAligned && activeCheckpoint.requiredState === '1' && currentStance.shape === '|')
+                    ? '0 0 16px #ec4899'
+                    : '0 4px 12px rgba(236, 72, 153, 0.3)',
+                  animation: (!isAligned && activeCheckpoint.requiredState === '1' && currentStance.shape === '|')
+                    ? 'pulseGlow 2s infinite'
+                    : 'none',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3
+                  gap: 2
                 }}
               >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
-                  [X] INVERT
+                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
+                  [X] FLIP
                 </span>
-                <span style={{ fontSize: '0.6rem', fontWeight: 800 }}>
-                  Swap 0 ↔ 1
+                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
+                  Vert ↔ Horiz
                 </span>
               </button>
 
@@ -722,21 +755,26 @@ export const SchrodingersStealth: React.FC = () => {
                 style={{
                   background: 'linear-gradient(180deg, #8a3ffc 0%, #6929c4 100%)',
                   color: '#fff',
-                  padding: '10px 6px',
+                  padding: '10px 4px',
                   borderRadius: 10,
                   border: '2px solid #fff',
-                  boxShadow: '0 4px 12px rgba(138, 63, 252, 0.3)',
+                  boxShadow: (!isAligned && activeCheckpoint.requiredState === '-' && currentStance.shape === '/')
+                    ? '0 0 16px #8a3ffc'
+                    : '0 4px 12px rgba(138, 63, 252, 0.3)',
+                  animation: (!isAligned && activeCheckpoint.requiredState === '-' && currentStance.shape === '/')
+                    ? 'pulseGlow 2s infinite'
+                    : 'none',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3
+                  gap: 2
                 }}
               >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
+                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
                   [Z] PHASE
                 </span>
-                <span style={{ fontSize: '0.6rem', fontWeight: 800 }}>
-                  Flip (+ / -)
+                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
+                  Flip / ↔ \
                 </span>
               </button>
             </div>
@@ -752,18 +790,23 @@ export const SchrodingersStealth: React.FC = () => {
                 width: '100%',
                 padding: '14px',
                 borderRadius: 12,
-                background: stealthProb > 0.95
+                background: isAligned
                   ? 'linear-gradient(180deg, #22c55e 0%, #15803d 100%)'
                   : 'linear-gradient(180deg, #eab308 0%, #a16207 100%)',
                 color: '#fff',
                 border: '2px solid #fff',
-                boxShadow: stealthProb > 0.95 ? '0 0 20px rgba(34, 197, 94, 0.6)' : '0 0 15px rgba(234, 179, 8, 0.4)',
+                boxShadow: isAligned ? '0 0 20px rgba(34, 197, 94, 0.6)' : '0 0 15px rgba(234, 179, 8, 0.4)',
                 fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.72rem',
-                letterSpacing: '0.04em'
+                fontSize: '0.7rem',
+                letterSpacing: '0.04em',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8
               }}
             >
-              🐾 ADVANCE THROUGH SCANNER
+              <Footprints size={16} />
+              <span>{isAligned ? 'SLIP THROUGH SENSOR (100% STEALTH)' : 'RISK PASSAGE (COLLAPSE DANGER!)'}</span>
             </button>
           )}
 
@@ -778,14 +821,14 @@ export const SchrodingersStealth: React.FC = () => {
                 color: '#050714',
                 border: '2px solid #fff',
                 fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.7rem',
+                fontSize: '0.68rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 6
               }}
             >
-              <span>INFILTRATE SECTOR {sector + 1}</span>
+              <span>ADVANCE TO SECTOR {sector + 1}</span>
               <ChevronRight size={16} />
             </button>
           )}
@@ -802,7 +845,7 @@ export const SchrodingersStealth: React.FC = () => {
                   color: '#fff',
                   border: '2px solid #fff',
                   fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '0.68rem'
+                  fontSize: '0.65rem'
                 }}
               >
                 RETRY CURRENT SECTOR
@@ -817,7 +860,7 @@ export const SchrodingersStealth: React.FC = () => {
                   color: '#94a3b8',
                   border: '1px solid #475569',
                   fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '0.6rem'
+                  fontSize: '0.58rem'
                 }}
               >
                 RESTART FROM SECTOR 1
@@ -839,7 +882,7 @@ export const SchrodingersStealth: React.FC = () => {
             }}>
               <div style={{
                 fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 color: '#fbbf24'
               }}>
                 🏆 VAULT CONQUERED!
@@ -848,7 +891,7 @@ export const SchrodingersStealth: React.FC = () => {
                 TOTAL SCORE: <b>{score} PTS</b>
               </div>
               <div style={{ fontSize: '0.72rem', color: '#38bdf8' }}>
-                BADGE UNLOCKED: <b>Master of Measurement & Bases</b>
+                BADGE UNLOCKED: <b>Master of Measurement Bases</b>
               </div>
               <button
                 onClick={fullRestart}
@@ -858,7 +901,7 @@ export const SchrodingersStealth: React.FC = () => {
                   border: '1px solid #475569',
                   borderRadius: 6,
                   padding: '8px 14px',
-                  fontSize: '0.68rem',
+                  fontSize: '0.65rem',
                   fontFamily: "'Press Start 2P', monospace",
                   marginTop: 6
                 }}
@@ -871,7 +914,7 @@ export const SchrodingersStealth: React.FC = () => {
       </div>
 
       {/* ============================================================== */}
-      {/* 4. "THE QUANTUM PHYSICS OF MEASUREMENT" ACCORDION              */}
+      {/* 4. "THE QUANTUM PHYSICS BEHIND IT" ACCORDION                   */}
       {/* ============================================================== */}
       <div style={{
         background: 'var(--bg-surface)',
@@ -889,21 +932,21 @@ export const SchrodingersStealth: React.FC = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
             color: 'var(--text-primary)',
-            fontSize: '0.8rem',
+            fontSize: '0.78rem',
             fontWeight: 700
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Sparkles size={16} color="var(--accent-cyan)" />
-            <span>Why Does Measurement Basis Matter?</span>
+            <Sparkles size={15} color="var(--accent-cyan)" />
+            <span>The Real Physics: Why Observing Causes Wave Collapse</span>
           </div>
-          {showPhysics ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          {showPhysics ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
 
         {showPhysics && (
           <div style={{
             padding: '0 14px 14px',
-            fontSize: '0.76rem',
+            fontSize: '0.74rem',
             color: 'var(--text-secondary)',
             lineHeight: 1.5,
             display: 'flex',
@@ -911,19 +954,18 @@ export const SchrodingersStealth: React.FC = () => {
             gap: 8
           }}>
             <p>
-              In classical physics, measuring a car's speed or location doesn't alter its speed.
-              In quantum mechanics, <b>measurement fundamentally perturbs the system</b>:
+              In quantum mechanics, <b>measurement is not a passive photo</b>. A detector projects the quantum wave onto its own measurement basis:
             </p>
             <ul style={{ paddingLeft: 18 }}>
               <li>
-                <b>Eigenstate Measurement (Zero Collapse):</b> If a detector measures along the <b>Z-basis</b> and the qubit is already in <b>|0⟩</b>, the measurement yields 0 with <b>100% certainty</b> and does NOT disturb the state!
+                <b>Measuring an Eigenstate:</b> If a detector measures along the Z-axis ({'|0⟩, |1⟩'}) and your qubit is already |0⟩, the probability of measuring 0 is 100%. The state is completely undisturbed!
               </li>
               <li>
-                <b>Basis Mismatch (Stochastic Collapse):</b> If the same <b>Z-basis</b> detector observes a qubit in superposition <b>|+⟩ = (|0⟩ + |1⟩)/√2</b>, it forces the qubit to randomly collapse to either |0⟩ or |1⟩ with 50/50 odds!
+                <b>Basis Mismatch (Collapse):</b> If you send a diagonal state |+⟩ into a Z-detector, it must choose: 50% chance of collapsing to 0, and 50% chance of collapsing to 1! That random jump causes the security alarm.
               </li>
             </ul>
             <p>
-              By equipping the <b>[H] Lens</b>, Agent Schrödinger rotates the measurement basis from Z to X, turning superposition into an eigenstate so lasers cannot detect any disturbance!
+              This is the cornerstone of <b>Quantum Key Distribution (BB84)</b>: If an eavesdropper listens in using the wrong basis, they inevitably cause collapse, alerting the sender and receiver immediately!
             </p>
           </div>
         )}
@@ -961,8 +1003,8 @@ export const SchrodingersStealth: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Lightbulb size={18} color="#00d2ff" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.72rem', color: '#00d2ff' }}>
-                  HQ MISSION BRIEFING
+                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.7rem', color: '#00d2ff' }}>
+                  HQ MISSION RULES
                 </span>
               </div>
               <button
@@ -973,27 +1015,27 @@ export const SchrodingersStealth: React.FC = () => {
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.5 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.76rem', color: '#cbd5e1', lineHeight: 1.5 }}>
               <div>
-                <b style={{ color: '#00d2ff' }}>1. The Mission:</b>
+                <b style={{ color: '#00d2ff' }}>1. The Rule:</b>
                 <p>
-                  Infiltrate each sector by advancing through quantum laser checkpoints. If your state matches the scanner's required eigenstate, you pass with 100% stealth!
+                  Each laser scanner has a specific angle (slot). If your quantum stance matches the slot, you have <b>100% Stealth</b> and slip right through.
                 </p>
               </div>
 
               <div>
-                <b style={{ color: '#ff4081' }}>2. Z-Basis vs X-Basis:</b>
-                <p>
-                  <b>Z-Basis (Cyan beams):</b> Checks for |0⟩ or |1⟩.<br />
-                  <b>X-Basis (Pink beams):</b> Checks for |+⟩ or |−⟩.<br />
-                  Use the cyan <b>[H] LENS</b> to swap between Z and X basis!
-                </p>
+                <b style={{ color: '#ff4081' }}>2. The Tools:</b>
+                <ul style={{ paddingLeft: 16, marginTop: 4 }}>
+                  <li><b>[H] TILT:</b> Rotates between Vertical (|) and 45° Diagonal (/).</li>
+                  <li><b>[X] FLIP:</b> Swaps between Vertical (|) and Horizontal (—).</li>
+                  <li><b>[Z] PHASE:</b> Flips between positive diagonal (/) and negative diagonal (\).</li>
+                </ul>
               </div>
 
               <div>
-                <b style={{ color: '#fbbf24' }}>3. Avoid Stochastic Collapse:</b>
+                <b style={{ color: '#fbbf24' }}>3. How to Win:</b>
                 <p>
-                  If you step into a scanner with the wrong basis, your wave function collapses probabilistically and raises the Alarm Detection Meter!
+                  Look at the <b>Scanner Keyhole</b> box in the center. Tap the pulsating button on your utility belt until <b>YOUR STANCE</b> matches the keyhole. When it says <b>100% STEALTH</b>, hit the button to advance!
                 </p>
               </div>
             </div>
@@ -1007,10 +1049,10 @@ export const SchrodingersStealth: React.FC = () => {
                 background: 'var(--accent-btn)',
                 color: '#050714',
                 fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.65rem'
+                fontSize: '0.62rem'
               }}
             >
-              MISSION ACCEPTED
+              GOT IT!
             </button>
           </div>
         </div>
