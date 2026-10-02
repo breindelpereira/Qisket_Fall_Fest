@@ -1,33 +1,26 @@
 :root {
-  /* Qiskit Fall Fest 2026 Event Color Palette */
-  --qff-bg: #090d24;
-  --qff-bg-gradient: radial-gradient(circle at 50% 0%, #1a2258 0%, #090d24 75%);
-  --qff-card: rgba(19, 25, 67, 0.85);
-  --qff-card-solid: #131943;
-  --qff-card-subtle: rgba(29, 38, 98, 0.55);
-  --qff-border: #252e6d;
-  --qff-border-glow: rgba(0, 210, 255, 0.35);
+  /* Premium Dark Quantum Theme */
+  --bg-app: #080b1a;
+  --bg-surface: #101530;
+  --bg-surface-elevated: #161d42;
+  --bg-surface-glass: rgba(16, 21, 48, 0.75);
 
-  /* Signature Accents from Event Banner */
-  --qff-cyan: #00d2ff;       /* Qiskit Cyan / Teal */
-  --qff-pink: #ff4081;       /* Origami Flamingo Pink */
-  --qff-purple: #8a3ffc;     /* IBM Quantum Purple */
-  --qff-ibm-blue: #0f62fe;   /* IBM Quantum Classic Blue */
-  --qff-green: #25a244;      /* Success / Verified */
-  --qff-gold: #f1c21b;       /* Competition / Award */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(0, 210, 255, 0.25);
 
-  --text-main: #ffffff;
-  --text-muted: #b8c4e2;
-  --text-dim: #7987b2;
+  /* Refined Accent Palette */
+  --accent-cyan: #00d2ff;
+  --accent-cyan-glow: rgba(0, 210, 255, 0.25);
+  --accent-pink: #ff4081;
+  --accent-purple: #8a3ffc;
+  --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #8a3ffc 100%);
+  --accent-btn: linear-gradient(135deg, #00d2ff 0%, #0072ff 100%);
 
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
 
-  font-family: var(--font-sans);
-  color-scheme: dark;
-  background-color: var(--qff-bg);
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
 }
 
 * {
@@ -38,29 +31,28 @@
 }
 
 body {
-  background: var(--qff-bg);
-  background-image: var(--qff-bg-gradient);
-  background-attachment: fixed;
-  color: var(--text-main);
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-family);
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: stretch;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
-  max-width: 480px;
-  min-height: 100dvh;
+  max-width: 440px;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--qff-bg);
-  background-image: var(--qff-bg-gradient);
+  background: radial-gradient(circle at 50% 0%, #151c44 0%, #080b1a 65%);
   position: relative;
-  border-left: 1px solid var(--qff-border);
-  border-right: 1px solid var(--qff-border);
-  box-shadow: 0 0 60px rgba(10, 15, 45, 0.85);
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
 }
 
 button {
@@ -72,15 +64,9 @@ button {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  display: none;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 210, 255, 0.2);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 210, 255, 0.5);
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
