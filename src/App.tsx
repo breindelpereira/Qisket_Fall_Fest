@@ -6,18 +6,22 @@ import {
   BookOpen, 
   Sparkles, 
   Play, 
-  ArrowRight,
+  ChevronLeft,
   X,
   Send,
   TrendingUp
+
 } from 'lucide-react';
 import { useProgress } from './hooks/useProgress';
 import { HonestyTagBadge } from './components/shared/HonestyTag';
 import type { HonestyTag } from './content/types';
-
+import { QuantumHeist } from './components/games/QuantumHeist';
+import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'learn' | 'games' | 'sims'>('home');
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const [selectedSim, setSelectedSim] = useState<string>('single_qubit_lab');
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tutorInput, setTutorInput] = useState('');
 
@@ -101,7 +105,7 @@ export default function App() {
       <main style={{ flex: 1, overflowY: 'auto', padding: '12px 20px 80px' }}>
         {activeTab === 'home' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            {/* Primary Action Hero Card: Start Course */}
+            {/* Primary Action Hero Card: Start Course / Play Game */}
             <div style={{
               background: 'linear-gradient(165deg, rgba(22, 29, 66, 0.9) 0%, rgba(13, 17, 40, 0.95) 100%)',
               borderRadius: 22,
@@ -131,7 +135,7 @@ export default function App() {
                 letterSpacing: '0.08em',
                 marginBottom: 6
               }}>
-                Curriculum • Module 1
+                Phase 2 • Module 1 Slice
               </div>
 
               <h1 style={{
@@ -142,7 +146,7 @@ export default function App() {
                 marginBottom: 8,
                 color: '#ffffff'
               }}>
-                Qubits & Superposition
+                Quantum Heist & Bloch Lab
               </h1>
 
               <p style={{
@@ -151,32 +155,63 @@ export default function App() {
                 lineHeight: 1.45,
                 marginBottom: 20
               }}>
-                Build intuition for quantum states beyond classical bits through interactive puzzles and simulations.
+                Play the <b>Quantum Heist</b> puzzle or experiment with the <b>Single-Qubit Bloch Sphere Lab</b>.
               </p>
 
-              {/* Big Start / Continue Course Button */}
-              <button
-                onClick={() => setActiveTab('learn')}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 10,
-                  padding: '13px 20px',
-                  borderRadius: 14,
-                  background: 'var(--accent-btn)',
-                  color: '#080b1a',
-                  fontSize: '0.92rem',
-                  fontWeight: 800,
-                  letterSpacing: '-0.01em',
-                  boxShadow: '0 6px 20px var(--accent-cyan-glow)',
-                  transition: 'transform 0.15s ease'
-                }}
-              >
-                <Play size={17} fill="#080b1a" />
-                <span>Start Course</span>
-              </button>
+              {/* Action Buttons: Play Game or Open Lab */}
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={() => {
+                    setSelectedGame('quantum_heist');
+                    setActiveTab('games');
+                  }}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    padding: '13px 16px',
+                    borderRadius: 14,
+                    background: 'var(--accent-btn)',
+                    color: '#080b1a',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.01em',
+                    boxShadow: '0 6px 20px var(--accent-cyan-glow)',
+                    transition: 'transform 0.15s ease'
+                  }}
+                >
+                  <Play size={16} fill="#080b1a" />
+                  <span>Play Heist</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedSim('single_qubit_lab');
+                    setActiveTab('sims');
+                  }}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    padding: '13px 16px',
+                    borderRadius: 14,
+                    background: 'rgba(255, 64, 129, 0.15)',
+                    border: '1px solid rgba(255, 64, 129, 0.35)',
+                    color: 'var(--accent-pink)',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.01em',
+                    transition: 'transform 0.15s ease'
+                  }}
+                >
+                  <FlaskConical size={16} />
+                  <span>Open Lab</span>
+                </button>
+              </div>
             </div>
 
             {/* In-Home Progress Section with Real LocalStorage State */}
@@ -201,7 +236,7 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Sleek Progress Bar */}
+              {/* Progress Bar */}
               <div style={{
                 height: 6,
                 background: 'rgba(255, 255, 255, 0.08)',
@@ -270,13 +305,16 @@ export default function App() {
                 marginBottom: 10,
                 paddingLeft: 4
               }}>
-                Or Explore Directly
+                Interactive Modes
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 {/* Games Card */}
                 <button
-                  onClick={() => setActiveTab('games')}
+                  onClick={() => {
+                    setSelectedGame(null);
+                    setActiveTab('games');
+                  }}
                   style={{
                     background: 'var(--bg-surface)',
                     border: '1px solid var(--border-subtle)',
@@ -306,14 +344,17 @@ export default function App() {
                       Games
                     </div>
                     <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
-                      19 intuition puzzles
+                      Quantum Heist ready!
                     </div>
                   </div>
                 </button>
 
                 {/* Simulations Card */}
                 <button
-                  onClick={() => setActiveTab('sims')}
+                  onClick={() => {
+                    setSelectedSim('single_qubit_lab');
+                    setActiveTab('sims');
+                  }}
                   style={{
                     background: 'var(--bg-surface)',
                     border: '1px solid var(--border-subtle)',
@@ -343,7 +384,7 @@ export default function App() {
                       Simulations
                     </div>
                     <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
-                      21 quantitative labs
+                      Bloch Lab active!
                     </div>
                   </div>
                 </button>
@@ -368,110 +409,143 @@ export default function App() {
           </div>
         )}
 
-        {/* Learn Tab */}
+        {/* Learn Tab (Placeholder until decisions made) */}
         {activeTab === 'learn' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Curriculum</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[
-                { part: 'Part 1', title: 'Quantum Concepts', desc: '8 modules: Superposition to Error Correction', color: 'var(--accent-cyan)' },
-                { part: 'Part 2', title: 'Hardware Modalities', desc: '10 modules: Superconducting, Ions, Atoms, Photonics', color: 'var(--accent-pink)' },
-                { part: 'Part 3', title: 'Math Companion', desc: '5 lessons: Dirac vectors, matrices, Grover geometry', color: 'var(--accent-purple)' }
-              ].map((c, i) => (
-                <div key={i} style={{
-                  background: 'var(--bg-surface)',
-                  padding: '16px',
-                  borderRadius: 16,
-                  border: '1px solid var(--border-subtle)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: c.color, textTransform: 'uppercase' }}>
-                      {c.part}
-                    </div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', margin: '2px 0' }}>
-                      {c.title}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                      {c.desc}
-                    </div>
-                  </div>
-                  <ArrowRight size={18} color="var(--text-tertiary)" />
-                </div>
-              ))}
+            <div style={{
+              background: 'var(--bg-surface)',
+              borderRadius: 16,
+              padding: '16px',
+              border: '1px solid var(--border-subtle)',
+              fontSize: '0.82rem',
+              color: 'var(--text-secondary)',
+              lineHeight: 1.5
+            }}>
+              📖 Curriculum structure is awaiting your decision inputs. Meanwhile, explore the interactive <b>Quantum Heist</b> game and the <b>Single-Qubit Simulation Lab</b>!
             </div>
           </div>
         )}
 
-        {/* Games Tab with Honesty Tags */}
+        {/* Games Tab */}
         {activeTab === 'games' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Games</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[
-                { title: 'Quantum Heist', concept: 'Qubits & Superposition', tag: 'Analogy' as HonestyTag },
-                { title: "Schrödinger's Stealth", concept: 'Measurement & Probability', tag: 'Simplified model' as HonestyTag },
-                { title: 'Bloch Runner', concept: 'Single-Qubit Gate Rotations', tag: 'Accurate' as HonestyTag },
-                { title: 'Photon Escape Room', concept: 'Interference & Phase Shifters', tag: 'Accurate' as HonestyTag },
-                { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell Tests', tag: 'Accurate' as HonestyTag },
-                { title: 'Braid Lock', concept: 'Non-Abelian Anyons & Protection', tag: 'Experimental/Contested' as HonestyTag }
-              ].map((g, i) => (
-                <div key={i} style={{
-                  background: 'var(--bg-surface)',
-                  padding: '14px 16px',
-                  borderRadius: 14,
-                  border: '1px solid var(--border-subtle)',
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {selectedGame === 'quantum_heist' ? (
+              <div>
+                <button
+                  onClick={() => setSelectedGame(null)}
+                  style={{
+                    background: 'transparent',
+                    color: 'var(--accent-cyan)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    marginBottom: 12,
+                    padding: 0
+                  }}
+                >
+                  <ChevronLeft size={18} />
+                  <span>All Games</span>
+                </button>
+                <QuantumHeist />
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Games</h2>
+                
+                {/* Featured Game Card: Quantum Heist */}
+                <div style={{
+                  background: 'linear-gradient(145deg, rgba(22, 29, 66, 0.95), rgba(13, 17, 40, 0.95))',
+                  borderRadius: 18,
+                  padding: '18px',
+                  border: '1px solid var(--border-accent)',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
+                  flexDirection: 'column',
+                  gap: 12
                 }}>
-                  <div>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>{g.title}</div>
-                    <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>{g.concept}</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', fontWeight: 700, textTransform: 'uppercase' }}>
+                      Playable Now • Phase 2
+                    </div>
+                    <HonestyTagBadge tag="Simplified model" />
                   </div>
-                  <HonestyTagBadge tag={g.tag} />
+
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+                      Quantum Heist
+                    </h3>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                      Infiltrate high-security quantum vaults across 3 levels: Superposition Doors, Phase Frequency, and 3D Bloch Aim!
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedGame('quantum_heist')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                      padding: '12px',
+                      borderRadius: 12,
+                      background: 'var(--accent-btn)',
+                      color: '#080b1a',
+                      fontSize: '0.88rem',
+                      fontWeight: 800,
+                      boxShadow: '0 4px 16px var(--accent-cyan-glow)'
+                    }}
+                  >
+                    <Play size={16} fill="#080b1a" />
+                    <span>Play Quantum Heist</span>
+                  </button>
                 </div>
-              ))}
-            </div>
+
+                {/* Other Upcoming Games */}
+                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', marginTop: 4 }}>
+                  Upcoming Games
+                </div>
+
+                {[
+                  { title: "Schrödinger's Stealth", concept: 'Measurement & Bases', tag: 'Simplified model' as HonestyTag, phase: 'Phase 5' },
+                  { title: 'Bloch Runner', concept: 'Single-Qubit Rotations', tag: 'Accurate' as HonestyTag, phase: 'Phase 5' },
+                  { title: 'Photon Escape Room', concept: 'Interference & Phase', tag: 'Accurate' as HonestyTag, phase: 'Phase 8' },
+                  { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell', tag: 'Accurate' as HonestyTag, phase: 'Phase 6' },
+                ].map((g, i) => (
+                  <div key={i} style={{
+                    background: 'var(--bg-surface)',
+                    padding: '14px 16px',
+                    borderRadius: 14,
+                    border: '1px solid var(--border-subtle)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>{g.title}</div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{g.concept}</div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                      <HonestyTagBadge tag={g.tag} />
+                      <span style={{ fontSize: '0.62rem', color: 'var(--text-tertiary)' }}>{g.phase}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         {/* Simulations Tab */}
         {activeTab === 'sims' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Simulations</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[
-                { title: 'Single-Qubit Lab', engine: 'State-Vector' },
-                { title: 'Measurement Shots & Histogram', engine: 'State-Vector' },
-                { title: 'Circuit Lab + Bloch Rotation', engine: 'State-Vector' },
-                { title: 'Mach–Zehnder Optical Lab', engine: 'Interferometer' },
-                { title: 'Bell & CHSH Explorer', engine: 'State-Vector' }
-              ].map((s, i) => (
-                <div key={i} style={{
-                  background: 'var(--bg-surface)',
-                  padding: '14px 16px',
-                  borderRadius: 14,
-                  border: '1px solid var(--border-subtle)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>{s.title}</div>
-                  <span style={{
-                    fontSize: '0.65rem',
-                    color: 'var(--accent-pink)',
-                    background: 'rgba(255, 64, 129, 0.1)',
-                    padding: '3px 8px',
-                    borderRadius: 6
-                  }}>
-                    {s.engine}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {selectedSim === 'single_qubit_lab' ? (
+              <div>
+                <SingleQubitLab />
+              </div>
+            ) : null}
           </div>
         )}
       </main>
@@ -598,7 +672,10 @@ export default function App() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => {
+                if (tab.id === 'games') setSelectedGame(null);
+                setActiveTab(tab.id as any);
+              }}
               style={{
                 background: 'transparent',
                 display: 'flex',
