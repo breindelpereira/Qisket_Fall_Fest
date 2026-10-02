@@ -16,6 +16,7 @@ import { useProgress } from './hooks/useProgress';
 import { HonestyTagBadge } from './components/shared/HonestyTag';
 import type { HonestyTag } from './content/types';
 import { QuantumHeist } from './components/games/QuantumHeist';
+import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 
 export default function App() {
@@ -424,34 +425,64 @@ export default function App() {
                 </button>
                 <QuantumHeist />
               </div>
+            ) : selectedGame === 'coin_flip' ? (
+              <div>
+                <button
+                  onClick={() => setSelectedGame(null)}
+                  style={{
+                    background: 'transparent',
+                    color: 'var(--accent-cyan)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    marginBottom: 12,
+                    padding: 0
+                  }}
+                >
+                  <ChevronLeft size={18} />
+                  <span>All Games</span>
+                </button>
+                <QuantumCoinFlip />
+              </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Games</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div>
+                  <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 2 }}>Quantum Arcade</h2>
+                  <p style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
+                    Learn quantum principles by playing real retro & arcade games.
+                  </p>
+                </div>
                 
-                {/* Featured Game Card: Quantum Heist */}
+                {/* Game 1: Quantum Heist */}
                 <div style={{
                   background: 'linear-gradient(145deg, rgba(22, 29, 66, 0.95), rgba(13, 17, 40, 0.95))',
                   borderRadius: 18,
                   padding: '18px',
-                  border: '1px solid var(--border-accent)',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                  border: '1px solid #00d2ff',
+                  boxShadow: '0 8px 30px rgba(0, 210, 255, 0.2)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 12
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', fontWeight: 700, textTransform: 'uppercase' }}>
-                      Playable Now • Phase 2
+                    <div style={{
+                      fontFamily: "'Press Start 2P', monospace",
+                      fontSize: '0.58rem',
+                      color: 'var(--accent-cyan)'
+                    }}>
+                      🕹️ 8-BIT ARCADE • 3 STAGES
                     </div>
                     <HonestyTagBadge tag="Simplified model" />
                   </div>
 
                   <div>
                     <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: 4 }}>
-                      Quantum Heist
+                      ⚡ Quantum Heist
                     </h3>
                     <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-                      Infiltrate high-security quantum vaults across 3 levels: Superposition Doors, Phase Frequency, and 3D Bloch Aim!
+                      Infiltrate the Central Quantum Bank! Use the Hadamard gate to split into 50/50 superposition ghosts, defeat phase traps, and aim the 3D Bloch radar!
                     </p>
                   </div>
 
@@ -473,6 +504,58 @@ export default function App() {
                   >
                     <Play size={16} fill="#080b1a" />
                     <span>Play Quantum Heist</span>
+                  </button>
+                </div>
+
+                {/* Game 2: Quantum Coin Flip (David Meyer Penny Flip) */}
+                <div style={{
+                  background: 'linear-gradient(145deg, rgba(30, 20, 60, 0.95), rgba(15, 10, 35, 0.95))',
+                  borderRadius: 18,
+                  padding: '18px',
+                  border: '1px solid #8a3ffc',
+                  boxShadow: '0 8px 30px rgba(138, 63, 252, 0.2)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{
+                      fontFamily: "'Press Start 2P', monospace",
+                      fontSize: '0.58rem',
+                      color: '#c084fc'
+                    }}>
+                      🎰 CYBER CASINO • PARADOX
+                    </div>
+                    <HonestyTagBadge tag="Accurate" />
+                  </div>
+
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+                      🪙 The Quantum Penny Paradox
+                    </h3>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                      Challenge Dr. Quantum in David Meyer's famous game. Discover why classical strategy always loses, and unlock quantum gates to fight back!
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedGame('coin_flip')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                      padding: '12px',
+                      borderRadius: 12,
+                      background: 'linear-gradient(135deg, #8a3ffc 0%, #6929c4 100%)',
+                      color: '#fff',
+                      fontSize: '0.88rem',
+                      fontWeight: 800,
+                      boxShadow: '0 4px 16px rgba(138, 63, 252, 0.4)'
+                    }}
+                  >
+                    <Play size={16} fill="#fff" />
+                    <span>Play Quantum Penny</span>
                   </button>
                 </div>
 
