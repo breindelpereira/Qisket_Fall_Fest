@@ -1,26 +1,31 @@
 :root {
-  --bg-dark: #080c14;
-  --bg-card: #0f172a;
-  --bg-card-subtle: #131d36;
-  --border-card: #1e293b;
-  --border-focus: #38bdf8;
-  
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  /* Qiskit Fall Fest 2026 Event Color Palette */
+  --qff-bg: #090d24;
+  --qff-bg-gradient: radial-gradient(circle at 50% 0%, #1a2258 0%, #090d24 75%);
+  --qff-card: rgba(19, 25, 67, 0.85);
+  --qff-card-solid: #131943;
+  --qff-card-subtle: rgba(29, 38, 98, 0.55);
+  --qff-border: #252e6d;
+  --qff-border-glow: rgba(0, 210, 255, 0.35);
 
-  --accent-cyan: #38bdf8;
-  --accent-purple: #c084fc;
-  --accent-green: #34d399;
-  --accent-amber: #fbbf24;
-  --accent-rose: #f43f5e;
+  /* Signature Accents from Event Banner */
+  --qff-cyan: #00d2ff;       /* Qiskit Cyan / Teal */
+  --qff-pink: #ff4081;       /* Origami Flamingo Pink */
+  --qff-purple: #8a3ffc;     /* IBM Quantum Purple */
+  --qff-ibm-blue: #0f62fe;   /* IBM Quantum Classic Blue */
+  --qff-green: #25a244;      /* Success / Verified */
+  --qff-gold: #f1c21b;       /* Competition / Award */
 
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --text-main: #ffffff;
+  --text-muted: #b8c4e2;
+  --text-dim: #7987b2;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 
   font-family: var(--font-sans);
   color-scheme: dark;
-  background-color: var(--bg-dark);
+  background-color: var(--qff-bg);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
@@ -33,7 +38,9 @@
 }
 
 body {
-  background: var(--bg-dark);
+  background: var(--qff-bg);
+  background-image: var(--qff-bg-gradient);
+  background-attachment: fixed;
   color: var(--text-main);
   min-height: 100vh;
   min-height: 100dvh;
@@ -48,11 +55,12 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--bg-dark);
+  background: var(--qff-bg);
+  background-image: var(--qff-bg-gradient);
   position: relative;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+  border-left: 1px solid var(--qff-border);
+  border-right: 1px solid var(--qff-border);
+  box-shadow: 0 0 60px rgba(10, 15, 45, 0.85);
 }
 
 button {
@@ -60,4 +68,19 @@ button {
   border: none;
   font-family: inherit;
   font-size: inherit;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 210, 255, 0.5);
 }
