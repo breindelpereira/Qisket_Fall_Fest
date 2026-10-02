@@ -4,17 +4,17 @@ import {
   Gamepad2, 
   FlaskConical, 
   BookOpen, 
-  Trophy, 
   Sparkles, 
   Play, 
   ArrowRight,
   X,
-  Send
+  Send,
+  TrendingUp
 
 } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'games' | 'sims' | 'learn' | 'progress'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'learn' | 'games' | 'sims'>('home');
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tutorInput, setTutorInput] = useState('');
 
@@ -87,12 +87,12 @@ export default function App() {
       {/* Main Content View */}
       <main style={{ flex: 1, overflowY: 'auto', padding: '12px 20px 80px' }}>
         {activeTab === 'home' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {/* Primary Action Hero Card: Start Course */}
             <div style={{
               background: 'linear-gradient(165deg, rgba(22, 29, 66, 0.9) 0%, rgba(13, 17, 40, 0.95) 100%)',
               borderRadius: 22,
-              padding: '24px 20px',
+              padding: '22px 20px',
               border: '1px solid var(--border-accent)',
               boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
               position: 'relative',
@@ -111,18 +111,18 @@ export default function App() {
               }} />
 
               <div style={{
-                fontSize: '0.7rem',
+                fontSize: '0.68rem',
                 fontWeight: 700,
                 color: 'var(--accent-cyan)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
-                marginBottom: 8
+                marginBottom: 6
               }}>
                 Curriculum • Module 1
               </div>
 
               <h1 style={{
-                fontSize: '1.45rem',
+                fontSize: '1.35rem',
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
                 lineHeight: 1.25,
@@ -133,10 +133,10 @@ export default function App() {
               </h1>
 
               <p style={{
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 color: 'var(--text-secondary)',
-                lineHeight: 1.5,
-                marginBottom: 22
+                lineHeight: 1.45,
+                marginBottom: 20
               }}>
                 Build intuition for quantum states beyond classical bits through interactive puzzles and simulations.
               </p>
@@ -150,20 +150,99 @@ export default function App() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 10,
-                  padding: '14px 20px',
+                  padding: '13px 20px',
                   borderRadius: 14,
                   background: 'var(--accent-btn)',
                   color: '#080b1a',
-                  fontSize: '0.95rem',
+                  fontSize: '0.92rem',
                   fontWeight: 800,
                   letterSpacing: '-0.01em',
                   boxShadow: '0 6px 20px var(--accent-cyan-glow)',
                   transition: 'transform 0.15s ease'
                 }}
               >
-                <Play size={18} fill="#080b1a" />
+                <Play size={17} fill="#080b1a" />
                 <span>Start Course</span>
               </button>
+            </div>
+
+            {/* In-Home Progress Section */}
+            <div style={{
+              background: 'var(--bg-surface)',
+              borderRadius: 18,
+              padding: '16px',
+              border: '1px solid var(--border-subtle)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <TrendingUp size={15} color="var(--accent-cyan)" />
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#fff' }}>
+                    Course Progress
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>
+                  0%
+                </span>
+              </div>
+
+              {/* Sleek Progress Bar */}
+              <div style={{
+                height: 6,
+                background: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: 3,
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  width: '0%',
+                  height: '100%',
+                  background: 'var(--accent-gradient)',
+                  borderRadius: 3
+                }} />
+              </div>
+
+              {/* Three Mastery Stat Badges */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 8,
+                paddingTop: 4
+              }}>
+                <div style={{
+                  background: 'rgba(0, 210, 255, 0.06)',
+                  border: '1px solid rgba(0, 210, 255, 0.15)',
+                  borderRadius: 10,
+                  padding: '8px 6px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>0</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Familiar</div>
+                </div>
+
+                <div style={{
+                  background: 'rgba(255, 64, 129, 0.06)',
+                  border: '1px solid rgba(255, 64, 129, 0.15)',
+                  borderRadius: 10,
+                  padding: '8px 6px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-pink)' }}>0</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Explored</div>
+                </div>
+
+                <div style={{
+                  background: 'rgba(138, 63, 252, 0.06)',
+                  border: '1px solid rgba(138, 63, 252, 0.15)',
+                  borderRadius: 10,
+                  padding: '8px 6px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#c084fc' }}>0</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Mastered</div>
+                </div>
+              </div>
             </div>
 
             {/* Quick Explore Section */}
@@ -174,7 +253,7 @@ export default function App() {
                 color: 'var(--text-tertiary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
-                marginBottom: 12,
+                marginBottom: 10,
                 paddingLeft: 4
               }}>
                 Or Explore Directly
@@ -260,7 +339,7 @@ export default function App() {
             {/* Event Footer Note */}
             <div style={{
               textAlign: 'center',
-              marginTop: 10,
+              marginTop: 6,
               fontSize: '0.72rem',
               color: 'var(--text-tertiary)',
               display: 'flex',
@@ -270,7 +349,7 @@ export default function App() {
             }}>
               <span>NMIMS MPSTME × IBM Quantum</span>
               <span>•</span>
-              <span>Qiskit Fall Fest 2026</span>
+              <span>Qiskit Fall Fest '26</span>
             </div>
           </div>
         )}
@@ -388,26 +467,6 @@ export default function App() {
             </div>
           </div>
         )}
-
-        {/* Progress Tab */}
-        {activeTab === 'progress' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Mastery Progress</h2>
-            <div style={{
-              background: 'var(--bg-surface)',
-              borderRadius: 16,
-              padding: '20px',
-              border: '1px solid var(--border-subtle)',
-              textAlign: 'center'
-            }}>
-              <Trophy size={32} color="var(--accent-cyan)" style={{ margin: '0 auto 10px' }} />
-              <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>Ready to Begin</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Start Module 1 to track your Familiar, Explored, and Mastered concepts.
-              </div>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* Modern Slide-Up Tutor Drawer */}
@@ -505,28 +564,27 @@ export default function App() {
         </div>
       )}
 
-      {/* Clean Bottom Navigation Bar */}
+      {/* 4-Tab Bottom Navigation Bar (No separate Progress tab) */}
       <nav style={{
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        height: 64,
-        background: 'rgba(12, 16, 40, 0.92)',
+        height: 62,
+        background: 'rgba(12, 16, 40, 0.94)',
         backdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: '0 10px',
+        padding: '0 12px',
         zIndex: 10
       }}>
         {[
           { id: 'home', label: 'Home', icon: Home },
           { id: 'learn', label: 'Learn', icon: BookOpen },
           { id: 'games', label: 'Games', icon: Gamepad2 },
-          { id: 'sims', label: 'Labs', icon: FlaskConical },
-          { id: 'progress', label: 'Progress', icon: Trophy }
+          { id: 'sims', label: 'Labs', icon: FlaskConical }
         ].map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -541,13 +599,13 @@ export default function App() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 4,
-                width: 58,
+                width: 66,
                 height: 50,
                 color: isActive ? 'var(--accent-cyan)' : 'var(--text-tertiary)',
                 transition: 'all 0.15s ease'
               }}
             >
-              <Icon size={20} strokeWidth={isActive ? 2.6 : 1.8} color={isActive ? 'var(--accent-cyan)' : 'currentColor'} />
+              <Icon size={21} strokeWidth={isActive ? 2.6 : 1.8} color={isActive ? 'var(--accent-cyan)' : 'currentColor'} />
               <span style={{ fontSize: '0.68rem', fontWeight: isActive ? 700 : 500 }}>
                 {tab.label}
               </span>
