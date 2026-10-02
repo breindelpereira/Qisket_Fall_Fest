@@ -17,6 +17,7 @@ import { HonestyTagBadge } from './components/shared/HonestyTag';
 import type { HonestyTag } from './content/types';
 import { QuantumHeist } from './components/games/QuantumHeist';
 import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
+import { SchrodingersStealth } from './components/games/SchrodingersStealth';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 
 export default function App() {
@@ -446,6 +447,27 @@ export default function App() {
                 </button>
                 <QuantumCoinFlip />
               </div>
+            ) : selectedGame === 'schrodingers_stealth' ? (
+              <div>
+                <button
+                  onClick={() => setSelectedGame(null)}
+                  style={{
+                    background: 'transparent',
+                    color: 'var(--accent-cyan)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    marginBottom: 12,
+                    padding: 0
+                  }}
+                >
+                  <ChevronLeft size={18} />
+                  <span>All Games</span>
+                </button>
+                <SchrodingersStealth />
+              </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
@@ -559,13 +581,64 @@ export default function App() {
                   </button>
                 </div>
 
+                {/* Game 3: Schrödinger's Stealth */}
+                <div style={{
+                  background: 'linear-gradient(145deg, rgba(7, 13, 30, 0.95), rgba(3, 6, 17, 0.95))',
+                  borderRadius: 18,
+                  padding: '18px',
+                  border: '1px solid #22c55e',
+                  boxShadow: '0 8px 30px rgba(34, 197, 94, 0.2)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{
+                      fontFamily: "'Press Start 2P', monospace",
+                      fontSize: '0.58rem',
+                      color: '#22c55e'
+                    }}>
+                      🐾 TACTICAL STEALTH • 3 SECTORS
+                    </div>
+                    <HonestyTagBadge tag="Accurate" />
+                  </div>
+
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+                      🐾 Schrödinger's Stealth
+                    </h3>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                      Observe without collapsing! Guide Agent Schrödinger through Z-basis and X-basis laser checkpoints using quantum basis lenses.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedGame('schrodingers_stealth')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                      padding: '12px',
+                      borderRadius: 12,
+                      background: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
+                      color: '#fff',
+                      fontSize: '0.88rem',
+                      fontWeight: 800,
+                      boxShadow: '0 4px 16px rgba(34, 197, 94, 0.4)'
+                    }}
+                  >
+                    <Play size={16} fill="#fff" />
+                    <span>Play Schrödinger's Stealth</span>
+                  </button>
+                </div>
+
                 {/* Other Upcoming Games */}
                 <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', marginTop: 4 }}>
                   Upcoming Games
                 </div>
 
                 {[
-                  { title: "Schrödinger's Stealth", concept: 'Measurement & Bases', tag: 'Simplified model' as HonestyTag, phase: 'Phase 5' },
                   { title: 'Bloch Runner', concept: 'Single-Qubit Rotations', tag: 'Accurate' as HonestyTag, phase: 'Phase 5' },
                   { title: 'Photon Escape Room', concept: 'Interference & Phase', tag: 'Accurate' as HonestyTag, phase: 'Phase 8' },
                   { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell', tag: 'Accurate' as HonestyTag, phase: 'Phase 6' },
