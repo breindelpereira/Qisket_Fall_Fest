@@ -135,7 +135,7 @@ export default function App() {
                 letterSpacing: '0.08em',
                 marginBottom: 6
               }}>
-                Phase 2 • Module 1 Slice
+                Curriculum • Module 1
               </div>
 
               <h1 style={{
@@ -146,7 +146,7 @@ export default function App() {
                 marginBottom: 8,
                 color: '#ffffff'
               }}>
-                Quantum Heist & Bloch Lab
+                Qubits & Superposition
               </h1>
 
               <p style={{
@@ -155,64 +155,37 @@ export default function App() {
                 lineHeight: 1.45,
                 marginBottom: 20
               }}>
-                Play the <b>Quantum Heist</b> puzzle or experiment with the <b>Single-Qubit Bloch Sphere Lab</b>.
+                Master quantum superposition through interactive arcade puzzles and quantitative simulation labs.
               </p>
 
-              {/* Action Buttons: Play Game or Open Lab */}
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  onClick={() => {
-                    setSelectedGame('quantum_heist');
-                    setActiveTab('games');
-                  }}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    padding: '13px 16px',
-                    borderRadius: 14,
-                    background: 'var(--accent-btn)',
-                    color: '#080b1a',
-                    fontSize: '0.88rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.01em',
-                    boxShadow: '0 6px 20px var(--accent-cyan-glow)',
-                    transition: 'transform 0.15s ease'
-                  }}
-                >
-                  <Play size={16} fill="#080b1a" />
-                  <span>Play Heist</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSelectedSim('single_qubit_lab');
-                    setActiveTab('sims');
-                  }}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    padding: '13px 16px',
-                    borderRadius: 14,
-                    background: 'rgba(255, 64, 129, 0.15)',
-                    border: '1px solid rgba(255, 64, 129, 0.35)',
-                    color: 'var(--accent-pink)',
-                    fontSize: '0.88rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.01em',
-                    transition: 'transform 0.15s ease'
-                  }}
-                >
-                  <FlaskConical size={16} />
-                  <span>Open Lab</span>
-                </button>
-              </div>
+              {/* Big Continue / Start Course Button */}
+              <button
+                onClick={() => {
+                  setSelectedGame('quantum_heist');
+                  setActiveTab('games');
+                }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  padding: '14px 20px',
+                  borderRadius: 14,
+                  background: 'var(--accent-btn)',
+                  color: '#080b1a',
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  letterSpacing: '-0.01em',
+                  boxShadow: '0 6px 20px var(--accent-cyan-glow)',
+                  transition: 'transform 0.15s ease'
+                }}
+              >
+                <Play size={18} fill="#080b1a" />
+                <span>{familiarCount > 0 ? 'Continue Course' : 'Start Course'}</span>
+              </button>
             </div>
+
 
             {/* In-Home Progress Section with Real LocalStorage State */}
             <div style={{
