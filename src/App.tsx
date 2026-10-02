@@ -10,13 +10,26 @@ import {
   X,
   Send,
   TrendingUp
-
 } from 'lucide-react';
+import { useProgress } from './hooks/useProgress';
+import { HonestyTagBadge } from './components/shared/HonestyTag';
+import type { HonestyTag } from './content/types';
+
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'learn' | 'games' | 'sims'>('home');
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tutorInput, setTutorInput] = useState('');
+
+  const { progress } = useProgress();
+
+  const masteryValues = Object.values(progress.conceptMastery);
+  const familiarCount = masteryValues.filter(m => m === 'familiar').length;
+  const exploredCount = masteryValues.filter(m => m === 'explored').length;
+  const masteredCount = masteryValues.filter(m => m === 'mastered').length;
+
+  const totalCoreConcepts = 8;
+  const progressPercent = Math.min(100, Math.round((masteredCount / totalCoreConcepts) * 100));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
@@ -166,7 +179,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* In-Home Progress Section */}
+            {/* In-Home Progress Section with Real LocalStorage State */}
             <div style={{
               background: 'var(--bg-surface)',
               borderRadius: 18,
@@ -184,7 +197,7 @@ export default function App() {
                   </span>
                 </div>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>
-                  0%
+                  {progressPercent}%
                 </span>
               </div>
 
@@ -196,10 +209,11 @@ export default function App() {
                 overflow: 'hidden'
               }}>
                 <div style={{
-                  width: '0%',
+                  width: `${progressPercent}%`,
                   height: '100%',
                   background: 'var(--accent-gradient)',
-                  borderRadius: 3
+                  borderRadius: 3,
+                  transition: 'width 0.4s ease'
                 }} />
               </div>
 
@@ -217,7 +231,7 @@ export default function App() {
                   padding: '8px 6px',
                   textAlign: 'center'
                 }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>0</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>{familiarCount}</div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Familiar</div>
                 </div>
 
@@ -228,7 +242,7 @@ export default function App() {
                   padding: '8px 6px',
                   textAlign: 'center'
                 }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-pink)' }}>0</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-pink)' }}>{exploredCount}</div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Explored</div>
                 </div>
 
@@ -239,7 +253,7 @@ export default function App() {
                   padding: '8px 6px',
                   textAlign: 'center'
                 }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#c084fc' }}>0</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#c084fc' }}>{masteredCount}</div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Mastered</div>
                 </div>
               </div>
@@ -391,17 +405,18 @@ export default function App() {
           </div>
         )}
 
-        {/* Games Tab */}
+        {/* Games Tab with Honesty Tags */}
         {activeTab === 'games' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Games</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                { title: 'Quantum Heist', concept: 'Qubits & Superposition', tag: 'Analogy' },
-                { title: "Schrödinger's Stealth", concept: 'Measurement & Probability', tag: 'Simplified' },
-                { title: 'Bloch Runner', concept: 'Single-Qubit Gate Rotations', tag: 'Accurate' },
-                { title: 'Photon Escape Room', concept: 'Interference & Phase Shifters', tag: 'Accurate' },
-                { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell Tests', tag: 'Accurate' }
+                { title: 'Quantum Heist', concept: 'Qubits & Superposition', tag: 'Analogy' as HonestyTag },
+                { title: "Schrödinger's Stealth", concept: 'Measurement & Probability', tag: 'Simplified model' as HonestyTag },
+                { title: 'Bloch Runner', concept: 'Single-Qubit Gate Rotations', tag: 'Accurate' as HonestyTag },
+                { title: 'Photon Escape Room', concept: 'Interference & Phase Shifters', tag: 'Accurate' as HonestyTag },
+                { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell Tests', tag: 'Accurate' as HonestyTag },
+                { title: 'Braid Lock', concept: 'Non-Abelian Anyons & Protection', tag: 'Experimental/Contested' as HonestyTag }
               ].map((g, i) => (
                 <div key={i} style={{
                   background: 'var(--bg-surface)',
@@ -416,15 +431,7 @@ export default function App() {
                     <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>{g.title}</div>
                     <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>{g.concept}</div>
                   </div>
-                  <span style={{
-                    fontSize: '0.65rem',
-                    color: 'var(--accent-cyan)',
-                    background: 'rgba(0, 210, 255, 0.1)',
-                    padding: '3px 8px',
-                    borderRadius: 6
-                  }}>
-                    {g.tag}
-                  </span>
+                  <HonestyTagBadge tag={g.tag} />
                 </div>
               ))}
             </div>
@@ -564,7 +571,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 4-Tab Bottom Navigation Bar (No separate Progress tab) */}
+      {/* 4-Tab Bottom Navigation Bar */}
       <nav style={{
         position: 'absolute',
         bottom: 0,
