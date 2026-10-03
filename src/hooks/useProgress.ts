@@ -17,6 +17,10 @@ export function useProgress() {
     ProgressStore.recordQuizScore(quizId, conceptId, score);
   }, []);
 
+  const setLessonRead = useCallback((lessonId: string, read: boolean) => {
+    ProgressStore.setLessonRead(lessonId, read);
+  }, []);
+
   const getMastery = useCallback((conceptId: string): MasteryTier => {
     return progress.conceptMastery[conceptId] || 'locked';
   }, [progress]);
@@ -26,6 +30,7 @@ export function useProgress() {
     completeGame,
     runSimulation,
     saveQuiz,
+    setLessonRead,
     getMastery,
   };
 }

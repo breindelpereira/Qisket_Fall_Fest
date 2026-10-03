@@ -5,7 +5,9 @@ export interface ProgressState {
   exploredSims: string[];
   conceptGames: Record<string, string[]>;
   conceptSims: Record<string, string[]>;
-  quizScores: Record<string, number>; // quizId/conceptId -> best score [0.0 - 1.0]
+  quizScores: Record<string, number>; // quizId -> best score [0.0 - 1.0]
+  conceptQuizzes: Record<string, string[]>; // conceptId -> ids of the quizzes taken for it
+  readLessons: string[]; // lessons marked as read (for lessons that have no quiz)
   conceptMastery: Record<string, MasteryTier>;
   lastUpdated: string;
 }
@@ -65,9 +67,17 @@ const createDefaultState = (): ProgressState => ({
   conceptGames: {},
   conceptSims: {},
   quizScores: {},
+  conceptQuizzes: {},
+  readLessons: [],
   conceptMastery: {},
   lastUpdated: new Date().toISOString(),
 });
+
+/** Best score over the quizzes taken for a concept. Also honours old saves that keyed scores by concept. */
+export function bestConceptQuizScore(conceptId: string, state: ProgressState): number {
+  const ids = state.conceptQuizzes?.[conceptId] ?? [];
+  return Math.max(state.quizScores[conceptId] ?? 0, ...ids.map((id) => state.quizScores[id] ?? 0));
+}
 
 /**
  * Evaluates mastery tier for a concept based on user evidence:
@@ -82,7 +92,7 @@ export function deriveConceptMastery(
 ): MasteryTier {
   const hasGame = (state.conceptGames[conceptId]?.length ?? 0) > 0;
   const hasSim = (state.conceptSims[conceptId]?.length ?? 0) > 0;
-  const quizScore = state.quizScores[conceptId] ?? 0;
+  const quizScore = bestConceptQuizScore(conceptId, state);
   const hasPassedQuiz = quizScore >= quizThreshold;
 
   if (hasPassedQuiz && hasSim) {
@@ -110,6 +120,8 @@ export const ProgressStore = {
         conceptSims: parsed.conceptSims || {},
         conceptMastery: parsed.conceptMastery || {},
         quizScores: parsed.quizScores || {},
+        conceptQuizzes: parsed.conceptQuizzes || {},
+        readLessons: parsed.readLessons || [],
       };
     } catch {
       return createDefaultState();
@@ -168,14 +180,28 @@ export const ProgressStore = {
     return state;
   },
 
-  recordQuizScore: (_quizId: string, conceptId: string, score: number): ProgressState => {
-
+  recordQuizScore: (quizId: string, conceptId: string, score: number): ProgressState => {
     const state = ProgressStore.get();
-    const currentBest = state.quizScores[conceptId] ?? 0;
+    const currentBest = state.quizScores[quizId] ?? 0;
     if (score > currentBest) {
-      state.quizScores[conceptId] = score;
+      state.quizScores[quizId] = score;
+    }
+    if (!state.conceptQuizzes[conceptId]) {
+      state.conceptQuizzes[conceptId] = [];
+    }
+    if (!state.conceptQuizzes[conceptId].includes(quizId)) {
+      state.conceptQuizzes[conceptId].push(quizId);
     }
     state.conceptMastery[conceptId] = deriveConceptMastery(conceptId, state);
+    ProgressStore.save(state);
+    return state;
+  },
+
+  setLessonRead: (lessonId: string, read: boolean): ProgressState => {
+    const state = ProgressStore.get();
+    const has = state.readLessons.includes(lessonId);
+    if (read && !has) state.readLessons.push(lessonId);
+    if (!read && has) state.readLessons = state.readLessons.filter((id) => id !== lessonId);
     ProgressStore.save(state);
     return state;
   },

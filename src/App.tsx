@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ComponentType } from 'react';
 import {
   Home,
@@ -25,6 +25,10 @@ import { BlochRunner } from './components/games/BlochRunner';
 import { PhotonEscapeRoom } from './components/games/PhotonEscapeRoom';
 import { AliceAndBob } from './components/games/AliceAndBob';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
+import { LearnTab } from './components/learn/LearnTab';
+import type { LearnView } from './components/learn/learnView';
+import { LESSONS, QUIZZES } from './content/lessons';
+import { courseProgressPercent, moduleEyebrow, nextUpLesson } from './core/learn/curriculum';
 
 type Tab = 'home' | 'learn' | 'games' | 'sims';
 
@@ -122,11 +126,17 @@ const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'sims', label: 'Labs', icon: FlaskConical },
 ];
 
+/** Labs that can be opened today. Games come from GAMES above; everything else in a lesson shows as "coming soon". */
+const AVAILABLE_SIM_IDS = ['single_qubit_lab'];
+
 const sectionTitle = { fontSize: '0.82rem', lineHeight: 1.5 } as const;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  // Owned here (not inside the Learn tab) so a lesson is still open after a trip to a game or lab
+  const [learnView, setLearnView] = useState<LearnView>({ kind: 'home' });
+  const mainRef = useRef<HTMLElement>(null);
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tutorInput, setTutorInput] = useState('');
 
@@ -137,13 +147,24 @@ export default function App() {
   const exploredCount = masteryValues.filter(m => m === 'explored').length;
   const masteredCount = masteryValues.filter(m => m === 'mastered').length;
 
-  const totalCoreConcepts = 8;
-  const progressPercent = Math.min(100, Math.round((masteredCount / totalCoreConcepts) * 100));
+  const progressPercent = courseProgressPercent(LESSONS, QUIZZES, progress);
+  const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
+  const started = progressPercent > 0 || familiarCount > 0 || Object.keys(progress.quizScores).length > 0;
 
   const openGames = (id: string | null) => {
     setSelectedGame(id);
     setActiveTab('games');
   };
+
+  const openLearn = (view: LearnView) => {
+    setLearnView(view);
+    setActiveTab('learn');
+  };
+
+  // Every new screen starts at the top
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [activeTab, learnView, selectedGame]);
 
   const activeGame = GAMES.find(g => g.id === selectedGame);
 
@@ -178,7 +199,7 @@ export default function App() {
         </button>
       </header>
 
-      <main style={{ flex: 1, overflowY: 'auto', padding: '10px 20px 96px' }}>
+      <main ref={mainRef} style={{ flex: 1, overflowY: 'auto', padding: '10px 20px 96px' }}>
         {activeTab === 'home' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {/* Mascot + primary action */}
@@ -199,15 +220,22 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="eyebrow">Module 1</div>
-              <h1 className="pixel" style={{ ...sectionTitle, fontSize: '1.05rem', margin: '4px 0 10px' }}>Qubits & Superposition</h1>
+              <div className="eyebrow">{nextLesson ? moduleEyebrow(nextLesson) : 'All done'}</div>
+              <h1 className="pixel" style={{ ...sectionTitle, fontSize: '1.05rem', margin: '4px 0 10px' }}>
+                {nextLesson ? nextLesson.title : 'Course complete!'}
+              </h1>
               <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 18 }}>
-                Play puzzles and run experiments to master your first qubit.
+                {nextLesson
+                  ? nextLesson.ahaMoment ?? 'Read the notes, then check yourself.'
+                  : 'You finished every module. Revisit any lesson from the Learn tab.'}
               </p>
 
-              <button className="btn" onClick={() => openGames('quantum_heist')}>
+              <button
+                className="btn"
+                onClick={() => openLearn(nextLesson ? { kind: 'lesson', lessonId: nextLesson.id } : { kind: 'home' })}
+              >
                 <Play size={20} fill="currentColor" />
-                <span>{familiarCount > 0 ? 'Continue' : 'Start'}</span>
+                <span>{nextLesson ? (started ? 'Continue' : 'Start') : 'Review'}</span>
               </button>
             </section>
 
@@ -239,7 +267,7 @@ export default function App() {
               {[
                 { title: 'Play', sub: 'Arcade games that teach quantum', icon: Gamepad2, color: 'var(--yellow)', edge: 'var(--yellow-edge)', go: () => openGames(null) },
                 { title: 'Experiment', sub: 'Interactive Bloch sphere lab', icon: FlaskConical, color: 'var(--pink)', edge: 'var(--pink-edge)', go: () => setActiveTab('sims') },
-                { title: 'Study', sub: 'Lessons and quizzes', icon: BookOpen, color: 'var(--mint)', edge: 'var(--mint-edge)', go: () => setActiveTab('learn') },
+                { title: 'Study', sub: 'Lessons and quizzes', icon: BookOpen, color: 'var(--mint)', edge: 'var(--mint-edge)', go: () => openLearn({ kind: 'home' }) },
               ].map(({ title, sub, icon: Icon, color, edge, go }) => (
                 <button key={title} className="card" onClick={go} style={{
                   display: 'flex', alignItems: 'center', gap: 14, padding: 14, textAlign: 'left',
@@ -266,15 +294,14 @@ export default function App() {
         )}
 
         {activeTab === 'learn' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h2 className="pixel" style={sectionTitle}>Curriculum</h2>
-            <div className="card" style={{ padding: 16, display: 'flex', gap: 14, alignItems: 'center' }}>
-              <DrQuantum size={72} mood="wow" />
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.5, fontWeight: 600 }}>
-                Lessons are coming soon! Meanwhile, try the <b style={{ color: '#fff' }}>Quantum Heist</b> game and the <b style={{ color: '#fff' }}>Single-Qubit Lab</b>.
-              </p>
-            </div>
-          </div>
+          <LearnTab
+            view={learnView}
+            onNavigate={setLearnView}
+            availableGameIds={GAMES.map((g) => g.id)}
+            availableSimIds={AVAILABLE_SIM_IDS}
+            onOpenGame={openGames}
+            onOpenSim={() => setActiveTab('sims')}
+          />
         )}
 
         {activeTab === 'games' && (
@@ -419,6 +446,8 @@ export default function App() {
               aria-current={isActive ? 'page' : undefined}
               onClick={() => {
                 if (tab.id === 'games') setSelectedGame(null);
+                // tapping the tab you are already on goes back to its start
+                if (tab.id === 'learn' && activeTab === 'learn') setLearnView({ kind: 'home' });
                 setActiveTab(tab.id);
               }}
             >
