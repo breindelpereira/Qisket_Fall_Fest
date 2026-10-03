@@ -50,6 +50,15 @@ function removeStorageItem(key: string): void {
   delete memoryStorage[key];
 }
 
+// Cached snapshot + listeners let every useProgress() consumer re-render when any one saves.
+let snapshot: ProgressState | null = null;
+const listeners = new Set<() => void>();
+
+function notify(): void {
+  snapshot = null;
+  listeners.forEach((l) => l());
+}
+
 const createDefaultState = (): ProgressState => ({
   completedGames: [],
   exploredSims: [],
@@ -114,6 +123,17 @@ export const ProgressStore = {
     } catch (e) {
       console.warn('Could not save progress', e);
     }
+    notify();
+  },
+
+  /** Stable between changes (required by useSyncExternalStore); treat as read-only. */
+  getSnapshot: (): ProgressState => (snapshot ??= ProgressStore.get()),
+
+  subscribe: (listener: () => void): (() => void) => {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
   },
 
   recordGameCompletion: (gameId: string, conceptId: string): ProgressState => {
@@ -163,6 +183,7 @@ export const ProgressStore = {
   reset: (): ProgressState => {
     removeStorageItem(STORAGE_KEY);
     memoryStorage = {};
+    notify();
     return createDefaultState();
   },
 };

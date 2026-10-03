@@ -50,3 +50,22 @@ describe('Phase 1 Progress & Persistence Test Gate', () => {
     expect(restartedState.conceptMastery[concept]).toBe('explored');
   });
 });
+
+describe('Progress store subscriptions', () => {
+  it('notifies subscribers and refreshes the snapshot when progress changes', () => {
+    ProgressStore.reset();
+    let calls = 0;
+    const unsubscribe = ProgressStore.subscribe(() => { calls++; });
+    const before = ProgressStore.getSnapshot();
+    expect(ProgressStore.getSnapshot()).toBe(before); // stable between changes
+
+    ProgressStore.recordGameCompletion('schrodinger_stealth', 'concept_measurement');
+    expect(calls).toBe(1);
+    expect(ProgressStore.getSnapshot()).not.toBe(before);
+    expect(ProgressStore.getSnapshot().conceptMastery['concept_measurement']).toBe('familiar');
+
+    unsubscribe();
+    ProgressStore.recordGameCompletion('quantum_heist', 'concept_qubits');
+    expect(calls).toBe(1);
+  });
+});

@@ -111,3 +111,65 @@ describe('Phase 1 Circuit Core Test Gate', () => {
     expect(blochMinus.theta).toBeCloseTo(Math.PI / 2, 5);
   });
 });
+
+describe('Circuit core: sampling, measurement and rotations', () => {
+  const seeded = (values: number[]) => {
+    let i = 0;
+    return () => values[i++ % values.length];
+  };
+
+  it('sampleCounts follows the Born rule for |+> with an injected RNG', () => {
+    const state = new QuantumStateVector(1).applyH(0);
+    const counts = state.sampleCounts(4, seeded([0.1, 0.4, 0.6, 0.9]));
+    expect(counts).toEqual({ '0': 2, '1': 2 });
+  });
+
+  it('sampleCounts never returns an outcome with zero probability, even at r ~ 1', () => {
+    const state = new QuantumStateVector(2); // |00>
+    const counts = state.sampleCounts(3, seeded([0, 0.5, 0.999999999]));
+    expect(counts).toEqual({ '00': 3 });
+  });
+
+  it('sampleCounts matches 50/50 statistically for |+> with the real RNG', () => {
+    const counts = new QuantumStateVector(1).applyH(0).sampleCounts(20000);
+    expect((counts['0'] ?? 0) / 20000).toBeCloseTo(0.5, 1);
+  });
+
+  it('measureQubit collapses a Bell pair to perfectly correlated outcomes', () => {
+    for (const r of [0.1, 0.9]) {
+      const state = new QuantumStateVector(2).applyH(0).applyCNOT(0, 1);
+      const first = state.measureQubit(0, () => r);
+      expect(first).toBe(r < 0.5 ? 0 : 1);
+      expect(state.isNormalized()).toBe(true);
+      expect(state.measureQubit(1)).toBe(first);
+    }
+  });
+
+  it('CNOT works on non-adjacent qubits', () => {
+    const state = new QuantumStateVector(3).applyX(0).applyCNOT(0, 2);
+    expect(state.getProbabilityMap()).toEqual({ '101': 1 });
+  });
+
+  it('Rx(pi) acts as X and Ry(pi/2) on |0> gives |+> (up to phase)', () => {
+    const rx = new QuantumStateVector(1).applyGate(Gates.Rx(Math.PI), 0);
+    expect(rx.getProbabilities()[1]).toBeCloseTo(1, 6);
+
+    const ry = new QuantumStateVector(1).applyGate(Gates.Ry(Math.PI / 2), 0);
+    const b = ry.getBlochCoordinates();
+    expect(b.x).toBeCloseTo(1, 5);
+    expect(b.z).toBeCloseTo(0, 5);
+  });
+
+  it('every standard gate is unitary (U * U-dagger = I)', () => {
+    const dagger = (m: ReturnType<typeof Gates.H>) =>
+      [
+        [Complex.conj(m[0][0]), Complex.conj(m[1][0])],
+        [Complex.conj(m[0][1]), Complex.conj(m[1][1])],
+      ] as ReturnType<typeof Gates.H>;
+    const all = [Gates.I(), Gates.X(), Gates.Y(), Gates.Z(), Gates.H(), Gates.S(), Gates.T(),
+      Gates.Rx(0.7), Gates.Ry(1.3), Gates.Rz(2.1)];
+    for (const g of all) {
+      expect(Gates.equals2x2(Gates.multiply2x2(g, dagger(g)), Gates.I(), 1e-9)).toBe(true);
+    }
+  });
+});

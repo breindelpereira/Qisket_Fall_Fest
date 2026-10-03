@@ -1,28 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useSyncExternalStore, useCallback } from 'react';
 import { ProgressStore } from '../utils/progressStore';
-import type { ProgressState, MasteryTier } from '../utils/progressStore';
-
+import type { MasteryTier } from '../utils/progressStore';
 
 export function useProgress() {
-  const [progress, setProgress] = useState<ProgressState>(ProgressStore.get());
-
-  useEffect(() => {
-    setProgress(ProgressStore.get());
-  }, []);
+  const progress = useSyncExternalStore(ProgressStore.subscribe, ProgressStore.getSnapshot);
 
   const completeGame = useCallback((gameId: string, conceptId: string) => {
-    const updated = ProgressStore.recordGameCompletion(gameId, conceptId);
-    setProgress({ ...updated });
+    ProgressStore.recordGameCompletion(gameId, conceptId);
   }, []);
 
   const runSimulation = useCallback((simId: string, conceptId: string) => {
-    const updated = ProgressStore.recordSimulationRun(simId, conceptId);
-    setProgress({ ...updated });
+    ProgressStore.recordSimulationRun(simId, conceptId);
   }, []);
 
   const saveQuiz = useCallback((quizId: string, conceptId: string, score: number) => {
-    const updated = ProgressStore.recordQuizScore(quizId, conceptId, score);
-    setProgress({ ...updated });
+    ProgressStore.recordQuizScore(quizId, conceptId, score);
   }, []);
 
   const getMastery = useCallback((conceptId: string): MasteryTier => {

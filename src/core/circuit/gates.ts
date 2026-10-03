@@ -84,7 +84,7 @@ export const Gates = {
     return C;
   },
 
-  // Check if two 2x2 matrices are equal up to a global phase or numerical tolerance
+  // Check if two 2x2 matrices are entrywise equal within a numerical tolerance (global phase is NOT ignored)
   equals2x2: (A: Matrix2x2, B: Matrix2x2, epsilon = 1e-6): boolean => {
     for (let r = 0; r < 2; r++) {
       for (let c = 0; c < 2; c++) {

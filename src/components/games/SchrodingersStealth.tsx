@@ -206,7 +206,7 @@ export const SchrodingersStealth: React.FC = () => {
         if (sector === 3) {
           setGameState('victory');
           setFeedback('MISSION ACCOMPLISHED! Agent Schrödinger slipped past all laser bases and secured the Quantum Drive!');
-          completeGame('schrodinger_stealth', 'concept_qubits');
+          completeGame('schrodinger_stealth', 'concept_measurement');
         } else {
           setGameState('sector_cleared');
           setFeedback(`SECTOR ${sector} CLEARED! Perfect alignment—zero wave function collapse!`);

@@ -39,10 +39,12 @@ export const SingleQubitLab: React.FC = () => {
   const [shotsResult, setShotsResult] = useState<{ count0: number; count1: number; shots: number } | null>(null);
   const [isSampling, setIsSampling] = useState(false);
 
-  // Mark simulation as explored on mount
+  // Count the lab as explored only once the learner does something: solves the challenge or samples shots
   useEffect(() => {
-    runSimulation('single_qubit_lab', 'concept_qubits');
-  }, [runSimulation]);
+    if (challengeSolved || shotsResult) {
+      runSimulation('single_qubit_lab', 'concept_qubits');
+    }
+  }, [challengeSolved, shotsResult, runSimulation]);
 
   // Compute state amplitudes from theta and phi:
   // |psi> = cos(theta/2)|0> + e^(i phi) sin(theta/2)|1>

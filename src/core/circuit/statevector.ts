@@ -170,7 +170,7 @@ export class QuantumStateVector {
   /**
    * Samples outcomes using Monte-Carlo sampling based on Born rule probabilities.
    */
-  sampleCounts(shots = 1024): Record<string, number> {
+  sampleCounts(shots = 1024, rng: () => number = Math.random): Record<string, number> {
     const probs = this.getProbabilities();
     const cumulative: number[] = new Array(this.dim);
     let sum = 0;
@@ -181,8 +181,9 @@ export class QuantumStateVector {
 
     const counts: Record<string, number> = {};
     for (let s = 0; s < shots; s++) {
-      const r = Math.random();
-      let outcomeIndex = 0;
+      const r = rng();
+      // Default to the last outcome so float rounding (sum slightly < 1) can't bias towards |0...0>
+      let outcomeIndex = this.dim - 1;
       for (let i = 0; i < this.dim; i++) {
         if (r <= cumulative[i]) {
           outcomeIndex = i;
@@ -199,7 +200,7 @@ export class QuantumStateVector {
    * Performs a single projective measurement on a specified qubit, collapsing the state.
    * Returns 0 or 1.
    */
-  measureQubit(qubit: number): 0 | 1 {
+  measureQubit(qubit: number, rng: () => number = Math.random): 0 | 1 {
     if (qubit < 0 || qubit >= this.numQubits) {
       throw new Error(`Invalid qubit index ${qubit}`);
     }
@@ -212,7 +213,7 @@ export class QuantumStateVector {
       }
     }
 
-    const outcome: 0 | 1 = Math.random() < prob0 ? 0 : 1;
+    const outcome: 0 | 1 = rng() < prob0 ? 0 : 1;
     const normFactor = 1 / Math.sqrt(outcome === 0 ? prob0 : 1 - prob0);
 
     for (let i = 0; i < this.dim; i++) {
