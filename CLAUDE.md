@@ -1,0 +1,35 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project
+
+Qisket: a mobile-first quantum computing learning app (React 19 + TypeScript + Vite, wrapped for Android with Capacitor 7). Games and simulations run on custom in-repo TypeScript physics engines (no quantum library). `RULES.md` (mirrored in `.gemini/rules.md`) is the project rulebook; `Plan/Implementation_Plan.md` holds the roadmap.
+
+## Commands
+
+```bash
+npm run dev          # Vite dev server
+npm run build        # tsc -b && vite build
+npm run lint         # oxlint (config: .oxlintrc.json), not ESLint
+npm test             # vitest run (node environment, globals enabled)
+npx vitest run tests/circuit.test.ts            # single test file
+npx vitest run -t "Bell"                        # single test by name
+npm run cap:sync     # cap sync android (after build); cap:open / cap:run for Android Studio / device
+```
+
+## Architecture
+
+- `src/core/circuit/`: state-vector engine (`complex.ts`, `gates.ts`, `statevector.ts`, `bloch.ts`, re-exported via `index.ts`). Pure TS with no React or DOM, so it runs under Vitest in node. `RULES.md` also plans `core/optical/` and `core/stabilizer/`; these don't exist yet. `EngineType` in `content/types.ts` already names all three.
+- `src/content/`: typed content models (`types.ts`), the concept data (`concepts.ts`), and `validator.ts`, which validates records at runtime (e.g. honesty tags, prerequisites). Games, sims, lessons and quizzes link to concepts by id (`relatedGames`, `relatedSims`, ...).
+- `src/components/games/`, `src/components/simulations/`: each game or lab is one self-contained component with inline styles. `src/components/shared/HonestyTag.tsx` is the badge component.
+- `src/App.tsx`: single-file shell with tab state (home/learn/games/sims), game/sim selection and the AI tutor drawer, with no router. A new game or sim has to be imported and wired in here.
+- `src/hooks/useProgress.ts` + `src/utils/progressStore.ts`: progress (completed games, explored sims, quiz scores, concept mastery tiers `locked/familiar/explored/mastered`) persisted to localStorage under `qisket_progress_v1`, with an in-memory fallback so it works under node tests.
+- `src/utils/audio.ts`: sound helpers.
+
+## Project rules (from RULES.md)
+
+- **Never change test expectations to make tests pass.** Fix the code or algorithm instead. Tests encode textbook physics (HXH = Z, Bell state 50/50 with perfect correlation, state-vector normalization, etc.).
+- **Every game, simulation and model must visibly show an Honesty Tag**: `Analogy`, `Simplified model`, `Accurate`, or `Experimental/Contested`.
+- Mobile-first: touch targets of at least 44×44px, colorblind-safe (never color alone), and an untimed mode for any timed gameplay.
+- AI Tutor: answers only from approved product content, and API keys must never live in client code (serverless proxy).
