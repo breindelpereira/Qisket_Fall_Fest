@@ -68,7 +68,7 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video('Quantum Computing in 5 Levels (watch 2:18–6:15)', 'WIRED', 'OWJCfOvochA', 138, 375),
+      video('Quantum Computing in 5 Levels', 'WIRED', 'OWJCfOvochA', 138, 375),
     ],
   }),
 
@@ -104,7 +104,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     ],
     references: [
       video(
-        "But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement (0:00–15:52)",
+        "But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement",
         '3Blue1Brown',
         'RQWpF2Gb-gU',
         0,
@@ -296,7 +296,7 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video("But what is quantum computing? (Grover's Algorithm) (watch 15:52–29:30)", '3Blue1Brown', 'RQWpF2Gb-gU', 952, 1770),
+      video("But what is quantum computing? (Grover's Algorithm), the search part", '3Blue1Brown', 'RQWpF2Gb-gU', 952, 1770),
       reading(
         'Deutsch-Jozsa algorithm',
         'IBM Quantum Learning',

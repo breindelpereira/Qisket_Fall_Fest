@@ -176,7 +176,7 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px 8px', zIndex: 10 }}>
+      <header className="app-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '14px 20px 8px', zIndex: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 40, height: 40, borderRadius: 14, background: 'var(--yellow)',
@@ -187,7 +187,7 @@ export default function App() {
           </div>
           <div>
             <div className="pixel" style={{ fontSize: '0.9rem' }}>Qisket</div>
-            <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '0.5rem', color: 'var(--pink)', marginTop: 4 }}>
+            <div className="brand-sub" style={{ fontFamily: 'var(--font-pixel)', fontSize: '0.5rem', color: 'var(--pink)', marginTop: 4, whiteSpace: 'nowrap' }}>
               FALL FEST '26
             </div>
           </div>
