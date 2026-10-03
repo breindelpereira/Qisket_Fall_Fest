@@ -84,9 +84,69 @@ export const PLAYER_HANDSHAKE: object[] = [
   })),
 ];
 
+export type PlayerFunc =
+  | 'playVideo' | 'pauseVideo' | 'seekTo' | 'setPlaybackRate' | 'loadModule' | 'unloadModule' | 'setOption';
+
 /** A command for the embedded player (posted as a string, like the handshake). */
-export function playerCommand(func: 'playVideo' | 'pauseVideo' | 'seekTo', ...args: unknown[]): object {
+export function playerCommand(func: PlayerFunc, ...args: unknown[]): object {
   return { event: 'command', func, args, id: 1, channel: 'widget' };
+}
+
+/** Playback speeds offered under the video. */
+export const SPEEDS = [0.75, 1, 1.25, 1.5, 2] as const;
+export type Speed = (typeof SPEEDS)[number];
+export const formatSpeed = (speed: number): string => `${speed}×`;
+
+/**
+ * Commands that switch English captions on or off. YouTube shows them only when the video has an English track
+ * (manual or automatic), so turning them on for a video without one simply shows nothing.
+ */
+export function captionCommands(on: boolean): { func: PlayerFunc; args: unknown[] }[] {
+  return on
+    ? [
+        { func: 'loadModule', args: ['captions'] },
+        { func: 'setOption', args: ['captions', 'track', { languageCode: 'en' }] },
+      ]
+    : [{ func: 'unloadModule', args: ['captions'] }];
+}
+
+/** Where to seek to when the learner drags the bar or skips: always inside the clip, and short of the very end. */
+export function clampSeek(clip: Clip, target: number): number {
+  return Math.min(Math.max(target, clip.start), clip.end - END_MARGIN - 0.25);
+}
+
+/** Remembered choices for the video player (shared by every video). */
+export interface PlayerPrefs {
+  speed: Speed;
+  captions: boolean;
+}
+
+export const DEFAULT_PREFS: PlayerPrefs = { speed: 1, captions: false };
+export const PREFS_KEY = 'qisket_video_prefs_v1';
+
+interface KeyValueStore {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
+export function readPrefs(store: KeyValueStore | null): PlayerPrefs {
+  try {
+    const raw = store?.getItem(PREFS_KEY);
+    if (!raw) return DEFAULT_PREFS;
+    const data = JSON.parse(raw) as Partial<PlayerPrefs>;
+    const speed = SPEEDS.find((v) => v === data.speed) ?? DEFAULT_PREFS.speed;
+    return { speed, captions: data.captions === true };
+  } catch {
+    return DEFAULT_PREFS;
+  }
+}
+
+export function writePrefs(store: KeyValueStore | null, prefs: PlayerPrefs): void {
+  try {
+    store?.setItem(PREFS_KEY, JSON.stringify(prefs));
+  } catch {
+    // storage can be blocked or full; the player works without remembering
+  }
 }
 
 export type PlayerEvent =

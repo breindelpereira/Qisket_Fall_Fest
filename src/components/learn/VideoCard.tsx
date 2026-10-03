@@ -1,11 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BookOpen, CirclePlay, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, WifiOff } from 'lucide-react';
+import { BookOpen, Captions, CaptionsOff, CirclePlay, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, WifiOff } from 'lucide-react';
 import type { ReferenceLink } from '../../content/types';
-import { atClipEnd, clipOf, clipPosition, embedUrl, describePlayerError, formatClock, watchUrl } from '../../core/learn/video';
+import {
+  SPEEDS, atClipEnd, captionCommands, clampSeek, clipOf, clipPosition, embedUrl, describePlayerError, formatClock, formatSpeed,
+  readPrefs, watchUrl, writePrefs,
+} from '../../core/learn/video';
+import type { PlayerPrefs, Speed } from '../../core/learn/video';
 import { Banner } from '../shared/Arcade';
 import { useYouTubePlayer } from './useYouTubePlayer';
 
 const linkStyle: React.CSSProperties = { textDecoration: 'none', color: 'inherit' };
+/** localStorage can be missing or blocked (private windows, previews); the player then just does not remember. */
+const storage = (): Storage | null => {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage;
+  } catch {
+    return null;
+  }
+};
+
 const iconButton: React.CSSProperties = { width: 48, minHeight: 48, padding: 0, justifyContent: 'center', flexShrink: 0 };
 
 /**
@@ -13,7 +26,9 @@ const iconButton: React.CSSProperties = { width: 48, minHeight: 48, padding: 0, 
  *
  * - A reference with a segment plays only that segment: YouTube's own controls are hidden (so nobody can scrub into the
  *   rest of the video), the app draws its own play / pause / back-10-seconds / replay controls and a progress bar for
- *   the segment, and playback stops at the end instead of showing YouTube's suggestions.
+ *   the segment, and playback stops at the end instead of showing YouTube's suggestions. The learner can drag the bar
+ *   (inside the segment only), skip 10 seconds either way, change the speed and switch English captions on or off;
+ *   the last two are remembered for every video.
  * - YouTube does not always allow in-app playback (it can ask for a sign-in inside an app webview), so the page listens
  *   to the player and "Watch on YouTube" is always available as the dependable fallback.
  */
@@ -22,6 +37,7 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' || navigator.onLine !== false);
   const [fullscreen, setFullscreen] = useState(false);
   const [fullscreenRefused, setFullscreenRefused] = useState(false);
+  const [prefs, setPrefs] = useState<PlayerPrefs>(() => readPrefs(storage()));
   const frameRef = useRef<HTMLIFrameElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -47,6 +63,19 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
 
+  // Once the player is up, apply the remembered speed and captions (and again after a retry or a change)
+  const live = showPlayer && (player.status === 'ready' || player.status === 'playing');
+  useEffect(() => {
+    if (!live) return;
+    send('setPlaybackRate', prefs.speed);
+    for (const c of captionCommands(prefs.captions)) send(c.func, ...c.args);
+  }, [live, player.attempt, prefs, send]);
+
+  const choose = (next: PlayerPrefs) => {
+    setPrefs(next);
+    writePrefs(storage(), next);
+  };
+
   // Reached the end of the segment (or YouTube ended it): hold there rather than let YouTube show other videos
   const finished =
     clip !== null && player.status !== 'error' && (player.state === 0 || (player.time !== null && atClipEnd(clip, player.time)));
@@ -64,11 +93,17 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
     if (finished) replay();
     else send(player.playing ? 'pauseVideo' : 'playVideo');
   };
-  const back10 = () => {
+  const seekTo = (target: number) => {
     if (!clip) return;
-    const target = Math.max(clip.start, (player.time ?? clip.start) - 10);
-    player.setTime(target);
-    send('seekTo', target, true);
+    const safe = clampSeek(clip, target);
+    player.setTime(safe);
+    send('seekTo', safe, true);
+  };
+  const skip = (delta: number) => {
+    if (!clip) return;
+    // Skipping out of a finished clip would otherwise leave the finished screen on top
+    seekTo((finished ? clip.end : player.time ?? clip.start) + delta);
+    if (finished) send('playVideo');
   };
   const toggleFullscreen = () => {
     const el = wrapperRef.current;
@@ -160,17 +195,17 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
 
         {clip && showPlayer && position && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div
-              className="xp-track"
-              role="progressbar"
-              aria-label="Clip progress"
-              aria-valuemin={0}
-              aria-valuemax={Math.round(position.total)}
-              aria-valuenow={Math.round(position.elapsed)}
+            <input
+              type="range"
+              aria-label="Seek within the clip"
+              min={0}
+              max={Math.max(1, Math.round(position.total))}
+              step={1}
+              value={Math.round(position.elapsed)}
               aria-valuetext={`${formatClock(position.elapsed)} of ${formatClock(position.total)}`}
-            >
-              <div className="xp-fill" style={{ width: `${position.fraction * 100}%` }} />
-            </div>
+              onChange={(e) => clip && seekTo(clip.start + Number(e.target.value))}
+              style={{ width: '100%', minHeight: 44, accentColor: '#ffd23f' }}
+            />
             <div style={{ display: 'flex', justifyContent: 'space-between' }} aria-hidden="true">
               <span className="retro-num" style={{ fontSize: '1.2rem' }}>{formatClock(position.elapsed)}</span>
               <span className="retro-num" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>{formatClock(position.total)}</span>
@@ -184,9 +219,13 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
               >
                 {finished ? <RotateCcw size={22} /> : player.playing ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
               </button>
-              <button className="chip" onClick={back10} aria-label="Back 10 seconds" style={{ ...iconButton, width: 'auto', padding: '0 14px' }}>
+              <button className="chip" onClick={() => skip(-10)} aria-label="Back 10 seconds" style={{ ...iconButton, width: 'auto', padding: '0 14px' }}>
                 <RotateCcw size={16} />
                 <span>10s</span>
+              </button>
+              <button className="chip" onClick={() => skip(10)} aria-label="Forward 10 seconds" style={{ ...iconButton, width: 'auto', padding: '0 14px' }}>
+                <span>10s</span>
+                <RotateCw size={16} />
               </button>
               {canFullscreen && (
                 <button
@@ -199,6 +238,35 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
                 </button>
               )}
             </div>
+            <div role="group" aria-label="Speed and captions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+              {SPEEDS.map((v: Speed) => (
+                <button
+                  key={v}
+                  className="chip"
+                  aria-pressed={prefs.speed === v}
+                  aria-label={`Speed ${formatSpeed(v)}`}
+                  onClick={() => choose({ ...prefs, speed: v })}
+                  style={{ minWidth: 48, justifyContent: 'center', padding: '8px 6px', fontSize: '0.55rem' }}
+                >
+                  {formatSpeed(v)}
+                </button>
+              ))}
+              <button
+                className="chip"
+                aria-pressed={prefs.captions}
+                aria-label={prefs.captions ? 'Captions on. Tap to turn off' : 'Captions off. Tap to turn on'}
+                onClick={() => choose({ ...prefs, captions: !prefs.captions })}
+                style={{ marginLeft: 'auto', justifyContent: 'center', padding: '8px 12px' }}
+              >
+                {prefs.captions ? <Captions size={18} /> : <CaptionsOff size={18} />}
+                <span>CC</span>
+              </button>
+            </div>
+            {prefs.captions && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                English captions show when the video has them. Not every video does.
+              </div>
+            )}
           </div>
         )}
       </div>

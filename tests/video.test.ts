@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   END_MARGIN, EMBED_ORIGIN, LOAD_TIMEOUT_MS, PLAYER_HANDSHAKE, SLOW_START_MS,
+  SPEEDS, DEFAULT_PREFS, PREFS_KEY, captionCommands, clampSeek, formatSpeed, readPrefs, writePrefs,
   atClipEnd, clipOf, clipPosition, describePlayerError, embedUrl, formatClock, isPlayerOrigin, isPlayingState,
   nextStatus, parsePlayerMessage, playerCommand, watchUrl,
 } from '../src/core/learn/video';
@@ -246,5 +247,49 @@ describe('Playing only the segment', () => {
     // the three original segments are still clipped
     const clipped = videos.filter((v) => clipOf(v));
     for (const id of ['OWJCfOvochA', 'RQWpF2Gb-gU']) expect(clipped.map((v) => v.youtubeId)).toContain(id);
+  });
+});
+
+describe('Speed, captions and seeking', () => {
+  const clip = { start: 100, end: 200 };
+
+  it('offers a sensible set of speeds including normal', () => {
+    expect([...SPEEDS]).toEqual([0.75, 1, 1.25, 1.5, 2]);
+    expect(formatSpeed(1.25)).toBe('1.25×');
+    expect(formatSpeed(2)).toBe('2×');
+  });
+
+  it('speed and caption commands are plain JSON messages the player understands', () => {
+    expect(playerCommand('setPlaybackRate', 1.5)).toEqual({ event: 'command', func: 'setPlaybackRate', args: [1.5], id: 1, channel: 'widget' });
+    const on = captionCommands(true);
+    expect(on.map((c) => c.func)).toEqual(['loadModule', 'setOption']);
+    expect(on[1].args).toEqual(['captions', 'track', { languageCode: 'en' }]);
+    expect(captionCommands(false).map((c) => c.func)).toEqual(['unloadModule']);
+    for (const c of [...on, ...captionCommands(false)]) {
+      expect(() => JSON.stringify(playerCommand(c.func, ...c.args))).not.toThrow();
+    }
+  });
+
+  it('seeking stays inside the clip and short of the very end', () => {
+    expect(clampSeek(clip, 50)).toBe(100);
+    expect(clampSeek(clip, 150)).toBe(150);
+    expect(clampSeek(clip, 500)).toBeLessThan(200);
+    expect(atClipEnd(clip, clampSeek(clip, 500))).toBe(false);
+  });
+
+  it('remembers the choices, and ignores a broken or hostile stored value', () => {
+    const data: Record<string, string> = {};
+    const store = { getItem: (k: string) => data[k] ?? null, setItem: (k: string, v: string) => { data[k] = v; } };
+    expect(readPrefs(store)).toEqual(DEFAULT_PREFS);
+    writePrefs(store, { speed: 1.5, captions: true });
+    expect(readPrefs(store)).toEqual({ speed: 1.5, captions: true });
+    data[PREFS_KEY] = JSON.stringify({ speed: 9, captions: 'yes' });
+    expect(readPrefs(store)).toEqual(DEFAULT_PREFS);
+    data[PREFS_KEY] = '{not json';
+    expect(readPrefs(store)).toEqual(DEFAULT_PREFS);
+    expect(readPrefs(null)).toEqual(DEFAULT_PREFS);
+    const blocked = { getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('blocked'); } };
+    expect(readPrefs(blocked)).toEqual(DEFAULT_PREFS);
+    expect(() => writePrefs(blocked, DEFAULT_PREFS)).not.toThrow();
   });
 });

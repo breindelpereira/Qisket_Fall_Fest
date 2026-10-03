@@ -4,6 +4,7 @@ import {
   EMBED_ORIGIN, LOAD_TIMEOUT_MS, PLAYER_HANDSHAKE, SLOW_START_MS,
   isPlayerOrigin, isPlayingState, nextStatus, parsePlayerMessage, playerCommand,
 } from '../../core/learn/video';
+import type { PlayerFunc } from '../../core/learn/video';
 import type { PlayerStatus } from '../../core/learn/video';
 
 export interface YouTubePlayer {
@@ -19,7 +20,7 @@ export interface YouTubePlayer {
   playing: boolean;
   /** Bumps on every retry; use it as the iframe key so the player loads from scratch. */
   attempt: number;
-  send: (func: 'playVideo' | 'pauseVideo' | 'seekTo', ...args: unknown[]) => void;
+  send: (func: PlayerFunc, ...args: unknown[]) => void;
   /** Pretend the position is `seconds` right away, until the player reports the real one. */
   setTime: (seconds: number) => void;
   retry: () => void;
@@ -83,7 +84,7 @@ export function useYouTubePlayer(frameRef: RefObject<HTMLIFrameElement | null>, 
   }, [active, status, attempt]);
 
   const send = useCallback(
-    (func: 'playVideo' | 'pauseVideo' | 'seekTo', ...args: unknown[]) => {
+    (func: PlayerFunc, ...args: unknown[]) => {
       frameRef.current?.contentWindow?.postMessage(JSON.stringify(playerCommand(func, ...args)), EMBED_ORIGIN);
     },
     [frameRef],
