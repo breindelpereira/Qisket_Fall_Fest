@@ -13,6 +13,9 @@ const ACCENT = '#2ee6a6';
 const EDGE = '#12a574';
 const PIXEL = "'Press Start 2P', monospace";
 
+// Three chips share one row, so they use tighter padding and must be allowed to shrink
+const rowChip: React.CSSProperties = { flex: '1 1 0', minWidth: 0, justifyContent: 'center', padding: '8px 4px', gap: 4, fontSize: '0.5rem' };
+
 const fmt = (n: number) => (Math.abs(n) < 0.0005 ? '0' : n.toFixed(2));
 const amp = (c: { re: number; im: number }) => {
   if (Math.abs(c.im) < 0.0005) return fmt(c.re);
@@ -286,14 +289,14 @@ export const BlochRunner: React.FC = () => {
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button className="chip" onClick={undo} disabled={moves.length === 0} style={{ flex: 1, justifyContent: 'center', opacity: moves.length ? 1 : 0.5 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button className="chip" onClick={undo} disabled={moves.length === 0} style={{ ...rowChip, opacity: moves.length ? 1 : 0.5 }}>
               <Undo2 size={16} /> Undo
             </button>
-            <button className="chip" onClick={reset} style={{ flex: 1, justifyContent: 'center' }}>
+            <button className="chip" onClick={reset} style={rowChip}>
               <RotateCcw size={16} /> Restart
             </button>
-            <button className="chip" onClick={() => setShowHint((v) => !v)} aria-expanded={showHint} style={{ flex: 1, justifyContent: 'center' }}>
+            <button className="chip" onClick={() => setShowHint((v) => !v)} aria-expanded={showHint} style={rowChip}>
               <Lightbulb size={16} /> Hint
             </button>
           </div>

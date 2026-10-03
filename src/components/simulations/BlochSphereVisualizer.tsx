@@ -23,7 +23,8 @@ export const BlochSphereVisualizer: React.FC<Props> = ({
   const rotX = 20 * (Math.PI / 180);
   const rotY = 45 * (Math.PI / 180);
 
-  const radius = size * 0.38;
+  // Leave room inside the svg for the axis labels, which sit 1.25 radii from the centre
+  const radius = size * 0.3;
   const cx = size / 2;
   const cy = size / 2;
 
