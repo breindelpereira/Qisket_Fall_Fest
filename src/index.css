@@ -146,6 +146,8 @@ input:focus-visible {
 .btn-violet { --btn-bg: var(--violet); --btn-edge: var(--violet-edge); --btn-ink: #fff; }
 .btn-mint   { --btn-bg: var(--mint);   --btn-edge: var(--mint-edge);   --btn-ink: var(--ink); }
 .btn-pink   { --btn-bg: var(--pink);   --btn-edge: var(--pink-edge);   --btn-ink: #fff; }
+.btn-orange { --btn-bg: #ff9f1c; --btn-edge: #c76d00; --btn-ink: var(--ink); }
+.btn-slate  { --btn-bg: #6a4ec2; --btn-edge: #432a8c; --btn-ink: #fff; }
 .btn-sky    { --btn-bg: var(--sky);    --btn-edge: var(--sky-edge);    --btn-ink: var(--ink); }
 
 .chip {

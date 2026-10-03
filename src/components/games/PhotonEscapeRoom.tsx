@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { RotateCcw, Lightbulb, ChevronRight, Zap, Check, X as XIcon } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
 import { HonestyTagBadge } from '../shared/HonestyTag';
+import { Banner } from '../shared/Arcade';
+import { frameStyle, THEMES, PIXEL, rowChip } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
 import { simulate, fireOnePhoton } from '../../core/optical/interferometer';
 import {
@@ -9,9 +11,7 @@ import {
 } from '../../core/games/photonEscape';
 import type { Choice } from '../../core/games/photonEscape';
 
-const ACCENT = '#38c8ff';
-const EDGE = '#0d8fc4';
-const PIXEL = "'Press Start 2P', monospace";
+const ACCENT = THEMES.sky.accent;
 
 const W = 340;
 const H = 190;
@@ -93,16 +93,7 @@ export const PhotonEscapeRoom: React.FC = () => {
     setFinished(false);
   };
 
-  const frame: React.CSSProperties = {
-    background: '#1d0848',
-    border: `3px solid ${ACCENT}`,
-    borderRadius: 20,
-    padding: 16,
-    boxShadow: `0 6px 0 ${EDGE}, 0 0 30px rgba(56, 200, 255, 0.25)`,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 14,
-  };
+  const frame = frameStyle(THEMES.sky);
 
   if (finished) {
     return (
@@ -271,31 +262,30 @@ export const PhotonEscapeRoom: React.FC = () => {
       )}
 
       {solved && (
-        <div role="status" style={{ background: 'rgba(46,230,166,0.15)', border: '2px solid #2ee6a6', borderRadius: 16, padding: 14, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ fontFamily: PIXEL, fontSize: '0.7rem', color: '#2ee6a6' }}>DOOR UNLOCKED!</div>
+        <Banner tone="good" title="DOOR UNLOCKED!" center>
           <button className="btn btn-mint" onClick={next}>
             <span>{levelIdx + 1 >= LEVELS.length ? 'Escape' : 'Next room'}</span>
             <ChevronRight size={18} />
           </button>
-        </div>
+        </Banner>
       )}
 
       {!solved && (
         <div style={{ display: 'flex', gap: 6 }}>
           <button className="chip" onClick={() => resetLevel(levelIdx)}
-            style={{ flex: '1 1 0', minWidth: 0, justifyContent: 'center', padding: '8px 4px', fontSize: '0.5rem' }}>
+            style={rowChip}>
             <RotateCcw size={16} /> Reset
           </button>
           <button className="chip" aria-expanded={showHint} onClick={() => setShowHint((v) => !v)}
-            style={{ flex: '1 1 0', minWidth: 0, justifyContent: 'center', padding: '8px 4px', fontSize: '0.5rem' }}>
+            style={rowChip}>
             <Lightbulb size={16} /> Hint
           </button>
         </div>
       )}
       {showHint && !solved && (
-        <div style={{ background: 'rgba(255,210,63,0.12)', border: '2px solid #ffd23f', borderRadius: 14, padding: 12, fontSize: '0.88rem', lineHeight: 1.45 }}>
+        <Banner tone="warn">
           💡 {level.hint}
-        </div>
+        </Banner>
       )}
     </div>
   );

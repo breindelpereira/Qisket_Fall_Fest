@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
-import { HonestyTagBadge } from '../shared/HonestyTag';
+import { ArcadeHeader, ArcadeModal, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
+import { THEMES, RETRO, frameStyle, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
 import { Complex } from '../../core/circuit';
 import { 
   Sparkles, 
   ShieldAlert, 
-  Zap, 
   ChevronRight, 
   Lightbulb,
-  Radio,
   ChevronUp,
   ChevronDown,
   Volume2,
@@ -270,6 +269,12 @@ export const SchrodingersStealth: React.FC = () => {
 
   const currentStance = getAgentStance();
 
+  const theme = THEMES.mint;
+  const pulseH = !isAligned && ((activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (activeCheckpoint.basis === 'Z' && currentStance.shape === '/'));
+  const pulseX = !isAligned && activeCheckpoint.requiredState === '1' && currentStance.shape === '|';
+  const pulseZ = !isAligned && activeCheckpoint.requiredState === '-' && currentStance.shape === '/';
+  const alarmColor = alarmLevel > 60 ? '#ff5c8a' : alarmLevel > 30 ? '#ffd23f' : '#2ee6a6';
+
   return (
     <div style={{
       display: 'flex',
@@ -277,124 +282,65 @@ export const SchrodingersStealth: React.FC = () => {
       gap: 12,
       fontFamily: "'Space Grotesk', -apple-system, sans-serif"
     }}>
-      {/* Tactical Espionage HUD Shell */}
-      <div style={{
-        background: 'linear-gradient(165deg, #070d1e 0%, #030611 100%)',
-        border: '3px solid #00d2ff',
-        borderRadius: 20,
-        padding: '16px',
-        boxShadow: '0 0 35px rgba(0, 210, 255, 0.3), inset 0 0 45px rgba(0, 0, 0, 0.95)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* Top Espionage Header */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '2px solid rgba(0, 210, 255, 0.25)',
-          paddingBottom: 10,
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Radio size={16} color="#00d2ff" />
-            <span style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '0.58rem',
-              color: '#00d2ff'
-            }}>
-              SECTOR {sector}/3
-            </span>
-            <span style={{ color: '#b9a6e8' }}>•</span>
-            <span style={{ color: '#fbbf24', fontSize: '0.62rem', fontWeight: 800 }}>
-              {score} PTS
-            </span>
-          </div>
+      <div style={frameStyle(theme)}>
+        <ArcadeHeader
+          theme={theme}
+          label={`SECTOR ${sector}/3`}
+          tag="Accurate"
+          middle={<span style={{ fontFamily: RETRO, fontSize: '1.4rem', color: '#ffd23f' }}>★ {score}</span>}
+        />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              style={{
-                background: 'transparent',
-                color: soundEnabled ? '#00d2ff' : '#b9a6e8',
-                padding: 2,
-                display: 'flex'
-              }}
-              title="Toggle sound"
-            >
-              {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            </button>
-            <button
-              onClick={() => setShowHandbook(!showHandbook)}
-              style={{
-                background: 'rgba(0, 210, 255, 0.15)',
-                border: '1px solid #00d2ff',
-                color: '#00d2ff',
-                borderRadius: 6,
-                padding: '4px 8px',
-                fontSize: '0.52rem',
-                fontFamily: "'Press Start 2P', monospace"
-              }}
-            >
-              RULES
-            </button>
-            <HonestyTagBadge tag="Accurate" />
-          </div>
+        {/* Sound and rules */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <button
+            className="chip"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            aria-pressed={soundEnabled}
+            aria-label={soundEnabled ? 'Mute sound' : 'Turn sound on'}
+            style={{ padding: 0, width: 44, justifyContent: 'center' }}
+          >
+            {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          </button>
+          <button className="chip" onClick={() => setShowHandbook(!showHandbook)}>
+            <Lightbulb size={16} />
+            <span>Rules</span>
+          </button>
         </div>
 
-        {/* Title */}
-        <div style={{ textAlign: 'center', marginBottom: 10, position: 'relative', zIndex: 6 }}>
-          <h2 style={{
-            fontSize: '1.15rem',
-            fontWeight: 800,
-            color: '#fff',
-            letterSpacing: '-0.01em',
-            marginBottom: 2
-          }}>
-            🐾 Schrödinger's Stealth
-          </h2>
-          <p style={{ fontSize: '0.72rem', color: '#ddd0fa' }}>
-            Quantum Measurement & Basis Infiltration • Slip through without collapsing
-          </p>
-        </div>
+        <GameTitle
+          title="🐾 Schrödinger's Stealth"
+          story="Slip through the lasers without collapsing your quantum state."
+        />
 
-        {/* ============================================================== */}
-        {/* 1. THE SIMPLE KEYHOLE ANALOGY: HOW THIS GAME WORKS             */}
-        {/* ============================================================== */}
-        <div style={{
-          background: 'rgba(0, 210, 255, 0.08)',
-          border: '1px solid rgba(0, 210, 255, 0.3)',
-          borderRadius: 14,
-          padding: '10px 12px',
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
+        {/* The simple keyhole analogy */}
+        <div style={panelStyle}>
           <button
             onClick={() => setShowAnalogy(!showAnalogy)}
+            aria-expanded={showAnalogy}
             style={{
               width: '100%',
+              minHeight: 44,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               background: 'transparent',
-              color: '#00d2ff',
-              fontSize: '0.74rem',
+              color: theme.accent,
+              fontSize: '0.88rem',
               fontWeight: 800,
-              padding: 0
+              padding: 0,
+              textAlign: 'left',
+              gap: 8
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Lightbulb size={14} color="#00d2ff" />
-              <span>THE SIMPLE RULE: MATCH THE KEYHOLE!</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Lightbulb size={18} />
+              <span>The simple rule: match the keyhole!</span>
             </div>
-            {showAnalogy ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+            {showAnalogy ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
 
           {showAnalogy && (
-            <div style={{ marginTop: 8, fontSize: '0.74rem', color: '#f1eaff', lineHeight: 1.45 }}>
+            <div style={{ marginTop: 8, fontSize: '0.88rem', color: '#f1eaff', lineHeight: 1.45 }}>
               <p>
                 Think of each security scanner like a <b>shaped slit or keyhole</b>:
               </p>
@@ -427,18 +373,12 @@ export const SchrodingersStealth: React.FC = () => {
           )}
         </div>
 
-        {/* ============================================================== */}
-        {/* 2. THE INTERACTIVE TACTICAL CORRIDOR ARENA                     */}
-        {/* ============================================================== */}
+        {/* The tactical corridor arena */}
         <div style={{
-          background: 'radial-gradient(circle at 50% 30%, #0d163d 0%, #050818 85%)',
-          border: '2px solid rgba(0, 210, 255, 0.4)',
-          borderRadius: 16,
+          ...stageStyle,
           padding: '16px 12px 14px',
-          marginBottom: 12,
           position: 'relative',
-          overflow: 'hidden',
-          zIndex: 6
+          overflow: 'hidden'
         }}>
           {/* Corridor Steps Map */}
           <div style={{
@@ -607,346 +547,132 @@ export const SchrodingersStealth: React.FC = () => {
           </div>
         </div>
 
-        {/* Alarm Detection Meter */}
-        <div style={{
-          background: 'rgba(42, 15, 92, 0.8)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 12,
-          padding: '8px 12px',
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <ShieldAlert size={14} color={alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'} />
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.5rem',
-                color: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e'
-              }}>
-                ALARM DETECTION METER:
-              </span>
+        {/* Alarm detection meter */}
+        <div style={panelStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <ShieldAlert size={18} color={alarmColor} />
+              <Eyebrow color={alarmColor}>ALARM METER</Eyebrow>
             </div>
-            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: alarmLevel > 60 ? '#f43f5e' : '#fff' }}>
+            <span style={{ fontFamily: RETRO, fontSize: '1.5rem', color: alarmLevel > 60 ? '#ff5c8a' : '#fff', lineHeight: 1 }}>
               {alarmLevel}%
             </span>
           </div>
 
-          <div style={{
-            height: 6,
-            background: 'rgba(255, 255, 255, 0.08)',
-            borderRadius: 3,
-            overflow: 'hidden'
-          }}>
+          <div className="xp-track" role="progressbar" aria-label="Alarm level" aria-valuenow={alarmLevel} aria-valuemin={0} aria-valuemax={100}>
             <div style={{
               width: `${alarmLevel}%`,
               height: '100%',
-              background: alarmLevel > 60 ? '#f43f5e' : alarmLevel > 30 ? '#fbbf24' : '#22c55e',
+              borderRadius: 999,
+              background: alarmColor,
               transition: 'width 0.3s ease'
             }} />
           </div>
         </div>
 
-        {/* Narrative Feedback Banner */}
+        {/* Narrative feedback */}
         {feedback && (
-          <div style={{
-            background: gameState === 'game_over' || gameState === 'alarm_alert' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(0, 210, 255, 0.12)',
-            border: `1.5px solid ${gameState === 'game_over' || gameState === 'alarm_alert' ? '#f43f5e' : '#00d2ff'}`,
-            borderRadius: 10,
-            padding: '8px 12px',
-            fontSize: '0.73rem',
-            color: gameState === 'game_over' || gameState === 'alarm_alert' ? '#fca5a5' : '#f6f1ff',
-            lineHeight: 1.4,
-            marginBottom: 12,
-            position: 'relative',
-            zIndex: 6
-          }}>
+          <Banner tone={gameState === 'game_over' || gameState === 'alarm_alert' ? 'bad' : 'info'}>
             {feedback}
-          </div>
+          </Banner>
         )}
 
-        {/* ============================================================== */}
-        {/* 3. QUANTUM UTILITY BELT (GADGETS TO CHANGE YOUR STANCE)        */}
-        {/* ============================================================== */}
+        {/* Quantum utility belt */}
         {gameState !== 'game_over' && gameState !== 'victory' && (
-          <div style={{ marginBottom: 12, position: 'relative', zIndex: 6 }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 8
-            }}>
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.52rem',
-                color: '#ddd0fa'
-              }}>
-                YOUR UTILITY GADGETS:
-              </span>
-              <span style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)' }}>
-                Tap to rotate your stance
-              </span>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <Eyebrow>YOUR GADGETS</Eyebrow>
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Tap to rotate your stance</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {/* Hadamard Tilt Lens */}
-              <button
-                onClick={applyHadamard}
-                style={{
-                  background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                  color: '#1d0848',
-                  padding: '10px 4px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: (!isAligned && activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (!isAligned && activeCheckpoint.basis === 'Z' && currentStance.shape === '/')
-                    ? '0 0 16px #00d2ff'
-                    : '0 4px 12px rgba(0, 210, 255, 0.3)',
-                  animation: (!isAligned && ((activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (activeCheckpoint.basis === 'Z' && currentStance.shape === '/')))
-                    ? 'pulseGlow 2s infinite'
-                    : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 2
-                }}
-              >
-                <Zap size={15} fill="#1d0848" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
-                  [H] TILT
-                </span>
-                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
-                  Vertical ↔ 45°
-                </span>
-              </button>
-
-              {/* Bit Inverter (Pauli-X) */}
-              <button
-                onClick={applyPauliX}
-                style={{
-                  background: 'linear-gradient(180deg, #ec4899 0%, #be185d 100%)',
-                  color: '#fff',
-                  padding: '10px 4px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: (!isAligned && activeCheckpoint.requiredState === '1' && currentStance.shape === '|')
-                    ? '0 0 16px #ec4899'
-                    : '0 4px 12px rgba(236, 72, 153, 0.3)',
-                  animation: (!isAligned && activeCheckpoint.requiredState === '1' && currentStance.shape === '|')
-                    ? 'pulseGlow 2s infinite'
-                    : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 2
-                }}
-              >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
-                  [X] FLIP
-                </span>
-                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
-                  Vert ↔ Horiz
-                </span>
-              </button>
-
-              {/* Phase Inverter (Pauli-Z) */}
-              <button
-                onClick={applyPauliZ}
-                style={{
-                  background: 'linear-gradient(180deg, #8a3ffc 0%, #6929c4 100%)',
-                  color: '#fff',
-                  padding: '10px 4px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: (!isAligned && activeCheckpoint.requiredState === '-' && currentStance.shape === '/')
-                    ? '0 0 16px #8a3ffc'
-                    : '0 4px 12px rgba(138, 63, 252, 0.3)',
-                  animation: (!isAligned && activeCheckpoint.requiredState === '-' && currentStance.shape === '/')
-                    ? 'pulseGlow 2s infinite'
-                    : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 2
-                }}
-              >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
-                  [Z] PHASE
-                </span>
-                <span style={{ fontSize: '0.58rem', fontWeight: 800 }}>
-                  Flip / ↔ \
-                </span>
-              </button>
+              {[
+                { name: '[H] TILT', sub: 'Vertical ↔ 45°', cls: 'btn-sky', on: applyHadamard, pulse: pulseH },
+                { name: '[X] FLIP', sub: 'Vert ↔ Horiz', cls: 'btn-pink', on: applyPauliX, pulse: pulseX },
+                { name: '[Z] PHASE', sub: 'Flip / ↔ \\', cls: 'btn-violet', on: applyPauliZ, pulse: pulseZ },
+              ].map((g) => (
+                <button
+                  key={g.name}
+                  className={`btn ${g.cls}`}
+                  onClick={g.on}
+                  aria-label={`${g.name}: ${g.sub}`}
+                  style={{
+                    flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px',
+                    animation: g.pulse ? 'pulseGlow 2s infinite' : 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '0.55rem' }}>{g.name}</span>
+                  <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>{g.sub}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Primary Action Button */}
-        <div style={{ position: 'relative', zIndex: 6 }}>
+        {/* Primary action */}
+        <div>
           {(gameState === 'playing' || gameState === 'checkpoint_passed' || gameState === 'alarm_alert') && (
-            <button
-              onClick={advanceThroughCheckpoint}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: isAligned
-                  ? 'linear-gradient(180deg, #22c55e 0%, #15803d 100%)'
-                  : 'linear-gradient(180deg, #eab308 0%, #a16207 100%)',
-                color: '#fff',
-                border: '2px solid #fff',
-                boxShadow: isAligned ? '0 0 20px rgba(34, 197, 94, 0.6)' : '0 0 15px rgba(234, 179, 8, 0.4)',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.7rem',
-                letterSpacing: '0.04em',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8
-              }}
-            >
-              <Footprints size={16} />
-              <span>{isAligned ? 'SLIP THROUGH SENSOR (100% STEALTH)' : 'RISK PASSAGE (COLLAPSE DANGER!)'}</span>
+            <button className={`btn ${isAligned ? 'btn-mint' : ''}`} onClick={advanceThroughCheckpoint}>
+              <Footprints size={18} />
+              <span>{isAligned ? 'Slip through (100% stealth)' : 'Risk passage (collapse danger!)'}</span>
             </button>
           )}
 
           {gameState === 'sector_cleared' && (
-            <button
-              onClick={nextSector}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                color: '#1d0848',
-                border: '2px solid #fff',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.68rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 6
-              }}
-            >
-              <span>ADVANCE TO SECTOR {sector + 1}</span>
-              <ChevronRight size={16} />
+            <button className="btn btn-sky" onClick={nextSector}>
+              <span>Advance to sector {sector + 1}</span>
+              <ChevronRight size={18} />
             </button>
           )}
 
           {gameState === 'game_over' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <button
-                onClick={restartSector}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: 10,
-                  background: '#f43f5e',
-                  color: '#fff',
-                  border: '2px solid #fff',
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '0.65rem'
-                }}
-              >
-                RETRY CURRENT SECTOR
-              </button>
-              <button
-                onClick={fullRestart}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: 10,
-                  background: '#4a2ea8',
-                  color: '#ddd0fa',
-                  border: '1px solid #8f7bc9',
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '0.58rem'
-                }}
-              >
-                RESTART FROM SECTOR 1
-              </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button className="btn btn-pink" onClick={restartSector}>Retry current sector</button>
+              <button className="btn btn-slate" onClick={fullRestart}>Restart from sector 1</button>
             </div>
           )}
 
           {gameState === 'victory' && (
-            <div style={{
-              background: 'rgba(34, 197, 94, 0.15)',
-              border: '2px solid #22c55e',
-              borderRadius: 12,
-              padding: '16px',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 8
-            }}>
-              <div style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.82rem',
-                color: '#fbbf24'
-              }}>
-                🏆 VAULT CONQUERED!
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#f6f1ff' }}>
-                TOTAL SCORE: <b>{score} PTS</b>
-              </div>
-              <div style={{ fontSize: '0.72rem', color: '#38bdf8' }}>
-                BADGE UNLOCKED: <b>Master of Measurement Bases</b>
-              </div>
-              <button
-                onClick={fullRestart}
-                style={{
-                  background: '#4a2ea8',
-                  color: '#fff',
-                  border: '1px solid #8f7bc9',
-                  borderRadius: 6,
-                  padding: '8px 14px',
-                  fontSize: '0.65rem',
-                  fontFamily: "'Press Start 2P', monospace",
-                  marginTop: 6
-                }}
-              >
-                PLAY AGAIN
-              </button>
-            </div>
+            <Banner tone="good" title="VAULT CONQUERED!" center>
+              <div>Total score: <b>{score} pts</b></div>
+              <div style={{ color: '#38c8ff', marginBottom: 10 }}>Badge unlocked: <b>Master of Measurement Bases</b></div>
+              <button className="btn" onClick={fullRestart}>Play again</button>
+            </Banner>
           )}
         </div>
       </div>
 
-      {/* ============================================================== */}
-      {/* 4. "THE QUANTUM PHYSICS BEHIND IT" ACCORDION                   */}
-      {/* ============================================================== */}
-      <div style={{
-        background: 'var(--bg-surface)',
-        borderRadius: 14,
-        border: '1px solid var(--border-subtle)',
-        overflow: 'hidden'
-      }}>
+      {/* The quantum physics behind it */}
+      <div style={{ ...panelStyle, padding: 0, overflow: 'hidden' }}>
         <button
           onClick={() => setShowPhysics(!showPhysics)}
+          aria-expanded={showPhysics}
           style={{
             width: '100%',
+            minHeight: 48,
             padding: '12px 14px',
             background: 'transparent',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             color: 'var(--text-primary)',
-            fontSize: '0.78rem',
-            fontWeight: 700
+            fontSize: '0.95rem',
+            fontWeight: 700,
+            textAlign: 'left',
+            gap: 8
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Sparkles size={15} color="var(--accent-cyan)" />
-            <span>The Real Physics: Why Observing Causes Wave Collapse</span>
+            <Sparkles size={18} color={theme.accent} />
+            <span>The real physics: why observing collapses the wave</span>
           </div>
-          {showPhysics ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+          {showPhysics ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
 
         {showPhysics && (
           <div style={{
             padding: '0 14px 14px',
-            fontSize: '0.74rem',
+            fontSize: '0.88rem',
             color: 'var(--text-secondary)',
             lineHeight: 1.5,
             display: 'flex',
@@ -971,91 +697,29 @@ export const SchrodingersStealth: React.FC = () => {
         )}
       </div>
 
-      {/* ============================================================== */}
-      {/* 5. BRIEFING MODAL                                              */}
-      {/* ============================================================== */}
       {showHandbook && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 16,
-          zIndex: 100
-        }}>
-          <div style={{
-            background: '#2a0f5c',
-            border: '2px solid #00d2ff',
-            borderRadius: 18,
-            padding: '20px',
-            maxWidth: 380,
-            width: '100%',
-            boxShadow: '0 10px 40px rgba(0, 210, 255, 0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-            maxHeight: '85vh',
-            overflowY: 'auto'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Lightbulb size={18} color="#00d2ff" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.7rem', color: '#00d2ff' }}>
-                  HQ MISSION RULES
-                </span>
-              </div>
-              <button
-                onClick={() => setShowHandbook(false)}
-                style={{ background: 'transparent', color: '#ddd0fa', padding: 4 }}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.76rem', color: '#f1eaff', lineHeight: 1.5 }}>
-              <div>
-                <b style={{ color: '#00d2ff' }}>1. The Rule:</b>
-                <p>
-                  Each laser scanner has a specific angle (slot). If your quantum stance matches the slot, you have <b>100% Stealth</b> and slip right through.
-                </p>
-              </div>
-
-              <div>
-                <b style={{ color: '#ff4081' }}>2. The Tools:</b>
-                <ul style={{ paddingLeft: 16, marginTop: 4 }}>
-                  <li><b>[H] TILT:</b> Rotates between Vertical (|) and 45° Diagonal (/).</li>
-                  <li><b>[X] FLIP:</b> Swaps between Vertical (|) and Horizontal (—).</li>
-                  <li><b>[Z] PHASE:</b> Flips between positive diagonal (/) and negative diagonal (\).</li>
-                </ul>
-              </div>
-
-              <div>
-                <b style={{ color: '#fbbf24' }}>3. How to Win:</b>
-                <p>
-                  Look at the <b>Scanner Keyhole</b> box in the center. Tap the pulsating button on your utility belt until <b>YOUR STANCE</b> matches the keyhole. When it says <b>100% STEALTH</b>, hit the button to advance!
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowHandbook(false)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: 10,
-                background: 'var(--accent-btn)',
-                color: '#1d0848',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.62rem'
-              }}
-            >
-              GOT IT!
-            </button>
+        <ArcadeModal theme={theme} title="HQ Mission Rules" onClose={() => setShowHandbook(false)}>
+          <div>
+            <b style={{ color: '#38c8ff' }}>1. The rule</b>
+            <p>
+              Each laser scanner has a specific angle (slot). If your quantum stance matches the slot, you have <b>100% stealth</b> and slip right through.
+            </p>
           </div>
-        </div>
+          <div>
+            <b style={{ color: '#ff5c8a' }}>2. The tools</b>
+            <ul style={{ paddingLeft: 16, marginTop: 4 }}>
+              <li><b>[H] TILT:</b> Rotates between Vertical (|) and 45° Diagonal (/).</li>
+              <li><b>[X] FLIP:</b> Swaps between Vertical (|) and Horizontal (—).</li>
+              <li><b>[Z] PHASE:</b> Flips between positive diagonal (/) and negative diagonal (\).</li>
+            </ul>
+          </div>
+          <div>
+            <b style={{ color: '#ffd23f' }}>3. How to win</b>
+            <p>
+              Look at the <b>Scanner Keyhole</b> box in the arena. Tap the pulsing gadget until <b>Your Stance</b> matches the keyhole. When it says <b>100% stealth</b>, hit the button to advance!
+            </p>
+          </div>
+        </ArcadeModal>
       )}
     </div>
   );

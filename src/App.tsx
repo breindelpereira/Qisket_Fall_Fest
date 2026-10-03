@@ -81,8 +81,8 @@ const GAMES: GameEntry[] = [
     kicker: 'Gate puzzles · 8 levels',
     blurb: 'Race around the Bloch sphere! Pick the right gate each move to steer your qubit onto the target, using as few moves as you can. No timer.',
     tag: 'Accurate',
-    btn: 'btn-sky',
-    accent: 'var(--sky)',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
     Component: BlochRunner,
   },
   {

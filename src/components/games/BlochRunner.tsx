@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Undo2, RotateCcw, Lightbulb, Star, ChevronRight, Flag } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
 import { HonestyTagBadge } from '../shared/HonestyTag';
+import { Banner } from '../shared/Arcade';
+import { frameStyle, THEMES, PIXEL, rowChip } from '../shared/arcadeTheme';
 import { BlochSphereVisualizer } from '../simulations/BlochSphereVisualizer';
 import { sound } from '../../utils/audio';
 import {
@@ -9,12 +11,8 @@ import {
 } from '../../core/games/blochRunner';
 import type { GateName } from '../../core/games/blochRunner';
 
-const ACCENT = '#2ee6a6';
-const EDGE = '#12a574';
-const PIXEL = "'Press Start 2P', monospace";
-
-// Three chips share one row, so they use tighter padding and must be allowed to shrink
-const rowChip: React.CSSProperties = { flex: '1 1 0', minWidth: 0, justifyContent: 'center', padding: '8px 4px', gap: 4, fontSize: '0.5rem' };
+const ACCENT = THEMES.orange.accent;
+const EDGE = THEMES.orange.edge;
 
 const fmt = (n: number) => (Math.abs(n) < 0.0005 ? '0' : n.toFixed(2));
 const amp = (c: { re: number; im: number }) => {
@@ -93,16 +91,7 @@ export const BlochRunner: React.FC = () => {
     setShowHint(false);
   };
 
-  const frame: React.CSSProperties = {
-    background: '#1d0848',
-    border: `3px solid ${ACCENT}`,
-    borderRadius: 20,
-    padding: 16,
-    boxShadow: `0 6px 0 ${EDGE}, 0 0 30px rgba(46, 230, 166, 0.25)`,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 14,
-  };
+  const frame = frameStyle(THEMES.orange);
 
   if (finished) {
     return (
@@ -118,7 +107,7 @@ export const BlochRunner: React.FC = () => {
             <b style={{ color: '#fff' }}> rotation</b>: X, Y and Z are half-turns, S and T are smaller twists around
             the vertical axis, and H tips you between the poles and the equator.
           </p>
-          <button className="btn btn-mint" onClick={restartAll}>
+          <button className="btn btn-orange" onClick={restartAll}>
             <RotateCcw size={18} /> <span>Run again</span>
           </button>
         </div>
@@ -147,7 +136,7 @@ export const BlochRunner: React.FC = () => {
               <div style={{
                 width: 28, height: 28, borderRadius: 10, flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: current ? ACCENT : done ? 'rgba(46, 230, 166, 0.35)' : 'rgba(255, 255, 255, 0.1)',
+                background: current ? ACCENT : done ? 'rgba(255, 159, 28, 0.35)' : 'rgba(255, 255, 255, 0.1)',
                 color: current ? '#2a0f5c' : '#fff', fontSize: current ? '1rem' : '0.7rem', fontFamily: PIXEL,
                 boxShadow: current ? `0 3px 0 ${EDGE}` : 'none',
               }}>
@@ -229,43 +218,33 @@ export const BlochRunner: React.FC = () => {
         {moves.map((g, i) => (
           <span key={i} style={{
             fontFamily: PIXEL, fontSize: '0.6rem', padding: '8px 10px', borderRadius: 10,
-            background: 'rgba(46, 230, 166, 0.2)', border: `2px solid ${ACCENT}`,
+            background: 'rgba(255, 159, 28, 0.2)', border: `2px solid ${ACCENT}`,
           }}>{GATE_INFO[g].label}</span>
         ))}
       </div>
 
       {/* Result */}
       {solved && (
-        <div role="status" style={{
-          background: 'rgba(46, 230, 166, 0.15)', border: `2px solid ${ACCENT}`, borderRadius: 16,
-          padding: 14, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center',
-        }}>
-          <div style={{ fontFamily: PIXEL, fontSize: '0.7rem', color: ACCENT }}>CHECKPOINT!</div>
-          <div aria-label={`${earned} of 3 stars`} style={{ display: 'flex', gap: 6 }}>
+        <Banner tone="good" title="CHECKPOINT!" center>
+          <div aria-label={`${earned} of 3 stars`} style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 8 }}>
             {[1, 2, 3].map((n) => (
               <Star key={n} size={28} color="#ffd23f" fill={n <= earned ? '#ffd23f' : 'none'} />
             ))}
           </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <div style={{ marginBottom: 10 }}>
             {earned === 3 ? 'Perfect path!' : `Done in ${moves.length} moves. The shortest path is ${par}.`}
           </div>
           <button className="btn btn-mint" onClick={nextLevel}>
             <span>{levelIdx + 1 >= LEVELS.length ? 'Finish' : 'Next level'}</span>
             <ChevronRight size={18} />
           </button>
-        </div>
+        </Banner>
       )}
 
       {outOfMoves && (
-        <div role="status" style={{
-          background: 'rgba(255, 92, 138, 0.15)', border: '2px solid #ff5c8a', borderRadius: 16,
-          padding: 14, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10,
-        }}>
-          <div style={{ fontFamily: PIXEL, fontSize: '0.7rem', color: '#ff5c8a' }}>OUT OF MOVES</div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            No timer here, just a move limit. Undo a step or restart and try another route.
-          </div>
-        </div>
+        <Banner tone="bad" title="OUT OF MOVES" center>
+          No timer here, just a move limit. Undo a step or restart and try another route.
+        </Banner>
       )}
 
       {/* Gate pad */}
@@ -278,7 +257,7 @@ export const BlochRunner: React.FC = () => {
                 onClick={() => play(g)}
                 disabled={outOfMoves}
                 aria-label={`${GATE_INFO[g].label} gate: ${GATE_INFO[g].blurb}`}
-                className="btn btn-mint"
+                className="btn btn-orange"
                 style={{ flexDirection: 'column', gap: 4, minHeight: 64, opacity: outOfMoves ? 0.5 : 1 }}
               >
                 <span style={{ fontSize: '1rem' }}>{GATE_INFO[g].label}</span>
@@ -301,9 +280,9 @@ export const BlochRunner: React.FC = () => {
             </button>
           </div>
           {showHint && (
-            <div style={{ background: 'rgba(255, 210, 63, 0.12)', border: '2px solid #ffd23f', borderRadius: 14, padding: 12, fontSize: '0.88rem', lineHeight: 1.45 }}>
+            <Banner tone="warn">
               💡 {level.hint}
-            </div>
+            </Banner>
           )}
         </>
       )}

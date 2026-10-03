@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
-import { HonestyTagBadge } from '../shared/HonestyTag';
+import { ArcadeHeader, Eyebrow, GameTitle } from '../shared/Arcade';
+import { THEMES, PIXEL, RETRO, frameStyle, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
 import { 
   RotateCcw, 
   Sparkles, 
-  Coins, 
   Lock, 
   Unlock,
   ChevronDown,
-  ChevronUp,
-  HelpCircle
+  ChevronUp
 } from 'lucide-react';
 
 export const QuantumCoinFlip: React.FC = () => {
@@ -108,6 +107,8 @@ export const QuantumCoinFlip: React.FC = () => {
     setAiDialogue("Game reset! The penny starts on HEADS (|0⟩). Can you discover the quantum strategy?");
   };
 
+  const theme = THEMES.violet;
+
   return (
     <div style={{
       display: 'flex',
@@ -115,181 +116,39 @@ export const QuantumCoinFlip: React.FC = () => {
       gap: 12,
       fontFamily: "'Space Grotesk', -apple-system, sans-serif"
     }}>
-      {/* Neon Cyber Arcade Cabinet Shell */}
-      <div style={{
-        background: 'linear-gradient(165deg, #0b0f2e 0%, #050716 100%)',
-        border: '3px solid #8a3ffc',
-        borderRadius: 20,
-        padding: '16px',
-        boxShadow: '0 0 35px rgba(138, 63, 252, 0.35), inset 0 0 45px rgba(0, 0, 0, 0.95)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        {/* CRT Scanline Effect */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%)',
-          backgroundSize: '100% 4px',
-          pointerEvents: 'none',
-          zIndex: 4,
-          opacity: 0.5
-        }} />
+      <div style={frameStyle(theme)}>
+        <ArcadeHeader theme={theme} label={`ROUND ${round}`} tag="Accurate" />
 
-        {/* Arcade Header HUD */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '2px solid rgba(138, 63, 252, 0.3)',
-          paddingBottom: 10,
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Coins size={16} color="#c084fc" />
-            <span style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '0.6rem',
-              color: '#c084fc'
-            }}>
-              ROUND {round}
-            </span>
+        <GameTitle
+          title="🪙 Quantum Penny Paradox"
+          story="David Meyer's 1999 game: can a classical player ever beat a quantum computer at a coin toss?"
+        />
+
+        {/* Scoreboard: Dr. Quantum vs player */}
+        <div style={{ ...panelStyle, display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 10, alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700 }}>🤖 Dr. Quantum</div>
+            <div style={{ fontFamily: RETRO, fontSize: '1.7rem', color: '#ff5c8a', lineHeight: 1.1 }}>{aiScore} <span style={{ fontSize: '1rem' }}>Heads</span></div>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => setShowSecretGuide(!showSecretGuide)}
-              style={{
-                background: 'rgba(138, 63, 252, 0.18)',
-                border: '1px solid #8a3ffc',
-                color: '#c084fc',
-                borderRadius: 6,
-                padding: '4px 8px',
-                fontSize: '0.58rem',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}
-            >
-              <HelpCircle size={12} />
-              <span>THE SECRET</span>
-            </button>
-            <HonestyTagBadge tag="Accurate" />
+          <span style={{ fontFamily: PIXEL, fontSize: '0.6rem', color: 'var(--text-tertiary)' }}>VS</span>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700 }}>You 🧑‍💻</div>
+            <div style={{ fontFamily: RETRO, fontSize: '1.7rem', color: '#38c8ff', lineHeight: 1.1 }}>{playerScore} <span style={{ fontSize: '1rem' }}>Tails</span></div>
           </div>
         </div>
 
-        {/* Title Header */}
-        <div style={{ textAlign: 'center', marginBottom: 12, position: 'relative', zIndex: 6 }}>
-          <h2 style={{
-            fontSize: '1.15rem',
-            fontWeight: 800,
-            color: '#fff',
-            letterSpacing: '-0.01em',
-            marginBottom: 3
-          }}>
-            🪙 The Quantum Penny Paradox
-          </h2>
-          <p style={{ fontSize: '0.72rem', color: '#ddd0fa' }}>
-            David Meyer's 1999 Game: Can a classical player ever beat a quantum computer at a coin toss?
-          </p>
-        </div>
-
-        {/* ============================================================== */}
-        {/* 1. SCOREBOARD: DR. QUANTUM VS PLAYER                           */}
-        {/* ============================================================== */}
+        {/* The quantum coin arena */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
-          gap: 10,
-          alignItems: 'center',
-          background: 'rgba(42, 15, 92, 0.75)',
-          border: '1px solid rgba(138, 63, 252, 0.25)',
-          borderRadius: 14,
-          padding: '10px 14px',
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
-          {/* AI Side */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              background: 'rgba(244, 63, 94, 0.2)',
-              border: '2px solid #f43f5e',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.1rem'
-            }}>
-              🤖
-            </div>
-            <div>
-              <div style={{ fontSize: '0.62rem', color: '#ddd0fa', fontWeight: 700 }}>
-                DR. QUANTUM (AI)
-              </div>
-              <div style={{ fontSize: '0.98rem', fontWeight: 900, color: '#f43f5e' }}>
-                {aiScore} WINS (Heads)
-              </div>
-            </div>
-          </div>
-
-          <span style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: '0.68rem',
-            color: '#b9a6e8'
-          }}>
-            VS
-          </span>
-
-          {/* Player Side */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.62rem', color: '#ddd0fa', fontWeight: 700 }}>
-                YOU (PLAYER)
-              </div>
-              <div style={{ fontSize: '0.98rem', fontWeight: 900, color: '#38bdf8' }}>
-                {playerScore} WINS (Tails)
-              </div>
-            </div>
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              background: 'rgba(56, 189, 248, 0.2)',
-              border: '2px solid #38bdf8',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.1rem'
-            }}>
-              🧑‍💻
-            </div>
-          </div>
-        </div>
-
-        {/* ============================================================== */}
-        {/* 2. THE 3D QUANTUM COIN ARENA                                   */}
-        {/* ============================================================== */}
-        <div style={{
-          background: 'radial-gradient(circle at 50% 50%, #1a1e50 0%, #07091c 85%)',
-          border: '2px solid rgba(138, 63, 252, 0.45)',
-          borderRadius: 18,
+          ...stageStyle,
           padding: '24px 16px 18px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: 12,
           position: 'relative',
-          overflow: 'hidden',
-          zIndex: 6
+          overflow: 'hidden'
         }}>
-          {/* Subtle Rotating Orbit Ring when in Superposition */}
+          {/* Orbit ring while in superposition */}
           {coinState === 'SUPERPOSITION' && (
             <div style={{
               position: 'absolute',
@@ -369,33 +228,15 @@ export const QuantumCoinFlip: React.FC = () => {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 3. THE 4-STEP MATCH TIMELINE PIPELINE                          */}
-        {/* ============================================================== */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: 12,
-          padding: '10px 8px',
-          marginBottom: 12,
-          position: 'relative',
-          zIndex: 6
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 8,
-            padding: '0 6px'
-          }}>
-            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
-              Round Sequence:
-            </span>
-            <span style={{ fontSize: '0.65rem', color: '#c084fc', fontWeight: 600 }}>
+        {/* Round sequence */}
+        <div style={panelStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <Eyebrow>ROUND SEQUENCE</Eyebrow>
+            <span style={{ fontSize: '0.78rem', color: '#c4b0ff', fontWeight: 700 }}>
               {turnState === 'ready' && 'Waiting to start'}
-              {turnState === 'ai_step1' && 'AI playing Step 1...'}
-              {turnState === 'player_turn' && 'YOUR TURN (Step 2)'}
-              {turnState === 'ai_step2' && 'AI playing Step 3...'}
+              {turnState === 'ai_step1' && 'AI playing step 1...'}
+              {turnState === 'player_turn' && 'Your turn (step 2)'}
+              {turnState === 'ai_step2' && 'AI playing step 3...'}
               {turnState === 'measured' && 'Round complete'}
             </span>
           </div>
@@ -462,150 +303,56 @@ export const QuantumCoinFlip: React.FC = () => {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 4. DR. QUANTUM INTERACTIVE INTEL & DIALOGUE                   */}
-        {/* ============================================================== */}
-        <div style={{
-          background: 'rgba(0, 0, 0, 0.55)',
-          border: '1px solid rgba(138, 63, 252, 0.35)',
-          borderRadius: 12,
-          padding: '10px 12px',
-          marginBottom: 12,
-          display: 'flex',
-          gap: 10,
-          alignItems: 'flex-start',
-          position: 'relative',
-          zIndex: 6
-        }}>
+        {/* Dr. Quantum speech */}
+        <div style={{ ...panelStyle, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
           <div style={{
-            width: 28,
-            height: 28,
-            borderRadius: 6,
-            background: 'linear-gradient(135deg, #f43f5e, #8a3ffc)',
+            width: 36,
+            height: 36,
+            borderRadius: 12,
+            background: 'linear-gradient(135deg, #ff5c8a, #8b5cf6)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1rem',
+            fontSize: '1.2rem',
             flexShrink: 0
           }}>
             🤖
           </div>
-
           <div style={{ flex: 1 }}>
-            <div style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '0.52rem',
-              color: '#f43f5e',
-              marginBottom: 4
-            }}>
-              DR. QUANTUM SAYS:
-            </div>
-            <div style={{ fontSize: '0.76rem', color: '#f6f1ff', lineHeight: 1.45 }}>
+            <Eyebrow color="#ff5c8a">DR. QUANTUM SAYS</Eyebrow>
+            <div style={{ fontSize: '0.9rem', color: '#f6f1ff', lineHeight: 1.45, marginTop: 6 }} aria-live="polite">
               {aiDialogue}
             </div>
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 5. PLAYER CONTROLS                                             */}
-        {/* ============================================================== */}
-        <div style={{ position: 'relative', zIndex: 6 }}>
+        {/* Player controls */}
+        <div>
           {turnState === 'ready' && (
-            <button
-              onClick={startRound}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: 'linear-gradient(135deg, #8a3ffc 0%, #6929c4 100%)',
-                color: '#fff',
-                border: '2px solid #fff',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.72rem',
-                boxShadow: '0 0 18px rgba(138, 63, 252, 0.6)'
-              }}
-            >
-              🪙 START ROUND {round}
+            <button className="btn btn-violet" onClick={startRound}>
+              <span>🪙 Start round {round}</span>
             </button>
           )}
 
           {turnState === 'player_turn' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.55rem',
-                color: '#38bdf8',
-                textAlign: 'center'
-              }}>
-                SELECT YOUR MOVE FOR STEP 2:
-              </div>
+              <div style={{ textAlign: 'center' }}><Eyebrow color="#38c8ff">SELECT YOUR MOVE FOR STEP 2</Eyebrow></div>
 
               <div style={{ display: 'grid', gridTemplateColumns: playerMode === 'quantum' ? '1fr 1fr 1fr' : '1fr 1fr', gap: 8 }}>
-                {/* Classical Flip (NOT / Pauli-X) */}
-                <button
-                  onClick={() => handlePlayerMove('FLIP')}
-                  style={{
-                    padding: '12px 6px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(180deg, #ec4899 0%, #be185d 100%)',
-                    color: '#fff',
-                    border: '2px solid #fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 3,
-                    boxShadow: '0 4px 12px rgba(236, 72, 153, 0.4)'
-                  }}
-                >
-                  <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.62rem' }}>
-                    FLIP (X)
-                  </span>
-                  <span style={{ fontSize: '0.62rem', opacity: 0.9 }}>Swap Heads ↔ Tails</span>
+                <button className="btn btn-pink" onClick={() => handlePlayerMove('FLIP')} style={{ flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px' }}>
+                  <span style={{ fontSize: '0.58rem' }}>FLIP (X)</span>
+                  <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>Swap Heads ↔ Tails</span>
                 </button>
 
-                {/* Classical Keep (Identity) */}
-                <button
-                  onClick={() => handlePlayerMove('KEEP')}
-                  style={{
-                    padding: '12px 6px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%)',
-                    color: '#fff',
-                    border: '2px solid #fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 3,
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)'
-                  }}
-                >
-                  <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.62rem' }}>
-                    KEEP (I)
-                  </span>
-                  <span style={{ fontSize: '0.62rem', opacity: 0.9 }}>Do Nothing</span>
+                <button className="btn btn-sky" onClick={() => handlePlayerMove('KEEP')} style={{ flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px' }}>
+                  <span style={{ fontSize: '0.58rem' }}>KEEP (I)</span>
+                  <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>Do nothing</span>
                 </button>
 
-                {/* Quantum Hadamard Unlock */}
                 {playerMode === 'quantum' && (
-                  <button
-                    onClick={() => handlePlayerMove('HADAMARD')}
-                    style={{
-                      padding: '12px 6px',
-                      borderRadius: 10,
-                      background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                      color: '#1d0848',
-                      border: '2px solid #fff',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: 3,
-                      boxShadow: '0 0 16px rgba(0, 210, 255, 0.7)'
-                    }}
-                  >
-                    <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.62rem', fontWeight: 900 }}>
-                      HADAMARD [H]
-                    </span>
-                    <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>⚡ Quantum Move!</span>
+                  <button className="btn" onClick={() => handlePlayerMove('HADAMARD')} style={{ flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px', animation: 'pulseGlow 2s infinite' }}>
+                    <span style={{ fontSize: '0.58rem' }}>[H] GATE</span>
+                    <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>⚡ Quantum move!</span>
                   </button>
                 )}
               </div>
@@ -613,128 +360,70 @@ export const QuantumCoinFlip: React.FC = () => {
           )}
 
           {turnState === 'measured' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{
-                display: 'flex',
-                gap: 8
-              }}>
-                <button
-                  onClick={startRound}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(135deg, #8a3ffc 0%, #6929c4 100%)',
-                    color: '#fff',
-                    border: '2px solid #fff',
-                    fontFamily: "'Press Start 2P', monospace",
-                    fontSize: '0.65rem'
-                  }}
-                >
-                  PLAY ROUND {round}
-                </button>
-
-                <button
-                  onClick={resetGame}
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: 10,
-                    background: '#4a2ea8',
-                    color: '#ddd0fa',
-                    border: '1px solid #8f7bc9',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  title="Reset Match"
-                >
-                  <RotateCcw size={16} />
-                </button>
-              </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="btn btn-violet" onClick={startRound} style={{ flex: 1 }}>
+                <span>Play round {round}</span>
+              </button>
+              <button className="chip" onClick={resetGame} aria-label="Reset match" style={{ width: 56, padding: 0, justifyContent: 'center' }}>
+                <RotateCcw size={18} />
+              </button>
             </div>
           )}
         </div>
 
-        {/* ============================================================== */}
-        {/* 6. MODE TOGGLE: UNLOCK QUANTUM POWERS                          */}
-        {/* ============================================================== */}
-        <div style={{
-          marginTop: 14,
-          paddingTop: 12,
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 6
-        }}>
+        {/* Mode toggle: unlock quantum powers */}
+        <div style={{ ...panelStyle, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
           <div>
-            <div style={{ fontSize: '0.68rem', color: '#ddd0fa' }}>
-              Your Ruleset:
-            </div>
-            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: playerMode === 'quantum' ? '#00d2ff' : '#f1eaff' }}>
-              {playerMode === 'quantum' ? '⚡ Quantum Moves Enabled' : '🔒 Classical Player (Flips Only)'}
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Your ruleset</div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: playerMode === 'quantum' ? '#38c8ff' : '#f1eaff' }}>
+              {playerMode === 'quantum' ? '⚡ Quantum moves on' : '🔒 Classical (flips only)'}
             </div>
           </div>
 
           <button
+            className="chip"
             onClick={() => {
               sound.playClick();
               setPlayerMode((m) => (m === 'classical' ? 'quantum' : 'classical'));
             }}
-            style={{
-              background: playerMode === 'quantum' ? 'rgba(0, 210, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)',
-              border: `1px solid ${playerMode === 'quantum' ? '#00d2ff' : '#b9a6e8'}`,
-              color: playerMode === 'quantum' ? '#00d2ff' : '#f1eaff',
-              borderRadius: 8,
-              padding: '6px 12px',
-              fontSize: '0.7rem',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6
-            }}
           >
-            {playerMode === 'quantum' ? <Unlock size={14} /> : <Lock size={14} />}
-            <span>{playerMode === 'quantum' ? 'Switch to Classical' : 'Unlock Quantum Mode!'}</span>
+            {playerMode === 'quantum' ? <Unlock size={16} /> : <Lock size={16} />}
+            <span>{playerMode === 'quantum' ? 'Classical' : 'Unlock'}</span>
           </button>
         </div>
       </div>
 
-      {/* ============================================================== */}
-      {/* 7. WHY IT WORKS: STEP-BY-STEP CONCEPT DECODER                  */}
-      {/* ============================================================== */}
-      <div style={{
-        background: 'var(--bg-surface)',
-        borderRadius: 14,
-        border: '1px solid var(--border-subtle)',
-        overflow: 'hidden'
-      }}>
+      {/* Why it works */}
+      <div style={{ ...panelStyle, padding: 0, overflow: 'hidden' }}>
         <button
           onClick={() => setShowSecretGuide(!showSecretGuide)}
+          aria-expanded={showSecretGuide}
           style={{
             width: '100%',
+            minHeight: 48,
             padding: '12px 14px',
             background: 'transparent',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             color: 'var(--text-primary)',
-            fontSize: '0.8rem',
-            fontWeight: 700
+            fontSize: '0.95rem',
+            fontWeight: 700,
+            textAlign: 'left',
+            gap: 8
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Sparkles size={16} color="var(--accent-purple)" />
-            <span>Why Does Dr. Quantum ALWAYS Win Classically?</span>
+            <Sparkles size={18} color={theme.accent} />
+            <span>Why does Dr. Quantum always win?</span>
           </div>
-          {showSecretGuide ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          {showSecretGuide ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
 
         {showSecretGuide && (
           <div style={{
             padding: '0 14px 14px',
-            fontSize: '0.76rem',
+            fontSize: '0.88rem',
             color: 'var(--text-secondary)',
             lineHeight: 1.5,
             display: 'flex',

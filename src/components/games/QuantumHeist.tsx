@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
 import { HonestyTagBadge } from '../shared/HonestyTag';
+import { ArcadeHeader, ArcadeModal, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
+import { THEMES, RETRO, frameStyle, panelStyle } from '../shared/arcadeTheme';
 import { BlochSphereVisualizer } from '../simulations/BlochSphereVisualizer';
 import { Complex } from '../../core/circuit';
 import type { BlochCoordinates } from '../../core/circuit/bloch';
@@ -11,9 +13,7 @@ import {
   Volume2, 
   VolumeX, 
   Crosshair, 
-  Zap, 
   HelpCircle, 
-  X, 
   CheckCircle2, 
   AlertTriangle, 
   Lightbulb, 
@@ -184,6 +184,9 @@ export const QuantumHeist: React.FC = () => {
     });
   };
 
+  const ready = level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready;
+  const theme = THEMES.yellow;
+
   return (
     <div style={{
       fontFamily: "'Space Grotesk', -apple-system, sans-serif",
@@ -191,16 +194,7 @@ export const QuantumHeist: React.FC = () => {
       flexDirection: 'column',
       gap: 12
     }}>
-      {/* 8-Bit Arcade Cabinet Shell */}
-      <div style={{
-        background: '#1d0848',
-        border: '3px solid #00d2ff',
-        borderRadius: 20,
-        padding: '16px',
-        boxShadow: '0 6px 0 #0d8fc4, 0 0 30px rgba(0, 210, 255, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.6)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
+      <div style={frameStyle(theme)}>
         {/* Laser alarm flashing background overlay when breach fails */}
         {laserFiring && (
           <div style={{
@@ -212,151 +206,62 @@ export const QuantumHeist: React.FC = () => {
           }} />
         )}
 
-        {/* CRT Scanline Overlay Effect */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.32) 50%)',
-          backgroundSize: '100% 4px',
-          pointerEvents: 'none',
-          zIndex: 6,
-          opacity: 0.5
-        }} />
+        <ArcadeHeader
+          theme={theme}
+          label={`STAGE ${level}/3`}
+          tag="Simplified model"
+          middle={<span style={{ fontFamily: RETRO, fontSize: '1.4rem', color: '#ffd23f' }}>★ {score}</span>}
+        />
 
-        {/* Arcade HUD: Status, Stage, Lives, Sound */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '2px solid rgba(0, 210, 255, 0.3)',
-          paddingBottom: 10,
-          marginBottom: 12,
-          fontFamily: "'Press Start 2P', monospace",
-          fontSize: '0.58rem'
-        }}>
-          {/* Stage & Score */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ color: '#00d2ff' }}>STAGE {level}/3</span>
-            <span style={{ color: '#b9a6e8' }}>|</span>
-            <span style={{ color: '#fbbf24' }}>{score} PTS</span>
+        {/* Shields, sound and rules */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+          <div role="img" aria-label={`${shields} of 3 shields left`} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {[1, 2, 3].map((heart) => (
+              <Heart
+                key={heart}
+                size={22}
+                fill={heart <= shields ? '#ff5c8a' : 'transparent'}
+                color={heart <= shields ? '#ff5c8a' : '#8f7bc9'}
+              />
+            ))}
           </div>
-
-          {/* Shields (Lives) & Sound */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 2 }} title="Security Shields">
-              {[1, 2, 3].map((heart) => (
-                <Heart
-                  key={heart}
-                  size={12}
-                  fill={heart <= shields ? '#f43f5e' : 'transparent'}
-                  color={heart <= shields ? '#f43f5e' : '#8f7bc9'}
-                />
-              ))}
-            </div>
-
-            {/* Sound Toggle */}
+          <div style={{ display: 'flex', gap: 8 }}>
             <button
+              className="chip"
               onClick={() => setSoundEnabled(!soundEnabled)}
-              style={{
-                background: 'transparent',
-                color: soundEnabled ? '#00d2ff' : '#b9a6e8',
-                padding: 2,
-                display: 'flex'
-              }}
-              title="Toggle sound"
+              aria-pressed={soundEnabled}
+              aria-label={soundEnabled ? 'Mute sound' : 'Turn sound on'}
+              style={{ padding: 0, width: 44, justifyContent: 'center' }}
             >
-              {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+              {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
-
-            {/* Rules Handbook Button */}
-            <button
-              onClick={() => setShowHandbook(true)}
-              style={{
-                background: 'rgba(0, 210, 255, 0.15)',
-                border: '1px solid #00d2ff',
-                color: '#00d2ff',
-                padding: '4px 7px',
-                borderRadius: 6,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.5rem'
-              }}
-            >
-              <HelpCircle size={10} />
-              <span>RULES</span>
+            <button className="chip" onClick={() => setShowHandbook(true)}>
+              <HelpCircle size={16} />
+              <span>Rules</span>
             </button>
           </div>
         </div>
 
-        {/* Mission Title Header */}
-        <div style={{ textAlign: 'center', marginBottom: 12 }}>
-          <div style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: '0.85rem',
-            color: '#00d2ff',
-            textShadow: '0 0 12px rgba(0, 210, 255, 0.8)',
-            marginBottom: 4,
-            letterSpacing: '0.04em'
-          }}>
-            ⚡ QUANTUM HEIST ⚡
-          </div>
-          <div style={{ fontSize: '0.72rem', color: '#ddd0fa', fontWeight: 600 }}>
-            {level === 1 && 'LEVEL 1: The Dual-Door Motion Tracker'}
-            {level === 2 && 'LEVEL 2: The Wave Phase Frequency Trap'}
-            {level === 3 && 'LEVEL 3: The 3D Bloch Gyro Decryption'}
-          </div>
-        </div>
+        <GameTitle
+          title="⚡ Quantum Heist"
+          story={
+            (level === 1 && 'Level 1: The Dual-Door Motion Tracker') ||
+            (level === 2 && 'Level 2: The Wave Phase Frequency Trap') ||
+            'Level 3: The 3D Bloch Gyro Decryption'
+          }
+        />
 
-        {/* ============================================================== */}
-        {/* HOW TO WIN THIS LEVEL: IN-GAME MISSION OBJECTIVE CARD           */}
-        {/* ============================================================== */}
-        <div style={{
-          background: 'rgba(42, 15, 92, 0.85)',
-          border: '1px solid rgba(0, 210, 255, 0.35)',
-          borderRadius: 12,
-          padding: '10px 12px',
-          marginBottom: 12,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 6
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Zap size={14} color="#00d2ff" />
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.58rem',
-                color: '#00d2ff'
-              }}>
-                MISSION OBJECTIVE:
-              </span>
-            </div>
-
-            {/* Hint Trigger Button */}
-            <button
-              onClick={() => setHintActive(!hintActive)}
-              style={{
-                background: hintActive ? '#fbbf24' : 'rgba(251, 191, 36, 0.15)',
-                border: '1px solid #fbbf24',
-                color: hintActive ? '#1d0848' : '#fbbf24',
-                borderRadius: 6,
-                padding: '3px 8px',
-                fontSize: '0.58rem',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4
-              }}
-            >
-              <Lightbulb size={11} />
-              <span>{hintActive ? 'HIDE HINT' : 'NEED HINT?'}</span>
+        {/* Mission objective */}
+        <div style={panelStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <Eyebrow color={theme.accent}>MISSION OBJECTIVE</Eyebrow>
+            <button className="chip" aria-expanded={hintActive} onClick={() => setHintActive(!hintActive)}>
+              <Lightbulb size={16} />
+              <span>{hintActive ? 'Hide' : 'Hint'}</span>
             </button>
           </div>
 
-          {/* Plain-English Goal & Action instruction */}
-          <div style={{ fontSize: '0.78rem', color: '#f6f1ff', lineHeight: 1.45 }}>
+          <div style={{ fontSize: '0.88rem', color: '#f6f1ff', lineHeight: 1.45 }}>
             {level === 1 && (
               <div>
                 The security camera fires if you are 100% in one door.{' '}
@@ -386,18 +291,9 @@ export const QuantumHeist: React.FC = () => {
             )}
           </div>
 
-          {/* Interactive Guided Hint */}
           {hintActive && (
-            <div style={{
-              background: 'rgba(251, 191, 36, 0.12)',
-              border: '1px dashed #fbbf24',
-              borderRadius: 8,
-              padding: '8px 10px',
-              marginTop: 4,
-              fontSize: '0.74rem',
-              color: '#fef08a',
-              lineHeight: 1.4
-            }}>
+            <div style={{ marginTop: 10 }}>
+              <Banner tone="warn">
               {level === 1 && (
                 <span>
                   👉 <b>Direct Move:</b> Click the cyan <b>[H] KEY</b> in the Hack Cartridges below! Notice your presence become 50% in Door 0 and 50% in Door 1.
@@ -413,6 +309,7 @@ export const QuantumHeist: React.FC = () => {
                   👉 <b>Direct Move:</b> Press the <b>▲/▼/◀/▶ D-Pad</b> to guide the crosshair onto the glowing target ring on the sphere equator!
                 </span>
               )}
+              </Banner>
             </div>
           )}
         </div>
@@ -423,10 +320,9 @@ export const QuantumHeist: React.FC = () => {
         {level < 3 && (
           <div style={{
             background: 'radial-gradient(circle at 50% 20%, #4a26a0 0%, #1d0848 80%)',
-            border: '2px solid rgba(0, 210, 255, 0.4)',
-            borderRadius: 14,
+            border: '2px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: 18,
             padding: '16px 12px 14px',
-            marginBottom: 12,
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -435,7 +331,6 @@ export const QuantumHeist: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              marginBottom: 12,
               position: 'relative'
             }}>
               {/* Turret Body */}
@@ -498,7 +393,6 @@ export const QuantumHeist: React.FC = () => {
                 border: '1px solid rgba(0, 210, 255, 0.3)',
                 borderRadius: 10,
                 padding: '8px 10px',
-                marginBottom: 12,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4
@@ -726,10 +620,9 @@ export const QuantumHeist: React.FC = () => {
         {level === 3 && (
           <div style={{
             background: 'radial-gradient(circle at center, #4a26a0 0%, #1d0848 80%)',
-            border: '2px solid #00d2ff',
-            borderRadius: 14,
+            border: '2px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: 18,
             padding: '14px',
-            marginBottom: 12,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
@@ -865,360 +758,131 @@ export const QuantumHeist: React.FC = () => {
           </div>
         )}
 
-        {/* Live Objective Status Banner */}
-        <div style={{
-          background: (level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready)
-            ? 'rgba(34, 197, 94, 0.18)'
-            : 'rgba(251, 191, 36, 0.12)',
-          border: `1.5px solid ${(level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready) ? '#22c55e' : 'rgba(251, 191, 36, 0.5)'}`,
-          borderRadius: 10,
-          padding: '8px 12px',
-          marginBottom: 12,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '0.74rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {(level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready) ? (
-              <CheckCircle2 size={16} color="#22c55e" />
-            ) : (
-              <AlertTriangle size={16} color="#fbbf24" />
-            )}
-            <span style={{
-              fontWeight: 700,
-              color: (level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready) ? '#86efac' : '#fde047'
-            }}>
-              {(level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready)
-                ? 'TARGET MATCHED — READY TO BREACH!'
-                : level === 1
-                ? 'CURRENT: 100% Door 0 (Alarm will fire!)'
-                : level === 2
-                ? 'CURRENT: Positive Phase (+). Need Negative Phase |−⟩!'
-                : 'CURRENT: Reticle off target'}
-            </span>
-          </div>
+        {/* Live objective status */}
+        <Banner tone={ready ? 'good' : 'warn'} icon={ready ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
+          title={ready ? 'READY TO BREACH!' : 'NOT READY YET'}>
+          {ready
+            ? 'Target matched. Hit the breach button!'
+            : level === 1
+            ? 'Right now you are 100% in Door 0, so the alarm will fire.'
+            : level === 2
+            ? 'The phase is still positive (+). You need the negative phase |−⟩.'
+            : 'The reticle is off target.'}
+        </Banner>
 
-          <span style={{
-            fontSize: '0.58rem',
-            color: '#ddd0fa',
-            fontFamily: "'Press Start 2P', monospace"
-          }}>
-            {(level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready) ? 'SAFE ✅' : 'WAITING ⏳'}
-          </span>
-        </div>
-
-        {/* Level Feedback & Story Banner */}
+        {/* Level feedback and story */}
         {feedback && (
-          <div style={{
-            padding: '10px 12px',
-            borderRadius: 8,
-            fontSize: '0.74rem',
-            lineHeight: 1.45,
-            background: gameState === 'failed' || gameState === 'game_over' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(34, 197, 94, 0.2)',
-            border: `2px solid ${gameState === 'failed' || gameState === 'game_over' ? '#f43f5e' : '#22c55e'}`,
-            color: gameState === 'failed' || gameState === 'game_over' ? '#fca5a5' : '#86efac',
-            marginBottom: 12
-          }}>
+          <Banner tone={gameState === 'failed' || gameState === 'game_over' ? 'bad' : 'good'}>
             {feedback}
-          </div>
+          </Banner>
         )}
 
-        {/* ============================================================== */}
-        {/* RETRO TOOL CARTRIDGES (GATES)                                 */}
-        {/* ============================================================== */}
+        {/* Gate cartridges */}
         {level < 3 && gameState === 'playing' && (
-          <div style={{ marginBottom: 12 }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 8
-            }}>
-              <span style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.55rem',
-                color: '#ddd0fa'
-              }}>
-                HACK CARTRIDGES:
-              </span>
-              <span style={{ fontSize: '0.68rem', color: '#00d2ff' }}>
-                Tap to apply quantum gate
-              </span>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <Eyebrow>HACK CARTRIDGES</Eyebrow>
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Tap to apply a gate</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {/* Hadamard */}
-              <button
-                onClick={applyHadamard}
-                style={{
-                  background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                  color: '#1d0848',
-                  padding: '10px 6px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: (level === 1 && !isLevel1Ready) ? '0 0 16px #00d2ff' : '0 4px 12px rgba(0, 210, 255, 0.3)',
-                  animation: (level === 1 && !isLevel1Ready) ? 'pulseGlow 2s infinite' : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 3,
-                  textAlign: 'center'
-                }}
-              >
-                <Zap size={16} fill="#1d0848" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
-                  [H] KEY
-                </span>
-                <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>
-                  Split 50/50
-                </span>
-              </button>
-
-              {/* Pauli-X */}
-              <button
-                onClick={applyPauliX}
-                style={{
-                  background: 'linear-gradient(180deg, #ec4899 0%, #be185d 100%)',
-                  color: '#fff',
-                  padding: '10px 6px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 3,
-                  textAlign: 'center'
-                }}
-              >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
-                  [X] FLIP
-                </span>
-                <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>
-                  Swap 0 ↔ 1
-                </span>
-              </button>
-
-              {/* Pauli-Z */}
-              <button
-                onClick={applyPauliZ}
-                style={{
-                  background: 'linear-gradient(180deg, #8a3ffc 0%, #6929c4 100%)',
-                  color: '#fff',
-                  padding: '10px 6px',
-                  borderRadius: 10,
-                  border: '2px solid #fff',
-                  boxShadow: (level === 2 && isLevel1Ready && !isLevel2Ready) ? '0 0 16px #8a3ffc' : '0 4px 12px rgba(138, 63, 252, 0.3)',
-                  animation: (level === 2 && isLevel1Ready && !isLevel2Ready) ? 'pulseGlow 2s infinite' : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 3,
-                  textAlign: 'center'
-                }}
-              >
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
-                  [Z] PHASE
-                </span>
-                <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>
-                  Flip (+ / -)
-                </span>
-              </button>
+              {[
+                { key: 'H', name: '[H] KEY', sub: 'Split 50/50', cls: 'btn-sky', on: applyHadamard, pulse: level === 1 && !isLevel1Ready },
+                { key: 'X', name: '[X] FLIP', sub: 'Swap 0 ↔ 1', cls: 'btn-pink', on: applyPauliX, pulse: false },
+                { key: 'Z', name: '[Z] PHASE', sub: 'Flip (+ / -)', cls: 'btn-violet', on: applyPauliZ, pulse: level === 2 && isLevel1Ready && !isLevel2Ready },
+              ].map((g) => (
+                <button
+                  key={g.key}
+                  className={`btn ${g.cls}`}
+                  onClick={g.on}
+                  aria-label={`${g.name}: ${g.sub}`}
+                  style={{
+                    flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px',
+                    animation: g.pulse ? 'pulseGlow 2s infinite' : 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '0.55rem' }}>{g.name}</span>
+                  <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>{g.sub}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Primary Action Button (Breach / Decrypt / Retry) */}
+        {/* Primary action */}
         <div>
           {gameState === 'playing' && (
-            <button
-              onClick={handleBreach}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: (level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready)
-                  ? 'linear-gradient(180deg, #22c55e 0%, #15803d 100%)'
-                  : 'linear-gradient(180deg, #eab308 0%, #a16207 100%)',
-                color: '#fff',
-                border: '2px solid #fff',
-                boxShadow: (level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready)
-                  ? '0 0 20px rgba(34, 197, 94, 0.6)'
-                  : '0 0 15px rgba(234, 179, 8, 0.4)',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.72rem',
-                letterSpacing: '0.04em',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {level === 3 ? '🔴 LOCK & DECRYPT' : '🔴 ATTEMPT BREACH'}
+            <button className={`btn ${ready ? 'btn-mint' : ''}`} onClick={handleBreach}>
+              <span>{level === 3 ? 'Lock & decrypt' : 'Attempt breach'}</span>
             </button>
           )}
 
           {gameState === 'failed' && (
-            <button
-              onClick={resetLevel}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: '#6a4ec2',
-                color: '#fff',
-                border: '2px solid #ddd0fa',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.68rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8
-              }}
-            >
-              <RotateCcw size={16} />
-              <span>RETRY INFILTRATION</span>
+            <button className="btn btn-slate" onClick={resetLevel}>
+              <RotateCcw size={18} />
+              <span>Retry infiltration</span>
             </button>
           )}
 
           {gameState === 'game_over' && (
-            <div style={{
-              background: 'rgba(244, 63, 94, 0.2)',
-              border: '2px solid #f43f5e',
-              borderRadius: 12,
-              padding: '14px',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 10
-            }}>
-              <div style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.8rem', color: '#fca5a5' }}>
-                ☠️ SECURITY SHIELDS DEPLETED!
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#f1eaff' }}>
-                Agent Q was captured. Restart the heist with full shields!
-              </div>
-              <button
-                onClick={fullRestart}
-                style={{
-                  background: '#f43f5e',
-                  color: '#fff',
-                  padding: '10px',
-                  borderRadius: 8,
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '0.65rem'
-                }}
-              >
-                RESTART FROM STAGE 1
-              </button>
-            </div>
+            <Banner tone="bad" title="SHIELDS DEPLETED!" center>
+              <div style={{ marginBottom: 10 }}>Agent Q was captured. Restart the heist with full shields!</div>
+              <button className="btn btn-pink" onClick={fullRestart}>Restart from stage 1</button>
+            </Banner>
           )}
 
           {gameState === 'level_complete' && (
             <button
+              className="btn btn-sky"
               onClick={() => {
                 if (soundEnabled) sound.playClick();
                 setLevel((l) => (l + 1) as any);
                 resetLevel();
               }}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: 12,
-                background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                color: '#1d0848',
-                border: '2px solid #fff',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.7rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 6
-              }}
             >
-              <span>ADVANCE TO STAGE {level + 1}</span>
-              <ChevronRight size={16} />
+              <span>Advance to stage {level + 1}</span>
+              <ChevronRight size={18} />
             </button>
           )}
 
           {gameState === 'victory' && (
-            <div style={{
-              background: 'rgba(34, 197, 94, 0.15)',
-              border: '2px solid #22c55e',
-              borderRadius: 12,
-              padding: '16px',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 8
-            }}>
-              <div style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.85rem',
-                color: '#fbbf24',
-                textShadow: '0 0 10px rgba(251, 191, 36, 0.8)'
-              }}>
-                🏆 HEIST ACCOMPLISHED!
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#f6f1ff', marginTop: 4 }}>
-                TOTAL SCORE: <b>{score} PTS</b>
-              </div>
-              <div style={{ fontSize: '0.72rem', color: '#38bdf8' }}>
-                BADGE UNLOCKED: <b>Superposition Master</b>
-              </div>
-              <button
-                onClick={fullRestart}
-                style={{
-                  background: '#4a2ea8',
-                  color: '#fff',
-                  border: '1px solid #8f7bc9',
-                  borderRadius: 6,
-                  padding: '6px 14px',
-                  fontSize: '0.7rem',
-                  marginTop: 6,
-                  fontFamily: "'Press Start 2P', monospace"
-                }}
-              >
-                REPLAY HEIST
-              </button>
-            </div>
+            <Banner tone="good" title="HEIST ACCOMPLISHED!" center>
+              <div>Total score: <b>{score} pts</b></div>
+              <div style={{ color: '#38c8ff', marginBottom: 10 }}>Badge unlocked: <b>Superposition Master</b></div>
+              <button className="btn" onClick={fullRestart}>Replay heist</button>
+            </Banner>
           )}
         </div>
       </div>
 
-      {/* ============================================================== */}
-      {/* "THE QUANTUM SECRET" (Why does this work in real physics?)      */}
-      {/* ============================================================== */}
-      <div style={{
-        background: 'var(--bg-surface)',
-        borderRadius: 14,
-        border: '1px solid var(--border-subtle)',
-        overflow: 'hidden'
-      }}>
+      {/* The Quantum Secret: why this works in real physics */}
+      <div style={{ ...panelStyle, padding: 0, overflow: 'hidden' }}>
         <button
           onClick={() => setShowPhysicsBreakdown(!showPhysicsBreakdown)}
+          aria-expanded={showPhysicsBreakdown}
           style={{
             width: '100%',
+            minHeight: 48,
             padding: '12px 14px',
             background: 'transparent',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             color: 'var(--text-primary)',
-            fontSize: '0.8rem',
+            fontSize: '0.95rem',
             fontWeight: 700
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Sparkles size={16} color="var(--accent-cyan)" />
+            <Sparkles size={18} color={theme.accent} />
             <span>The Quantum Physics Secret</span>
           </div>
-          {showPhysicsBreakdown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          {showPhysicsBreakdown ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
-
         {showPhysicsBreakdown && (
           <div style={{
             padding: '0 14px 14px',
-            fontSize: '0.76rem',
+            fontSize: '0.88rem',
             color: 'var(--text-secondary)',
             lineHeight: 1.5,
             display: 'flex',
@@ -1235,7 +899,7 @@ export const QuantumHeist: React.FC = () => {
               borderRadius: 8,
               fontFamily: 'monospace',
               color: '#00d2ff',
-              fontSize: '0.78rem'
+              fontSize: '0.88rem'
             }}>
               |ψ⟩ = (1/√2)|0⟩ + (1/√2)|1⟩
             </div>
@@ -1248,96 +912,33 @@ export const QuantumHeist: React.FC = () => {
         )}
       </div>
 
-      {/* ============================================================== */}
-      {/* "HACKER HANDBOOK" POPUP MODAL                                  */}
-      {/* ============================================================== */}
       {showHandbook && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 16,
-          zIndex: 100
-        }}>
-          <div style={{
-            background: '#2a0f5c',
-            border: '2px solid #00d2ff',
-            borderRadius: 18,
-            padding: '20px',
-            maxWidth: 380,
-            width: '100%',
-            boxShadow: '0 10px 40px rgba(0, 210, 255, 0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-            maxHeight: '85vh',
-            overflowY: 'auto'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Lightbulb size={18} color="#00d2ff" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.72rem', color: '#00d2ff' }}>
-                  HACKER HANDBOOK
-                </span>
-              </div>
-              <button
-                onClick={() => setShowHandbook(false)}
-                style={{ background: 'transparent', color: '#ddd0fa', padding: 4 }}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.78rem', color: '#f1eaff', lineHeight: 1.5 }}>
-              <div>
-                <b style={{ color: '#00d2ff' }}>1. What is the Goal?</b>
-                <p>
-                  You are infiltrating a quantum vault. Classical security scanners can detect when you pick a single door (0 or 1). Your goal is to use quantum gates to manipulate your qubit so you can bypass the defenses!
-                </p>
-              </div>
-
-              <div>
-                <b style={{ color: '#ff4081' }}>2. How to Win Stage 1:</b>
-                <p>
-                  Click the <b>[H] KEY</b> to split into 50% Door 0 and 50% Door 1. The scanner cannot resolve a definite target. The Status Banner will turn green. Then hit <b>ATTEMPT BREACH</b>!
-                </p>
-              </div>
-
-              <div>
-                <b style={{ color: '#c084fc' }}>3. How to Win Stage 2:</b>
-                <p>
-                  Click <b>[H]</b>, then click <b>[Z]</b>. The [Z] gate inverts the phase, producing destructive interference that cancels the alarm frequency!
-                </p>
-              </div>
-
-              <div>
-                <b style={{ color: '#fde047' }}>4. How to Win Stage 3:</b>
-                <p>
-                  Use the D-Pad to tilt the reticle down from the North Pole (|0⟩) to the Equator target ring (|+⟩)!
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowHandbook(false)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: 10,
-                background: 'var(--accent-btn)',
-                color: '#1d0848',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '0.65rem'
-              }}
-            >
-              GOT IT, AGENT!
-            </button>
+        <ArcadeModal theme={theme} title="Hacker Handbook" onClose={() => setShowHandbook(false)} closeLabel="Got it, agent!">
+          <div>
+            <b style={{ color: '#38c8ff' }}>1. What is the goal?</b>
+            <p>
+              You are infiltrating a quantum vault. Classical security scanners can detect when you pick a single door (0 or 1). Use quantum gates to manipulate your qubit and bypass the defenses!
+            </p>
           </div>
-        </div>
+          <div>
+            <b style={{ color: '#ff5c8a' }}>2. How to win Stage 1</b>
+            <p>
+              Click the <b>[H] KEY</b> to split into 50% Door 0 and 50% Door 1. The scanner cannot resolve a definite target. The banner turns green. Then hit <b>Attempt breach</b>!
+            </p>
+          </div>
+          <div>
+            <b style={{ color: '#c4b0ff' }}>3. How to win Stage 2</b>
+            <p>
+              Click <b>[H]</b>, then click <b>[Z]</b>. The [Z] gate inverts the phase, producing destructive interference that cancels the alarm frequency!
+            </p>
+          </div>
+          <div>
+            <b style={{ color: '#ffd23f' }}>4. How to win Stage 3</b>
+            <p>
+              Use the D-Pad to tilt the reticle down from the North Pole (|0⟩) to the Equator target ring (|+⟩)!
+            </p>
+          </div>
+        </ArcadeModal>
       )}
     </div>
   );

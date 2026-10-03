@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { RotateCcw, Play, ChevronRight, Minus, Plus, Check, X as XIcon } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
 import { HonestyTagBadge } from '../shared/HonestyTag';
+import { Banner } from '../shared/Arcade';
+import { frameStyle, THEMES, PIXEL } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
 import {
   QUESTION_PAIRS, classicalWinsPerPair, classicalWinProbability, quantumWinProbabilityPerPair, quantumWinProbability,
@@ -9,9 +11,7 @@ import {
 } from '../../core/games/chsh';
 import type { Bit, ClassicalStrategy, QuantumStrategy, RoundResult } from '../../core/games/chsh';
 
-const ACCENT = '#ff5c8a';
-const EDGE = '#c42e5c';
-const PIXEL = "'Press Start 2P', monospace";
+const ACCENT = THEMES.pink.accent;
 const ESCAPE_TARGET = 0.8;
 const STEP_DEG = 22.5;
 const ROUNDS = 100;
@@ -71,16 +71,7 @@ export const AliceAndBob: React.FC = () => {
   const winRate = runs.length ? runs.filter((r) => r.won).length / runs.length : null;
   const escaped = avgQ >= ESCAPE_TARGET;
 
-  const frame: React.CSSProperties = {
-    background: '#1d0848',
-    border: `3px solid ${ACCENT}`,
-    borderRadius: 20,
-    padding: 16,
-    boxShadow: `0 6px 0 ${EDGE}, 0 0 30px rgba(255, 92, 138, 0.25)`,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 14,
-  };
+  const frame = frameStyle(THEMES.pink);
 
   const header = (label: string) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
@@ -255,9 +246,9 @@ export const AliceAndBob: React.FC = () => {
           <span>Open the door</span> <ChevronRight size={18} />
         </button>
       ) : (
-        <div style={{ background: 'rgba(255,210,63,0.12)', border: '2px solid #ffd23f', borderRadius: 14, padding: 12, fontSize: '0.88rem', lineHeight: 1.45 }}>
+        <Banner tone="warn">
           💡 Hint: Alice's two angles should be {STEP_DEG * 2}° apart. Bob's should sit halfway, one on each side. Try Alice 0° and 45°, Bob 22.5° and −22.5°.
-        </div>
+        </Banner>
       )}
 
       <button className="chip" style={{ alignSelf: 'flex-start' }} onClick={() => { setRuns([]); setStage('classical'); }}>
