@@ -20,7 +20,9 @@ npm run cap:sync     # cap sync android (after build); cap:open / cap:run for An
 
 ## Architecture
 
-- `src/core/circuit/`: state-vector engine (`complex.ts`, `gates.ts`, `statevector.ts`, `bloch.ts`, re-exported via `index.ts`). Pure TS with no React or DOM, so it runs under Vitest in node. `RULES.md` also plans `core/optical/` and `core/stabilizer/`; these don't exist yet. `EngineType` in `content/types.ts` already names all three.
+- `src/core/circuit/`: state-vector engine (`complex.ts`, `gates.ts`, `statevector.ts`, `bloch.ts`, re-exported via `index.ts`). Pure TS with no React or DOM, so it runs under Vitest in node. `sampleCounts` and `measureQubit` take an optional rng for deterministic tests.
+- `src/core/optical/interferometer.ts`: single-photon two-path engine (beam splitter, phase shifter, blocker) built on the same complex/matrix helpers. `core/stabilizer/` from `RULES.md` does not exist yet; `EngineType` in `content/types.ts` already names all three.
+- `src/core/games/`: pure game rules, kept out of the components so they are testable (`blochRunner.ts`, `photonEscape.ts`, `chsh.ts`). Each game component only renders and wires state to these modules. Add new games this way, with a matching `tests/*.test.ts`.
 - `src/content/`: typed content models (`types.ts`), the concept data (`concepts.ts`), and `validator.ts`, which validates records at runtime (e.g. honesty tags, prerequisites). Games, sims, lessons and quizzes link to concepts by id (`relatedGames`, `relatedSims`, ...).
 - `src/components/games/`, `src/components/simulations/`: each game or lab is one self-contained component with inline styles. `src/components/shared/HonestyTag.tsx` is the badge component.
 - `src/App.tsx`: single-file shell with tab state (home/learn/games/sims), game/sim selection and the AI tutor drawer, with no router. A new game or sim has to be imported and wired in here.

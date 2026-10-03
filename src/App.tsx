@@ -22,6 +22,8 @@ import { QuantumHeist } from './components/games/QuantumHeist';
 import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
 import { SchrodingersStealth } from './components/games/SchrodingersStealth';
 import { BlochRunner } from './components/games/BlochRunner';
+import { PhotonEscapeRoom } from './components/games/PhotonEscapeRoom';
+import { AliceAndBob } from './components/games/AliceAndBob';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 
 type Tab = 'home' | 'learn' | 'games' | 'sims';
@@ -83,11 +85,34 @@ const GAMES: GameEntry[] = [
     accent: 'var(--sky)',
     Component: BlochRunner,
   },
+  {
+    id: 'photon_escape_room',
+    title: 'Photon Escape Room',
+    emoji: '🔦',
+    kicker: 'Optics puzzles · 6 rooms',
+    blurb: 'Lock a single photon in an interferometer and make it leave by the door you choose. Beam splitters, phase shifters and a sneaky saboteur.',
+    tag: 'Accurate',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: PhotonEscapeRoom,
+  },
+  {
+    id: 'alice_and_bob',
+    title: 'Alice & Bob: Escape Together',
+    emoji: '🔗',
+    kicker: 'Entanglement · CHSH game',
+    blurb: 'Two prisoners, one rule, no talking. See why classical teams cap at 75%, then share an entangled pair to beat it.',
+    tag: 'Simplified model',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: AliceAndBob,
+  },
 ];
 
-const UPCOMING = [
-  { title: 'Photon Escape Room', concept: 'Interference & Phase', tag: 'Accurate' as HonestyTag, phase: 'Phase 8' },
-  { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell', tag: 'Accurate' as HonestyTag, phase: 'Phase 6' },
+const UPCOMING: { title: string; concept: string; tag: HonestyTag; phase: string }[] = [
+  { title: 'Teleport Relay', concept: 'Teleportation & No-Cloning', tag: 'Accurate', phase: 'Next up' },
+  { title: 'Qubit Surgeon', concept: 'Noise & Error Correction', tag: 'Simplified model', phase: 'Phase 7' },
+  { title: 'Oracle Detective', concept: 'Oracles & Deutsch-Jozsa', tag: 'Accurate', phase: 'Phase 8' },
 ];
 
 const TABS: { id: Tab; label: string; icon: typeof Home }[] = [

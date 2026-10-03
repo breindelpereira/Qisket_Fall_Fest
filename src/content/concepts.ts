@@ -42,4 +42,14 @@ export const CONCEPTS: Record<string, ConceptRecord> = {
     relatedLessons: ['module_5a'],
     honestyTag: 'Accurate',
   },
+  concept_interference: {
+    id: 'concept_interference',
+    name: 'Phase & Interference',
+    summary: 'A single photon can take two paths at once. Whether the paths reinforce or cancel at the output depends on their relative phase, which is how a Mach-Zehnder interferometer routes light with certainty.',
+    prerequisites: ['concept_qubits', 'concept_gates'],
+    relatedGames: ['photon_escape_room'],
+    relatedSims: ['mach_zehnder_lab'],
+    relatedLessons: ['module_4'],
+    honestyTag: 'Accurate',
+  },
 };
