@@ -34,7 +34,9 @@
   --text-secondary: #ddd0fa;
   --text-tertiary: #b9a6e8;
 
-  --font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-family: 'Space Grotesk', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Press Start 2P', 'Courier New', monospace;
+  --font-retro: 'VT323', 'Courier New', monospace;
 }
 
 * {
@@ -95,6 +97,18 @@ input:focus-visible {
 }
 
 /* ---------- Shared components ---------- */
+.pixel {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.retro-num {
+  font-family: var(--font-retro);
+  font-weight: 400;
+  line-height: 1;
+}
+
 .card {
   background: var(--bg-surface);
   border: 2px solid var(--border-subtle);
@@ -116,9 +130,11 @@ input:focus-visible {
   border-radius: 18px;
   background: var(--btn-bg);
   color: var(--btn-ink);
-  font-weight: 900;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   box-shadow: 0 5px 0 var(--btn-edge);
   transition: transform 0.08s ease, box-shadow 0.08s ease;
@@ -142,14 +158,17 @@ input:focus-visible {
   background: rgba(255, 255, 255, 0.14);
   border: 2px solid var(--border-subtle);
   color: #fff;
-  font-weight: 800;
-  font-size: 0.85rem;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 0.62rem;
 }
 
 .eyebrow {
-  font-size: 0.75rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--yellow);
 }
@@ -178,8 +197,9 @@ input:focus-visible {
   min-width: 64px;
   height: 56px;
   color: var(--text-tertiary);
-  font-weight: 800;
-  font-size: 0.72rem;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 0.5rem;
 }
 .nav-tab .nav-icon {
   display: flex;

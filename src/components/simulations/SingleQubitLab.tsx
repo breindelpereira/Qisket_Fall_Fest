@@ -177,7 +177,7 @@ export const SingleQubitLab: React.FC = () => {
       {/* Lab Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff' }}>Single-Qubit Lab</h2>
+          <h2 className="pixel" style={{ fontSize: '0.9rem', color: '#fff' }}>Single-Qubit Lab</h2>
           <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>
             Interactive 3D Bloch Sphere & Quantum Measurement Simulation
           </div>
@@ -222,7 +222,7 @@ export const SingleQubitLab: React.FC = () => {
           </button>
         </div>
 
-        <p style={{ fontSize: '0.76rem', color: '#cbd5e1', lineHeight: 1.45 }}>
+        <p style={{ fontSize: '0.76rem', color: '#f1eaff', lineHeight: 1.45 }}>
           The <b>Bloch Sphere</b> is the 3D compass of a single qubit. The red arrow represents the qubit's quantum state:
         </p>
 
@@ -235,7 +235,7 @@ export const SingleQubitLab: React.FC = () => {
             border: '1px solid rgba(0, 210, 255, 0.25)'
           }}>
             <div style={{ color: 'var(--accent-cyan)', fontWeight: 800 }}>North Pole |0⟩</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.65rem' }}>100% chance of 0</div>
+            <div style={{ color: '#ddd0fa', fontSize: '0.65rem' }}>100% chance of 0</div>
           </div>
 
           <div style={{
@@ -245,7 +245,7 @@ export const SingleQubitLab: React.FC = () => {
             border: '1px solid rgba(138, 63, 252, 0.25)'
           }}>
             <div style={{ color: '#c084fc', fontWeight: 800 }}>Equator |+⟩</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.65rem' }}>50% 0 + 50% 1</div>
+            <div style={{ color: '#ddd0fa', fontSize: '0.65rem' }}>50% 0 + 50% 1</div>
           </div>
 
           <div style={{
@@ -255,7 +255,7 @@ export const SingleQubitLab: React.FC = () => {
             border: '1px solid rgba(255, 64, 129, 0.25)'
           }}>
             <div style={{ color: 'var(--accent-pink)', fontWeight: 800 }}>South Pole |1⟩</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.65rem' }}>100% chance of 1</div>
+            <div style={{ color: '#ddd0fa', fontSize: '0.65rem' }}>100% chance of 1</div>
           </div>
         </div>
 
@@ -331,7 +331,7 @@ export const SingleQubitLab: React.FC = () => {
           background: 'rgba(0, 0, 0, 0.4)',
           borderRadius: 8,
           fontSize: '0.68rem',
-          color: '#94a3b8',
+          color: '#ddd0fa',
           fontFamily: 'monospace'
         }}>
           <span>X: {blochCoords.x.toFixed(2)}</span>
@@ -398,7 +398,7 @@ export const SingleQubitLab: React.FC = () => {
           </span>
         </div>
 
-        <div style={{ fontSize: '0.76rem', color: '#e2e8f0', lineHeight: 1.45 }}>
+        <div style={{ fontSize: '0.76rem', color: '#f6f1ff', lineHeight: 1.45 }}>
           {blochCoords.z > 0.9 ? (
             <span>
               The state is at the <b>North Pole</b>. The qubit behaves like a classical bit locked on <b>0</b>. If measured, it will yield <b>0 with 100% certainty</b>.
@@ -477,7 +477,7 @@ export const SingleQubitLab: React.FC = () => {
           gap: 8
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+            <span style={{ fontSize: '0.72rem', color: '#ddd0fa' }}>
               Want to see real quantum collapse in action?
             </span>
             <button
@@ -485,7 +485,7 @@ export const SingleQubitLab: React.FC = () => {
               disabled={isSampling}
               style={{
                 background: 'linear-gradient(135deg, #00d2ff 0%, #8a3ffc 100%)',
-                color: '#080b1a',
+                color: '#2a0f5c',
                 padding: '6px 12px',
                 borderRadius: 8,
                 fontSize: '0.72rem',
@@ -508,7 +508,7 @@ export const SingleQubitLab: React.FC = () => {
               borderRadius: 10,
               padding: '8px 12px',
               fontSize: '0.72rem',
-              color: '#cbd5e1',
+              color: '#f1eaff',
               display: 'flex',
               flexDirection: 'column',
               gap: 4
@@ -517,7 +517,7 @@ export const SingleQubitLab: React.FC = () => {
                 <span style={{ color: 'var(--accent-cyan)' }}>Measured |0⟩: {shotsResult.count0} times</span>
                 <span style={{ color: 'var(--accent-pink)' }}>Measured |1⟩: {shotsResult.count1} times</span>
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
+              <div style={{ fontSize: '0.68rem', color: '#ddd0fa' }}>
                 💡 <i>Notice: A quantum measurement NEVER yields 'half a bit'—the superposition collapses probabilistically to either 0 or 1!</i>
               </div>
             </div>
@@ -555,7 +555,7 @@ export const SingleQubitLab: React.FC = () => {
               borderRadius: 10,
               background: activeExperiment === 'superposition' ? 'rgba(0, 210, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'superposition' ? 'var(--accent-cyan)' : 'transparent'}`,
-              color: activeExperiment === 'superposition' ? 'var(--accent-cyan)' : '#cbd5e1',
+              color: activeExperiment === 'superposition' ? 'var(--accent-cyan)' : '#f1eaff',
               fontSize: '0.7rem',
               fontWeight: 700
             }}
@@ -573,7 +573,7 @@ export const SingleQubitLab: React.FC = () => {
               borderRadius: 10,
               background: activeExperiment === 'phase' ? 'rgba(138, 63, 252, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'phase' ? '#c084fc' : 'transparent'}`,
-              color: activeExperiment === 'phase' ? '#c084fc' : '#cbd5e1',
+              color: activeExperiment === 'phase' ? '#c084fc' : '#f1eaff',
               fontSize: '0.7rem',
               fontWeight: 700
             }}
@@ -591,7 +591,7 @@ export const SingleQubitLab: React.FC = () => {
               borderRadius: 10,
               background: activeExperiment === 'bitflip' ? 'rgba(255, 64, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'bitflip' ? 'var(--accent-pink)' : 'transparent'}`,
-              color: activeExperiment === 'bitflip' ? 'var(--accent-pink)' : '#cbd5e1',
+              color: activeExperiment === 'bitflip' ? 'var(--accent-pink)' : '#f1eaff',
               fontSize: '0.7rem',
               fontWeight: 700
             }}
@@ -609,7 +609,7 @@ export const SingleQubitLab: React.FC = () => {
             padding: '10px 12px',
             fontSize: '0.74rem',
             lineHeight: 1.45,
-            color: '#e2e8f0'
+            color: '#f6f1ff'
           }}>
             <b>🧪 Experiment 1: How Hadamard creates Superposition</b>
             <p style={{ marginTop: 4 }}>
@@ -630,7 +630,7 @@ export const SingleQubitLab: React.FC = () => {
             padding: '10px 12px',
             fontSize: '0.74rem',
             lineHeight: 1.45,
-            color: '#e2e8f0'
+            color: '#f6f1ff'
           }}>
             <b>🧪 Experiment 2: The Mystery of Quantum Phase</b>
             <p style={{ marginTop: 4 }}>
@@ -651,7 +651,7 @@ export const SingleQubitLab: React.FC = () => {
             padding: '10px 12px',
             fontSize: '0.74rem',
             lineHeight: 1.45,
-            color: '#e2e8f0'
+            color: '#f6f1ff'
           }}>
             <b>🧪 Experiment 3: Quantum NOT (Pauli-X)</b>
             <p style={{ marginTop: 4 }}>
@@ -704,7 +704,7 @@ export const SingleQubitLab: React.FC = () => {
           <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
             Apply Unitary Gates (3D Rotations)
           </span>
-          <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>Tap to rotate sphere</span>
+          <span style={{ fontSize: '0.68rem', color: '#ddd0fa' }}>Tap to rotate sphere</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
           {[
@@ -768,7 +768,7 @@ export const SingleQubitLab: React.FC = () => {
             }}
             style={{ width: '100%', accentColor: 'var(--accent-cyan)' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#64748b', marginTop: 2 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#b9a6e8', marginTop: 2 }}>
             <span>0° = North |0⟩</span>
             <span>90° = Equator (50/50)</span>
             <span>180° = South |1⟩</span>
@@ -793,7 +793,7 @@ export const SingleQubitLab: React.FC = () => {
             }}
             style={{ width: '100%', accentColor: 'var(--accent-pink)' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#64748b', marginTop: 2 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#b9a6e8', marginTop: 2 }}>
             <span>-180° = |−⟩</span>
             <span>0° = |+⟩</span>
             <span>+90° = |+i⟩</span>
@@ -875,7 +875,7 @@ export const SingleQubitLab: React.FC = () => {
           <div style={{
             padding: '14px',
             borderTop: '1px solid var(--border-subtle)',
-            background: 'rgba(8, 11, 26, 0.6)',
+            background: 'rgba(42, 15, 92, 0.6)',
             fontSize: '0.78rem',
             lineHeight: 1.6,
             display: 'flex',
@@ -906,7 +906,7 @@ export const SingleQubitLab: React.FC = () => {
 
             <div>
               <div style={{ color: 'var(--text-tertiary)', fontSize: '0.7rem' }}>Born Rule Probabilities:</div>
-              <div style={{ color: '#cbd5e1' }}>
+              <div style={{ color: '#f1eaff' }}>
                 P(0) = |α|² = {(prob0).toFixed(4)} ({(prob0 * 100).toFixed(1)}%)<br />
                 P(1) = |β|² = {(prob1).toFixed(4)} ({(prob1 * 100).toFixed(1)}%)
               </div>

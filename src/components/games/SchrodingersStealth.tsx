@@ -307,7 +307,7 @@ export const SchrodingersStealth: React.FC = () => {
             }}>
               SECTOR {sector}/3
             </span>
-            <span style={{ color: '#64748b' }}>•</span>
+            <span style={{ color: '#b9a6e8' }}>•</span>
             <span style={{ color: '#fbbf24', fontSize: '0.62rem', fontWeight: 800 }}>
               {score} PTS
             </span>
@@ -318,7 +318,7 @@ export const SchrodingersStealth: React.FC = () => {
               onClick={() => setSoundEnabled(!soundEnabled)}
               style={{
                 background: 'transparent',
-                color: soundEnabled ? '#00d2ff' : '#64748b',
+                color: soundEnabled ? '#00d2ff' : '#b9a6e8',
                 padding: 2,
                 display: 'flex'
               }}
@@ -355,7 +355,7 @@ export const SchrodingersStealth: React.FC = () => {
           }}>
             🐾 Schrödinger's Stealth
           </h2>
-          <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+          <p style={{ fontSize: '0.72rem', color: '#ddd0fa' }}>
             Quantum Measurement & Basis Infiltration • Slip through without collapsing
           </p>
         </div>
@@ -394,7 +394,7 @@ export const SchrodingersStealth: React.FC = () => {
           </button>
 
           {showAnalogy && (
-            <div style={{ marginTop: 8, fontSize: '0.74rem', color: '#cbd5e1', lineHeight: 1.45 }}>
+            <div style={{ marginTop: 8, fontSize: '0.74rem', color: '#f1eaff', lineHeight: 1.45 }}>
               <p>
                 Think of each security scanner like a <b>shaped slit or keyhole</b>:
               </p>
@@ -454,8 +454,8 @@ export const SchrodingersStealth: React.FC = () => {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: currentStep === 0 ? 'var(--accent-cyan)' : '#1e293b',
-                color: currentStep === 0 ? '#050714' : '#94a3b8',
+                background: currentStep === 0 ? 'var(--accent-cyan)' : '#4a2ea8',
+                color: currentStep === 0 ? '#1d0848' : '#ddd0fa',
                 border: '2px solid #fff',
                 display: 'flex',
                 alignItems: 'center',
@@ -465,7 +465,7 @@ export const SchrodingersStealth: React.FC = () => {
               }}>
                 🐱
               </div>
-              <span style={{ fontSize: '0.58rem', color: '#94a3b8', marginTop: 4, fontWeight: 700 }}>
+              <span style={{ fontSize: '0.58rem', color: '#ddd0fa', marginTop: 4, fontWeight: 700 }}>
                 AGENT
               </span>
             </div>
@@ -481,7 +481,7 @@ export const SchrodingersStealth: React.FC = () => {
                     ? 'rgba(34, 197, 94, 0.25)'
                     : currentStep === idx
                     ? `${cp.beamColor}33`
-                    : 'rgba(15, 23, 42, 0.9)',
+                    : 'rgba(42, 15, 92, 0.9)',
                   border: `2px solid ${currentStep > idx ? '#22c55e' : cp.beamColor}`,
                   display: 'flex',
                   alignItems: 'center',
@@ -506,7 +506,7 @@ export const SchrodingersStealth: React.FC = () => {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: currentStep >= currentSectorCheckpoints.length ? '#22c55e' : '#1e293b',
+                background: currentStep >= currentSectorCheckpoints.length ? '#22c55e' : '#4a2ea8',
                 color: '#fff',
                 border: '2px solid #fff',
                 display: 'flex',
@@ -549,7 +549,7 @@ export const SchrodingersStealth: React.FC = () => {
                 <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#fff', margin: '2px 0' }}>
                   {activeCheckpoint.shape}
                 </div>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#e2e8f0' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#f6f1ff' }}>
                   {activeCheckpoint.slotName}
                 </div>
               </div>
@@ -577,7 +577,7 @@ export const SchrodingersStealth: React.FC = () => {
                 <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#fff', margin: '2px 0' }}>
                   {currentStance.shape}
                 </div>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#e2e8f0' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#f6f1ff' }}>
                   {currentStance.name}
                 </div>
               </div>
@@ -609,7 +609,7 @@ export const SchrodingersStealth: React.FC = () => {
 
         {/* Alarm Detection Meter */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.8)',
+          background: 'rgba(42, 15, 92, 0.8)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 12,
           padding: '8px 12px',
@@ -656,7 +656,7 @@ export const SchrodingersStealth: React.FC = () => {
             borderRadius: 10,
             padding: '8px 12px',
             fontSize: '0.73rem',
-            color: gameState === 'game_over' || gameState === 'alarm_alert' ? '#fca5a5' : '#e2e8f0',
+            color: gameState === 'game_over' || gameState === 'alarm_alert' ? '#fca5a5' : '#f6f1ff',
             lineHeight: 1.4,
             marginBottom: 12,
             position: 'relative',
@@ -680,7 +680,7 @@ export const SchrodingersStealth: React.FC = () => {
               <span style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.52rem',
-                color: '#94a3b8'
+                color: '#ddd0fa'
               }}>
                 YOUR UTILITY GADGETS:
               </span>
@@ -695,7 +695,7 @@ export const SchrodingersStealth: React.FC = () => {
                 onClick={applyHadamard}
                 style={{
                   background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                  color: '#050714',
+                  color: '#1d0848',
                   padding: '10px 4px',
                   borderRadius: 10,
                   border: '2px solid #fff',
@@ -711,7 +711,7 @@ export const SchrodingersStealth: React.FC = () => {
                   gap: 2
                 }}
               >
-                <Zap size={15} fill="#050714" />
+                <Zap size={15} fill="#1d0848" />
                 <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.58rem', fontWeight: 900 }}>
                   [H] TILT
                 </span>
@@ -818,7 +818,7 @@ export const SchrodingersStealth: React.FC = () => {
                 padding: '14px',
                 borderRadius: 12,
                 background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                color: '#050714',
+                color: '#1d0848',
                 border: '2px solid #fff',
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.68rem',
@@ -856,9 +856,9 @@ export const SchrodingersStealth: React.FC = () => {
                   width: '100%',
                   padding: '10px',
                   borderRadius: 10,
-                  background: '#1e293b',
-                  color: '#94a3b8',
-                  border: '1px solid #475569',
+                  background: '#4a2ea8',
+                  color: '#ddd0fa',
+                  border: '1px solid #8f7bc9',
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: '0.58rem'
                 }}
@@ -887,7 +887,7 @@ export const SchrodingersStealth: React.FC = () => {
               }}>
                 🏆 VAULT CONQUERED!
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#e2e8f0' }}>
+              <div style={{ fontSize: '0.78rem', color: '#f6f1ff' }}>
                 TOTAL SCORE: <b>{score} PTS</b>
               </div>
               <div style={{ fontSize: '0.72rem', color: '#38bdf8' }}>
@@ -896,9 +896,9 @@ export const SchrodingersStealth: React.FC = () => {
               <button
                 onClick={fullRestart}
                 style={{
-                  background: '#1e293b',
+                  background: '#4a2ea8',
                   color: '#fff',
-                  border: '1px solid #475569',
+                  border: '1px solid #8f7bc9',
                   borderRadius: 6,
                   padding: '8px 14px',
                   fontSize: '0.65rem',
@@ -987,7 +987,7 @@ export const SchrodingersStealth: React.FC = () => {
           zIndex: 100
         }}>
           <div style={{
-            background: '#090d24',
+            background: '#2a0f5c',
             border: '2px solid #00d2ff',
             borderRadius: 18,
             padding: '20px',
@@ -1009,13 +1009,13 @@ export const SchrodingersStealth: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowHandbook(false)}
-                style={{ background: 'transparent', color: '#94a3b8', padding: 4 }}
+                style={{ background: 'transparent', color: '#ddd0fa', padding: 4 }}
               >
                 ✕
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.76rem', color: '#cbd5e1', lineHeight: 1.5 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.76rem', color: '#f1eaff', lineHeight: 1.5 }}>
               <div>
                 <b style={{ color: '#00d2ff' }}>1. The Rule:</b>
                 <p>
@@ -1047,7 +1047,7 @@ export const SchrodingersStealth: React.FC = () => {
                 padding: '12px',
                 borderRadius: 10,
                 background: 'var(--accent-btn)',
-                color: '#050714',
+                color: '#1d0848',
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.62rem'
               }}

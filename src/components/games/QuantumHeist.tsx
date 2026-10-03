@@ -193,11 +193,11 @@ export const QuantumHeist: React.FC = () => {
     }}>
       {/* 8-Bit Arcade Cabinet Shell */}
       <div style={{
-        background: '#040716',
+        background: '#1d0848',
         border: '3px solid #00d2ff',
         borderRadius: 20,
         padding: '16px',
-        boxShadow: '0 0 35px rgba(0, 210, 255, 0.35), inset 0 0 50px rgba(0, 0, 0, 0.95)',
+        boxShadow: '0 6px 0 #0d8fc4, 0 0 30px rgba(0, 210, 255, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.6)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -237,7 +237,7 @@ export const QuantumHeist: React.FC = () => {
           {/* Stage & Score */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ color: '#00d2ff' }}>STAGE {level}/3</span>
-            <span style={{ color: '#64748b' }}>|</span>
+            <span style={{ color: '#b9a6e8' }}>|</span>
             <span style={{ color: '#fbbf24' }}>{score} PTS</span>
           </div>
 
@@ -249,7 +249,7 @@ export const QuantumHeist: React.FC = () => {
                   key={heart}
                   size={12}
                   fill={heart <= shields ? '#f43f5e' : 'transparent'}
-                  color={heart <= shields ? '#f43f5e' : '#475569'}
+                  color={heart <= shields ? '#f43f5e' : '#8f7bc9'}
                 />
               ))}
             </div>
@@ -259,7 +259,7 @@ export const QuantumHeist: React.FC = () => {
               onClick={() => setSoundEnabled(!soundEnabled)}
               style={{
                 background: 'transparent',
-                color: soundEnabled ? '#00d2ff' : '#64748b',
+                color: soundEnabled ? '#00d2ff' : '#b9a6e8',
                 padding: 2,
                 display: 'flex'
               }}
@@ -302,7 +302,7 @@ export const QuantumHeist: React.FC = () => {
           }}>
             ⚡ QUANTUM HEIST ⚡
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>
+          <div style={{ fontSize: '0.72rem', color: '#ddd0fa', fontWeight: 600 }}>
             {level === 1 && 'LEVEL 1: The Dual-Door Motion Tracker'}
             {level === 2 && 'LEVEL 2: The Wave Phase Frequency Trap'}
             {level === 3 && 'LEVEL 3: The 3D Bloch Gyro Decryption'}
@@ -313,7 +313,7 @@ export const QuantumHeist: React.FC = () => {
         {/* HOW TO WIN THIS LEVEL: IN-GAME MISSION OBJECTIVE CARD           */}
         {/* ============================================================== */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.85)',
+          background: 'rgba(42, 15, 92, 0.85)',
           border: '1px solid rgba(0, 210, 255, 0.35)',
           borderRadius: 12,
           padding: '10px 12px',
@@ -340,7 +340,7 @@ export const QuantumHeist: React.FC = () => {
               style={{
                 background: hintActive ? '#fbbf24' : 'rgba(251, 191, 36, 0.15)',
                 border: '1px solid #fbbf24',
-                color: hintActive ? '#050714' : '#fbbf24',
+                color: hintActive ? '#1d0848' : '#fbbf24',
                 borderRadius: 6,
                 padding: '3px 8px',
                 fontSize: '0.58rem',
@@ -356,7 +356,7 @@ export const QuantumHeist: React.FC = () => {
           </div>
 
           {/* Plain-English Goal & Action instruction */}
-          <div style={{ fontSize: '0.78rem', color: '#e2e8f0', lineHeight: 1.45 }}>
+          <div style={{ fontSize: '0.78rem', color: '#f6f1ff', lineHeight: 1.45 }}>
             {level === 1 && (
               <div>
                 The security camera fires if you are 100% in one door.{' '}
@@ -422,7 +422,7 @@ export const QuantumHeist: React.FC = () => {
         {/* ============================================================== */}
         {level < 3 && (
           <div style={{
-            background: 'radial-gradient(circle at 50% 20%, #111a42 0%, #06091a 80%)',
+            background: 'radial-gradient(circle at 50% 20%, #4a26a0 0%, #1d0848 80%)',
             border: '2px solid rgba(0, 210, 255, 0.4)',
             borderRadius: 14,
             padding: '16px 12px 14px',
@@ -440,8 +440,8 @@ export const QuantumHeist: React.FC = () => {
             }}>
               {/* Turret Body */}
               <div style={{
-                background: '#1e293b',
-                border: '2px solid #64748b',
+                background: '#4a2ea8',
+                border: '2px solid #b9a6e8',
                 borderRadius: '8px 8px 14px 14px',
                 padding: '4px 14px',
                 display: 'flex',
@@ -494,7 +494,7 @@ export const QuantumHeist: React.FC = () => {
             {/* Level 2 Wave Oscilloscope Interferometer Display */}
             {level === 2 && (
               <div style={{
-                background: '#070b1e',
+                background: '#24095a',
                 border: '1px solid rgba(0, 210, 255, 0.3)',
                 borderRadius: 10,
                 padding: '8px 10px',
@@ -519,7 +519,7 @@ export const QuantumHeist: React.FC = () => {
                 <div style={{ height: 32, position: 'relative', overflow: 'hidden' }}>
                   <svg width="100%" height="32" viewBox="0 0 280 32" preserveAspectRatio="none">
                     {/* Center baseline */}
-                    <line x1="0" y1="16" x2="280" y2="16" stroke="#1e293b" strokeWidth="1" strokeDasharray="3 3" />
+                    <line x1="0" y1="16" x2="280" y2="16" stroke="#4a2ea8" strokeWidth="1" strokeDasharray="3 3" />
                     
                     {/* Security Trap Wave: Sinusoid (+1) */}
                     <path
@@ -558,8 +558,8 @@ export const QuantumHeist: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               {/* DOOR 0 */}
               <div style={{
-                background: prob0 > 0.4 ? 'rgba(0, 210, 255, 0.16)' : 'rgba(15, 23, 42, 0.9)',
-                border: `2px ${prob0 > 0.4 ? 'solid' : 'dashed'} ${prob0 > 0.4 ? '#00d2ff' : '#334155'}`,
+                background: prob0 > 0.4 ? 'rgba(0, 210, 255, 0.16)' : 'rgba(42, 15, 92, 0.9)',
+                border: `2px ${prob0 > 0.4 ? 'solid' : 'dashed'} ${prob0 > 0.4 ? '#00d2ff' : '#6a4ec2'}`,
                 borderRadius: 14,
                 padding: '12px 8px 10px',
                 textAlign: 'center',
@@ -571,7 +571,7 @@ export const QuantumHeist: React.FC = () => {
                 <div style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: '0.62rem',
-                  color: prob0 > 0.4 ? '#00d2ff' : '#64748b',
+                  color: prob0 > 0.4 ? '#00d2ff' : '#b9a6e8',
                   marginBottom: 6
                 }}>
                   DOOR |0⟩
@@ -618,7 +618,7 @@ export const QuantumHeist: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <span style={{ fontSize: '0.65rem', color: '#475569' }}>EMPTY</span>
+                    <span style={{ fontSize: '0.65rem', color: '#8f7bc9' }}>EMPTY</span>
                   )}
                 </div>
 
@@ -626,21 +626,21 @@ export const QuantumHeist: React.FC = () => {
                 <div style={{
                   fontSize: '0.88rem',
                   fontWeight: 800,
-                  color: prob0 > 0.4 ? '#00d2ff' : '#94a3b8',
+                  color: prob0 > 0.4 ? '#00d2ff' : '#ddd0fa',
                   marginTop: 4
                 }}>
                   {(prob0 * 100).toFixed(0)}% PRESENCE
                 </div>
 
-                <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 2 }}>
+                <div style={{ fontSize: '0.65rem', color: '#ddd0fa', marginTop: 2 }}>
                   Amplitude: <b>{alpha.re.toFixed(2)}</b>
                 </div>
               </div>
 
               {/* DOOR 1 */}
               <div style={{
-                background: prob1 > 0.4 ? 'rgba(255, 64, 129, 0.16)' : 'rgba(15, 23, 42, 0.9)',
-                border: `2px ${prob1 > 0.4 ? 'solid' : 'dashed'} ${prob1 > 0.4 ? '#ff4081' : '#334155'}`,
+                background: prob1 > 0.4 ? 'rgba(255, 64, 129, 0.16)' : 'rgba(42, 15, 92, 0.9)',
+                border: `2px ${prob1 > 0.4 ? 'solid' : 'dashed'} ${prob1 > 0.4 ? '#ff4081' : '#6a4ec2'}`,
                 borderRadius: 14,
                 padding: '12px 8px 10px',
                 textAlign: 'center',
@@ -652,7 +652,7 @@ export const QuantumHeist: React.FC = () => {
                 <div style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: '0.62rem',
-                  color: prob1 > 0.4 ? '#ff4081' : '#64748b',
+                  color: prob1 > 0.4 ? '#ff4081' : '#b9a6e8',
                   marginBottom: 6
                 }}>
                   DOOR |1⟩
@@ -698,7 +698,7 @@ export const QuantumHeist: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <span style={{ fontSize: '0.65rem', color: '#475569' }}>EMPTY</span>
+                    <span style={{ fontSize: '0.65rem', color: '#8f7bc9' }}>EMPTY</span>
                   )}
                 </div>
 
@@ -706,13 +706,13 @@ export const QuantumHeist: React.FC = () => {
                 <div style={{
                   fontSize: '0.88rem',
                   fontWeight: 800,
-                  color: prob1 > 0.4 ? '#ff4081' : '#94a3b8',
+                  color: prob1 > 0.4 ? '#ff4081' : '#ddd0fa',
                   marginTop: 4
                 }}>
                   {(prob1 * 100).toFixed(0)}% PRESENCE
                 </div>
 
-                <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 2 }}>
+                <div style={{ fontSize: '0.65rem', color: '#ddd0fa', marginTop: 2 }}>
                   Amplitude: <b>{beta.re.toFixed(2)}</b>
                 </div>
               </div>
@@ -725,7 +725,7 @@ export const QuantumHeist: React.FC = () => {
         {/* ============================================================== */}
         {level === 3 && (
           <div style={{
-            background: 'radial-gradient(circle at center, #111a42 0%, #06091a 80%)',
+            background: 'radial-gradient(circle at center, #4a26a0 0%, #1d0848 80%)',
             border: '2px solid #00d2ff',
             borderRadius: 14,
             padding: '14px',
@@ -766,13 +766,13 @@ export const QuantumHeist: React.FC = () => {
               fontSize: '0.72rem'
             }}>
               <div>
-                <span style={{ color: '#94a3b8' }}>Aim Dist: </span>
+                <span style={{ color: '#ddd0fa' }}>Aim Dist: </span>
                 <b style={{ color: isLevel3Ready ? '#22c55e' : '#fbbf24' }}>
                   {level3Dist.toFixed(2)} {isLevel3Ready ? '✅ (LOCKED!)' : '(Steer closer)'}
                 </b>
               </div>
               <div>
-                <span style={{ color: '#94a3b8' }}>Target: </span>
+                <span style={{ color: '#ddd0fa' }}>Target: </span>
                 <b style={{ color: '#00d2ff' }}>|+⟩ (Equator)</b>
               </div>
             </div>
@@ -789,7 +789,7 @@ export const QuantumHeist: React.FC = () => {
               <button
                 onClick={() => steer(-0.15, 0)}
                 style={{
-                  background: '#1e293b',
+                  background: '#4a2ea8',
                   border: '2px solid #00d2ff',
                   color: '#00d2ff',
                   borderRadius: 8,
@@ -805,7 +805,7 @@ export const QuantumHeist: React.FC = () => {
                 <button
                   onClick={() => steer(0, -0.2)}
                   style={{
-                    background: '#1e293b',
+                    background: '#4a2ea8',
                     border: '2px solid #00d2ff',
                     color: '#00d2ff',
                     borderRadius: 8,
@@ -821,7 +821,7 @@ export const QuantumHeist: React.FC = () => {
                   width: 36,
                   height: 36,
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, #00d2ff, #0f172a)',
+                  background: 'radial-gradient(circle, #00d2ff, #2a0f5c)',
                   border: '2px solid #fff',
                   display: 'flex',
                   alignItems: 'center',
@@ -834,7 +834,7 @@ export const QuantumHeist: React.FC = () => {
                 <button
                   onClick={() => steer(0, 0.2)}
                   style={{
-                    background: '#1e293b',
+                    background: '#4a2ea8',
                     border: '2px solid #00d2ff',
                     color: '#00d2ff',
                     borderRadius: 8,
@@ -850,7 +850,7 @@ export const QuantumHeist: React.FC = () => {
               <button
                 onClick={() => steer(0.15, 0)}
                 style={{
-                  background: '#1e293b',
+                  background: '#4a2ea8',
                   border: '2px solid #00d2ff',
                   color: '#00d2ff',
                   borderRadius: 8,
@@ -901,7 +901,7 @@ export const QuantumHeist: React.FC = () => {
 
           <span style={{
             fontSize: '0.58rem',
-            color: '#94a3b8',
+            color: '#ddd0fa',
             fontFamily: "'Press Start 2P', monospace"
           }}>
             {(level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready) ? 'SAFE ✅' : 'WAITING ⏳'}
@@ -938,7 +938,7 @@ export const QuantumHeist: React.FC = () => {
               <span style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.55rem',
-                color: '#94a3b8'
+                color: '#ddd0fa'
               }}>
                 HACK CARTRIDGES:
               </span>
@@ -953,7 +953,7 @@ export const QuantumHeist: React.FC = () => {
                 onClick={applyHadamard}
                 style={{
                   background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                  color: '#050714',
+                  color: '#1d0848',
                   padding: '10px 6px',
                   borderRadius: 10,
                   border: '2px solid #fff',
@@ -966,7 +966,7 @@ export const QuantumHeist: React.FC = () => {
                   textAlign: 'center'
                 }}
               >
-                <Zap size={16} fill="#050714" />
+                <Zap size={16} fill="#1d0848" />
                 <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.6rem', fontWeight: 900 }}>
                   [H] KEY
                 </span>
@@ -1063,9 +1063,9 @@ export const QuantumHeist: React.FC = () => {
                 width: '100%',
                 padding: '14px',
                 borderRadius: 12,
-                background: '#334155',
+                background: '#6a4ec2',
                 color: '#fff',
-                border: '2px solid #94a3b8',
+                border: '2px solid #ddd0fa',
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.68rem',
                 display: 'flex',
@@ -1093,7 +1093,7 @@ export const QuantumHeist: React.FC = () => {
               <div style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.8rem', color: '#fca5a5' }}>
                 ☠️ SECURITY SHIELDS DEPLETED!
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#cbd5e1' }}>
+              <div style={{ fontSize: '0.74rem', color: '#f1eaff' }}>
                 Agent Q was captured. Restart the heist with full shields!
               </div>
               <button
@@ -1124,7 +1124,7 @@ export const QuantumHeist: React.FC = () => {
                 padding: '14px',
                 borderRadius: 12,
                 background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                color: '#050714',
+                color: '#1d0848',
                 border: '2px solid #fff',
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.7rem',
@@ -1159,7 +1159,7 @@ export const QuantumHeist: React.FC = () => {
               }}>
                 🏆 HEIST ACCOMPLISHED!
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#e2e8f0', marginTop: 4 }}>
+              <div style={{ fontSize: '0.78rem', color: '#f6f1ff', marginTop: 4 }}>
                 TOTAL SCORE: <b>{score} PTS</b>
               </div>
               <div style={{ fontSize: '0.72rem', color: '#38bdf8' }}>
@@ -1168,9 +1168,9 @@ export const QuantumHeist: React.FC = () => {
               <button
                 onClick={fullRestart}
                 style={{
-                  background: '#1e293b',
+                  background: '#4a2ea8',
                   color: '#fff',
-                  border: '1px solid #475569',
+                  border: '1px solid #8f7bc9',
                   borderRadius: 6,
                   padding: '6px 14px',
                   fontSize: '0.7rem',
@@ -1264,7 +1264,7 @@ export const QuantumHeist: React.FC = () => {
           zIndex: 100
         }}>
           <div style={{
-            background: '#090d24',
+            background: '#2a0f5c',
             border: '2px solid #00d2ff',
             borderRadius: 18,
             padding: '20px',
@@ -1286,13 +1286,13 @@ export const QuantumHeist: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowHandbook(false)}
-                style={{ background: 'transparent', color: '#94a3b8', padding: 4 }}
+                style={{ background: 'transparent', color: '#ddd0fa', padding: 4 }}
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.5 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.78rem', color: '#f1eaff', lineHeight: 1.5 }}>
               <div>
                 <b style={{ color: '#00d2ff' }}>1. What is the Goal?</b>
                 <p>
@@ -1329,7 +1329,7 @@ export const QuantumHeist: React.FC = () => {
                 padding: '12px',
                 borderRadius: 10,
                 background: 'var(--accent-btn)',
-                color: '#050714',
+                color: '#1d0848',
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: '0.65rem'
               }}

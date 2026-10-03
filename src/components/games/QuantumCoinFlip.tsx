@@ -192,7 +192,7 @@ export const QuantumCoinFlip: React.FC = () => {
           }}>
             🪙 The Quantum Penny Paradox
           </h2>
-          <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+          <p style={{ fontSize: '0.72rem', color: '#ddd0fa' }}>
             David Meyer's 1999 Game: Can a classical player ever beat a quantum computer at a coin toss?
           </p>
         </div>
@@ -205,7 +205,7 @@ export const QuantumCoinFlip: React.FC = () => {
           gridTemplateColumns: '1fr auto 1fr',
           gap: 10,
           alignItems: 'center',
-          background: 'rgba(15, 23, 42, 0.75)',
+          background: 'rgba(42, 15, 92, 0.75)',
           border: '1px solid rgba(138, 63, 252, 0.25)',
           borderRadius: 14,
           padding: '10px 14px',
@@ -229,7 +229,7 @@ export const QuantumCoinFlip: React.FC = () => {
               🤖
             </div>
             <div>
-              <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.62rem', color: '#ddd0fa', fontWeight: 700 }}>
                 DR. QUANTUM (AI)
               </div>
               <div style={{ fontSize: '0.98rem', fontWeight: 900, color: '#f43f5e' }}>
@@ -241,7 +241,7 @@ export const QuantumCoinFlip: React.FC = () => {
           <span style={{
             fontFamily: "'Press Start 2P', monospace",
             fontSize: '0.68rem',
-            color: '#64748b'
+            color: '#b9a6e8'
           }}>
             VS
           </span>
@@ -249,7 +249,7 @@ export const QuantumCoinFlip: React.FC = () => {
           {/* Player Side */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.62rem', color: '#ddd0fa', fontWeight: 700 }}>
                 YOU (PLAYER)
               </div>
               <div style={{ fontSize: '0.98rem', fontWeight: 900, color: '#38bdf8' }}>
@@ -415,7 +415,7 @@ export const QuantumCoinFlip: React.FC = () => {
               padding: '6px 4px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '0.55rem', color: '#94a3b8' }}>START</div>
+              <div style={{ fontSize: '0.55rem', color: '#ddd0fa' }}>START</div>
               <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#fff' }}>|0⟩ Heads</div>
             </div>
 
@@ -427,7 +427,7 @@ export const QuantumCoinFlip: React.FC = () => {
               padding: '6px 4px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '0.55rem', color: '#94a3b8' }}>1. AI MOVE</div>
+              <div style={{ fontSize: '0.55rem', color: '#ddd0fa' }}>1. AI MOVE</div>
               <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#c084fc' }}>Hadamard [H]</div>
             </div>
 
@@ -440,7 +440,7 @@ export const QuantumCoinFlip: React.FC = () => {
               textAlign: 'center',
               animation: turnState === 'player_turn' ? 'pulseGlow 2s infinite' : 'none'
             }}>
-              <div style={{ fontSize: '0.55rem', color: '#94a3b8' }}>2. YOU</div>
+              <div style={{ fontSize: '0.55rem', color: '#ddd0fa' }}>2. YOU</div>
               <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8' }}>
                 {playerChoice || 'Your Move'}
               </div>
@@ -454,7 +454,7 @@ export const QuantumCoinFlip: React.FC = () => {
               padding: '6px 4px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '0.55rem', color: '#94a3b8' }}>3. AI + MEASURE</div>
+              <div style={{ fontSize: '0.55rem', color: '#ddd0fa' }}>3. AI + MEASURE</div>
               <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#f43f5e' }}>
                 {turnState === 'measured' ? coinState : 'Hadamard [H]'}
               </div>
@@ -500,7 +500,7 @@ export const QuantumCoinFlip: React.FC = () => {
             }}>
               DR. QUANTUM SAYS:
             </div>
-            <div style={{ fontSize: '0.76rem', color: '#e2e8f0', lineHeight: 1.45 }}>
+            <div style={{ fontSize: '0.76rem', color: '#f6f1ff', lineHeight: 1.45 }}>
               {aiDialogue}
             </div>
           </div>
@@ -593,7 +593,7 @@ export const QuantumCoinFlip: React.FC = () => {
                       padding: '12px 6px',
                       borderRadius: 10,
                       background: 'linear-gradient(180deg, #00d2ff 0%, #0284c7 100%)',
-                      color: '#050714',
+                      color: '#1d0848',
                       border: '2px solid #fff',
                       display: 'flex',
                       flexDirection: 'column',
@@ -639,9 +639,9 @@ export const QuantumCoinFlip: React.FC = () => {
                   style={{
                     padding: '12px 14px',
                     borderRadius: 10,
-                    background: '#1e293b',
-                    color: '#94a3b8',
-                    border: '1px solid #475569',
+                    background: '#4a2ea8',
+                    color: '#ddd0fa',
+                    border: '1px solid #8f7bc9',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
@@ -669,10 +669,10 @@ export const QuantumCoinFlip: React.FC = () => {
           zIndex: 6
         }}>
           <div>
-            <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
+            <div style={{ fontSize: '0.68rem', color: '#ddd0fa' }}>
               Your Ruleset:
             </div>
-            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: playerMode === 'quantum' ? '#00d2ff' : '#cbd5e1' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: playerMode === 'quantum' ? '#00d2ff' : '#f1eaff' }}>
               {playerMode === 'quantum' ? '⚡ Quantum Moves Enabled' : '🔒 Classical Player (Flips Only)'}
             </div>
           </div>
@@ -684,8 +684,8 @@ export const QuantumCoinFlip: React.FC = () => {
             }}
             style={{
               background: playerMode === 'quantum' ? 'rgba(0, 210, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)',
-              border: `1px solid ${playerMode === 'quantum' ? '#00d2ff' : '#64748b'}`,
-              color: playerMode === 'quantum' ? '#00d2ff' : '#cbd5e1',
+              border: `1px solid ${playerMode === 'quantum' ? '#00d2ff' : '#b9a6e8'}`,
+              color: playerMode === 'quantum' ? '#00d2ff' : '#f1eaff',
               borderRadius: 8,
               padding: '6px 12px',
               fontSize: '0.7rem',
@@ -805,7 +805,7 @@ export const QuantumCoinFlip: React.FC = () => {
               |0⟩ ───[ H ]───[ X or I ]───[ H ]───[ MEASURE ] ───→ |0⟩ (HEADS!)
             </div>
 
-            <p style={{ color: '#cbd5e1' }}>
+            <p style={{ color: '#f1eaff' }}>
               💡 <b>How to Beat Dr. Quantum:</b> Click <b>'Unlock Quantum Mode'</b> above. When you play the <b>[H] Hadamard</b> gate on Move 2, you break his circuit and force the outcome to Tails (|1⟩)!
             </p>
           </div>

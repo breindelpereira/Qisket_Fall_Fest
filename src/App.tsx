@@ -86,7 +86,7 @@ const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'sims', label: 'Labs', icon: FlaskConical },
 ];
 
-const sectionTitle = { fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.01em' } as const;
+const sectionTitle = { fontSize: '0.82rem', lineHeight: 1.5 } as const;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -126,11 +126,11 @@ export default function App() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 4px 0 var(--yellow-edge)',
           }}>
-            <span style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--ink)' }}>Q</span>
+            <span className="pixel" style={{ fontSize: '1.1rem', color: 'var(--ink)' }}>Q</span>
           </div>
           <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>Qisket</div>
-            <div style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--pink)', letterSpacing: '0.06em', marginTop: 3 }}>
+            <div className="pixel" style={{ fontSize: '0.9rem' }}>Qisket</div>
+            <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '0.5rem', color: 'var(--pink)', marginTop: 4 }}>
               FALL FEST '26
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function App() {
               </div>
 
               <div className="eyebrow">Module 1</div>
-              <h1 style={{ ...sectionTitle, fontSize: '1.6rem', margin: '2px 0 6px' }}>Qubits & Superposition</h1>
+              <h1 className="pixel" style={{ ...sectionTitle, fontSize: '1.05rem', margin: '4px 0 10px' }}>Qubits & Superposition</h1>
               <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 18 }}>
                 Play puzzles and run experiments to master your first qubit.
               </p>
@@ -178,8 +178,8 @@ export default function App() {
             {/* XP / progress */}
             <section className="card" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <span style={{ fontWeight: 900, fontSize: '1.05rem' }}>Your progress</span>
-                <span style={{ fontWeight: 900, color: 'var(--yellow)' }}>{progressPercent}%</span>
+                <span className="pixel" style={{ fontSize: '0.75rem' }}>Your progress</span>
+                <span className="retro-num" style={{ fontSize: '1.6rem', color: 'var(--yellow)' }}>{progressPercent}%</span>
               </div>
               <div className="xp-track" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Course progress">
                 <div className="xp-fill" style={{ width: `${Math.max(progressPercent, 4)}%` }} />
@@ -190,7 +190,7 @@ export default function App() {
                     background: 'rgba(0, 0, 0, 0.22)', borderRadius: 16, padding: '10px 6px', textAlign: 'center',
                   }}>
                     <Icon size={22} color={color} fill={label === 'Familiar' ? color : 'none'} />
-                    <div style={{ fontSize: '1.3rem', fontWeight: 900, lineHeight: 1.1 }}>{value}</div>
+                    <div className="retro-num" style={{ fontSize: '2rem' }}>{value}</div>
                     <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>{label}</div>
                   </div>
                 ))}
@@ -199,7 +199,7 @@ export default function App() {
 
             {/* Play / Experiment / Study */}
             <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <h2 style={sectionTitle}>Choose your adventure</h2>
+              <h2 className="pixel" style={sectionTitle}>Choose your adventure</h2>
               {[
                 { title: 'Play', sub: 'Arcade games that teach quantum', icon: Gamepad2, color: 'var(--yellow)', edge: 'var(--yellow-edge)', go: () => openGames(null) },
                 { title: 'Experiment', sub: 'Interactive Bloch sphere lab', icon: FlaskConical, color: 'var(--pink)', edge: 'var(--pink-edge)', go: () => setActiveTab('sims') },
@@ -216,7 +216,7 @@ export default function App() {
                     <Icon size={26} color="var(--ink)" strokeWidth={2.6} />
                   </span>
                   <span>
-                    <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 900 }}>{title}</span>
+                    <span className="pixel" style={{ display: 'block', fontSize: '0.78rem', marginBottom: 6 }}>{title}</span>
                     <span style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{sub}</span>
                   </span>
                 </button>
@@ -231,7 +231,7 @@ export default function App() {
 
         {activeTab === 'learn' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h2 style={sectionTitle}>Curriculum</h2>
+            <h2 className="pixel" style={sectionTitle}>Curriculum</h2>
             <div className="card" style={{ padding: 16, display: 'flex', gap: 14, alignItems: 'center' }}>
               <DrQuantum size={72} mood="wow" />
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.5, fontWeight: 600 }}>
@@ -258,7 +258,7 @@ export default function App() {
             ) : (
               <>
                 <div>
-                  <h2 style={sectionTitle}>Quantum Arcade</h2>
+                  <h2 className="pixel" style={sectionTitle}>Quantum Arcade</h2>
                   <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
                     Learn quantum ideas by playing.
                   </p>
@@ -273,7 +273,7 @@ export default function App() {
                       <HonestyTagBadge tag={g.tag} />
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '1.3rem', fontWeight: 900, marginBottom: 4 }}>{g.emoji} {g.title}</h3>
+                      <h3 className="pixel" style={{ fontSize: '0.85rem', marginBottom: 8 }}>{g.emoji} {g.title}</h3>
                       <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', lineHeight: 1.45 }}>{g.blurb}</p>
                     </div>
                     <button className={`btn ${g.btn}`} onClick={() => setSelectedGame(g.id)}>
@@ -289,7 +289,7 @@ export default function App() {
                     padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.85,
                   }}>
                     <div>
-                      <div style={{ fontSize: '1rem', fontWeight: 800 }}>🔒 {g.title}</div>
+                      <div className="pixel" style={{ fontSize: '0.68rem', marginBottom: 6 }}>🔒 {g.title}</div>
                       <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{g.concept}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
@@ -325,7 +325,7 @@ export default function App() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.1rem', fontWeight: 900 }}>Ask Dr Quantum</span>
+              <span className="pixel" style={{ fontSize: '0.8rem' }}>Ask Dr Quantum</span>
               <button
                 aria-label="Close tutor"
                 onClick={() => setTutorOpen(false)}

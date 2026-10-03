@@ -187,10 +187,10 @@ export const BlochSphereVisualizer: React.FC<Props> = ({
         <text x={zMinusX} y={zMinusY + 16} fill="#ff4081" fontSize="12" fontWeight="800" textAnchor="middle">
           |1⟩ (-Z)
         </text>
-        <text x={xPlusX + 12} y={xPlusY + 4} fill="#b4c0e0" fontSize="10" fontWeight="600" textAnchor="start">
+        <text x={xPlusX + 12} y={xPlusY + 4} fill="#e6dcff" fontSize="10" fontWeight="600" textAnchor="start">
           |+⟩ (+X)
         </text>
-        <text x={xMinusX - 12} y={xMinusY + 4} fill="#b4c0e0" fontSize="10" fontWeight="600" textAnchor="end">
+        <text x={xMinusX - 12} y={xMinusY + 4} fill="#e6dcff" fontSize="10" fontWeight="600" textAnchor="end">
           |-⟩ (-X)
         </text>
 
