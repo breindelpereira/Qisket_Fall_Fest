@@ -15,8 +15,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('coherence_race'), sim('qubit_metrics_lab')],
     references: [
-      video('Measuring decoherence', 'QuTech Academy', 'RRvzE_430DY'),
-      video('What is Gate Fidelity', 'QuEra Computing', 'ehDUE0SdcTE'),
+      video('Measuring decoherence', 'QuTech Academy', 'RRvzE_430DY', 0, 355),
+      video('What is Gate Fidelity', 'QuEra Computing', 'ehDUE0SdcTE', 0, 148),
     ],
     blocks: [
       { type: 'note', text: HARDWARE_SNAPSHOT_NOTE },
@@ -46,8 +46,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('cool_down'), sim('transmon_lab')],
     references: [
-      video('The transmon qubit', 'QuTech Academy', 'cb_f9KpYipk'),
-      video('Building a quantum computer with superconducting qubits (QuantumCasts)', 'Google Quantum AI', 'uPw9nkJAwDY'),
+      video('The transmon qubit', 'QuTech Academy', 'cb_f9KpYipk', 0, 363),
+      video('Building a quantum computer with superconducting qubits (QuantumCasts)', 'Google Quantum AI', 'uPw9nkJAwDY', 0, 646),
     ],
     blocks: [
       {
@@ -75,8 +75,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('ion_chain_conductor'), sim('topology_compiler')],
     references: [
-      video('How Trapped-Ion Quantum Computers Work', 'Quantinuum', 'ec3Bs6Wam8w'),
-      video('Learn Quantum: What is Trapped Ion Quantum Computing?', 'IonQ', 'f80y85GGyfE'),
+      video('How Trapped-Ion Quantum Computers Work', 'Quantinuum', 'ec3Bs6Wam8w', 0, 122),
+      video('Learn Quantum: What is Trapped Ion Quantum Computing?', 'IonQ', 'f80y85GGyfE', 0, 520),
     ],
     blocks: [
       {
@@ -104,8 +104,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('tweezer_shuffle'), sim('rydberg_blockade_lab')],
     references: [
-      video('Neutral Atom Quantum Computers - Concept of Operation', 'QuEra Computing', 'JmnZVhQc-H8'),
-      video('The 2018 Physics Nobel Prize: What ARE Optical Tweezers?', 'Atoms and Sporks', 'UAmdoOX3870'),
+      video('Neutral Atom Quantum Computers - Concept of Operation', 'QuEra Computing', 'JmnZVhQc-H8', 0, 196),
+      video('The 2018 Physics Nobel Prize: What ARE Optical Tweezers?', 'Atoms and Sporks', 'UAmdoOX3870', 0, 521),
     ],
     blocks: [
       {
@@ -133,8 +133,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('photon_factory'), sim('loss_budget_lab')],
     references: [
-      video('How Xanadu\u2019s Photonic Quantum Computers Work', 'Xanadu', 'v7iAqcFCTQQ'),
-      video('Introduction to Photonic Quantum Computing', 'Quantum Source', 'ustVvxJ8t-s'),
+      video('How Xanadu\u2019s Photonic Quantum Computers Work', 'Xanadu', 'v7iAqcFCTQQ', 0, 142),
+      video('Introduction to Photonic Quantum Computing', 'Quantum Source', 'ustVvxJ8t-s', 0, 134),
     ],
     blocks: [
       {
@@ -162,8 +162,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('dot_tuner'), sim('exchange_coupling_lab')],
     references: [
-      video('Spin qubits', 'QuTech Academy', 'y9dt5uTvsEM'),
-      video('Quantum Dot Qubits', 'QuTech Academy', 'vQnA05VnGis'),
+      video('Spin qubits', 'QuTech Academy', 'y9dt5uTvsEM', 0, 631),
+      video('Quantum Dot Qubits', 'QuTech Academy', 'vQnA05VnGis', 0, 342),
     ],
     blocks: [
       {
@@ -191,8 +191,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_hardware',
     activities: [game('valley_roll'), sim('annealing_lab')],
     references: [
-      video('What is Quantum Annealing?', 'D-Wave', 'zvfkXjzzYOo'),
-      video('How The Quantum Annealing Process Works', 'D-Wave', 'UV_RlCAc5Zs'),
+      video('What is Quantum Annealing?', 'D-Wave', 'zvfkXjzzYOo', 0, 358),
+      video('How The Quantum Annealing Process Works', 'D-Wave', 'UV_RlCAc5Zs', 0, 356),
     ],
     blocks: [
       {
@@ -221,9 +221,9 @@ export const PART2_LESSONS: LessonRecord[] = [
     honestyTag: 'Experimental/Contested',
     activities: [],
     references: [
-      video('Majorana fermions and where to find them (topological qubits)', 'QuTech Academy', '_otDRv7IN28'),
-      video('Cat Qubits and LDPC Codes, a New Step Towards Quantum Error Correction', 'Alice & Bob', 'nI0Yg-QRAns'),
-      video('A Multinode Quantum Network explained (networked machines)', 'QuTech', 'DRGT5ZgGrEc'),
+      video('Majorana fermions and where to find them (topological qubits)', 'QuTech Academy', '_otDRv7IN28', 0, 388),
+      video('Cat Qubits and LDPC Codes, a New Step Towards Quantum Error Correction', 'Alice & Bob', 'nI0Yg-QRAns', 0, 289),
+      video('A Multinode Quantum Network explained (networked machines)', 'QuTech', 'DRGT5ZgGrEc', 0, 162),
     ],
     blocks: [
       {
@@ -260,8 +260,8 @@ export const PART2_LESSONS: LessonRecord[] = [
     quizId: 'quiz_hardware',
     activities: [game('logical_qubit_builder'), game('quantum_architect'), sim('overhead_calculator'), sim('comparison_dashboard')],
     references: [
-      video('Quantum error correction codes', 'QuTech Academy', '4hWUIGZh6WE'),
-      video('Demonstrating Quantum Error Correction', 'Google Quantum AI', '_ugJLuJ1_gM'),
+      video('Quantum error correction codes', 'QuTech Academy', '4hWUIGZh6WE', 0, 320),
+      video('Demonstrating Quantum Error Correction', 'Google Quantum AI', '_ugJLuJ1_gM', 0, 239),
     ],
     blocks: [
       {

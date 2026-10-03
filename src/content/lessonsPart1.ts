@@ -34,7 +34,7 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video('The Map of Quantum Computing - Quantum Computing Explained', 'Domain of Science', '-UlxHPIEVqA'),
+      video('The Map of Quantum Computing - Quantum Computing Explained', 'Domain of Science', '-UlxHPIEVqA', 0, 2008),
     ],
   }),
 
@@ -149,7 +149,7 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video('How Quantum Computers Compute - Quantum Gates', 'Physics but Awesome', 'HHV-P4_Xp1E'),
+      video('How Quantum Computers Compute - Quantum Gates', 'Physics but Awesome', 'HHV-P4_Xp1E', 0, 651),
       reading('Quantum computing for the very curious (interactive essay)', 'Quantum Country', 'https://quantum.country/qcvc'),
       reading(
         'Bits, gates, and circuits',
@@ -192,7 +192,7 @@ export const PART1_LESSONS: LessonRecord[] = [
         ],
       },
     ],
-    references: [video('Single Photon Interference', 'Veritasium', 'GzbKb59my3U')],
+    references: [video('Single Photon Interference', 'Veritasium', 'GzbKb59my3U', 0, 360)],
   }),
 
   makeLesson({
@@ -229,7 +229,7 @@ export const PART1_LESSONS: LessonRecord[] = [
         ],
       },
     ],
-    references: [video("Bell's Theorem: The Quantum Venn Diagram Paradox", 'MinutePhysics', 'zcqZHYo7ONs')],
+    references: [video("Bell's Theorem: The Quantum Venn Diagram Paradox", 'MinutePhysics', 'zcqZHYo7ONs', 0, 1054)],
   }),
 
   makeLesson({
@@ -258,8 +258,8 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video('Transporters and Quantum Teleportation', 'minutephysics', 'dAaHHGHuy1c'),
-      video('How Quantum Teleportation Really Works', 'Qiskit', 'jxqnzltpDdE'),
+      video('Transporters and Quantum Teleportation', 'minutephysics', 'dAaHHGHuy1c', 0, 121),
+      video('How Quantum Teleportation Really Works', 'Qiskit', 'jxqnzltpDdE', 0, 878),
       reading(
         'Basics of Quantum Information (see the "Entanglement in action" lesson for teleportation)',
         'IBM Quantum Learning',
@@ -339,8 +339,8 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
-      video('How Quantum Computers Become Fault Tolerant', 'Qiskit', 'vja_KmolxAU'),
-      video('Quantum Error Mitigation and the Path to Useful Quantum Computing', 'IBM Technology', 'JCrvxWZEtSY'),
+      video('How Quantum Computers Become Fault Tolerant', 'Qiskit', 'vja_KmolxAU', 0, 399),
+      video('Quantum Error Mitigation and the Path to Useful Quantum Computing', 'IBM Technology', 'JCrvxWZEtSY', 0, 649),
       reading(
         'Foundations of Quantum Error Correction',
         'IBM Quantum Learning',

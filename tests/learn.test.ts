@@ -151,11 +151,11 @@ describe('Learn content: links to the rest of the app', () => {
     }
   });
 
-  it('every video has a title and a source channel, and clipped ones stay inside a sensible length', () => {
+  it('every video has a title and a source channel, and no clip is longer than 40 minutes', () => {
     for (const v of LESSONS.flatMap((l) => l.references.filter((r) => r.kind === 'video'))) {
       expect(v.title.length).toBeGreaterThan(5);
       expect(v.source.length).toBeGreaterThan(1);
-      if (v.endSeconds !== undefined) expect(v.endSeconds - (v.startSeconds ?? 0)).toBeLessThanOrEqual(30 * 60);
+      if (v.endSeconds !== undefined) expect(v.endSeconds - (v.startSeconds ?? 0)).toBeLessThanOrEqual(40 * 60);
     }
   });
 

@@ -15,7 +15,7 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     activities: [],
     references: [
-      video('Vectors | Essence of linear algebra, chapter 1', '3Blue1Brown', 'fNk_zzaMoSs'),
+      video('Vectors | Essence of linear algebra, chapter 1', '3Blue1Brown', 'fNk_zzaMoSs', 0, 591),
     ],
     blocks: [
       {
@@ -42,7 +42,7 @@ export const PART3_LESSONS: LessonRecord[] = [
     activities: [],
     references: [
       video('But what is quantum computing? (Grover\'s Algorithm), the state vector', '3Blue1Brown', 'RQWpF2Gb-gU', 363, 720),
-      video('Ch 6: What are bras and bra-ket notation?', 'Quantum Sense', 'lRR-qgjaKlg'),
+      video('Ch 6: What are bras and bra-ket notation?', 'Quantum Sense', 'lRR-qgjaKlg', 0, 603),
     ],
     blocks: [
       {
@@ -73,8 +73,8 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     activities: [],
     references: [
-      video('Single qubit and its logic gates', 'Professor Nano', 'rD_fH7O-D5Y'),
-      video('The Hadamard Gate and the +, -, i and -i States', 'Quantum Soar', 'G9d0QWM82sU'),
+      video('Single qubit and its logic gates', 'Professor Nano', 'rD_fH7O-D5Y', 0, 824),
+      video('The Hadamard Gate and the +, -, i and -i States', 'Quantum Soar', 'G9d0QWM82sU', 0, 147),
     ],
     blocks: [
       {
@@ -105,7 +105,7 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     activities: [],
     references: [
-      video('2-Qubit Computational Basis States, Tensor Products, Orthonormality, 4D Hilbert Space', 'Elucyda', 'ETkBuBdl3wc'),
+      video('2-Qubit Computational Basis States, Tensor Products, Orthonormality, 4D Hilbert Space', 'Elucyda', 'ETkBuBdl3wc', 0, 579),
     ],
     blocks: [
       { type: 'paragraph', text: 'To combine qubits, we use the Tensor Product.' },
@@ -131,8 +131,8 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     activities: [],
     references: [
-      video('The Born Rule', 'QuTech Academy', 'kk4gd4TIokw'),
-      video('The Born Rule', 'Looking Glass Universe', 'VHlqY44fOg0'),
+      video('The Born Rule', 'QuTech Academy', 'kk4gd4TIokw', 0, 194),
+      video('The Born Rule', 'Looking Glass Universe', 'VHlqY44fOg0', 0, 303),
     ],
     blocks: [
       {
@@ -160,7 +160,7 @@ export const PART3_LESSONS: LessonRecord[] = [
     quizId: 'quiz_math',
     activities: [],
     references: [
-      video('A Visual Introduction to Grover\'s Algorithm and Reflections', 'Gordon Ma', 'c30KrWjHaw4'),
+      video('A Visual Introduction to Grover\'s Algorithm and Reflections', 'Gordon Ma', 'c30KrWjHaw4', 0, 1126),
       video('But what is quantum computing? (Grover\'s Algorithm), why square root?', '3Blue1Brown', 'RQWpF2Gb-gU', 1887, 2041),
     ],
     blocks: [

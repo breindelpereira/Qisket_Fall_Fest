@@ -9,12 +9,13 @@ import { LESSON_BY_ID, LESSONS } from '../src/content/lessons';
 import type { ReferenceLink } from '../src/content/types';
 
 const wired = LESSON_BY_ID.module_1.references[0];
-const noSegment = LESSON_BY_ID.module_4.references[0];
+// The course now gives every video a segment, but a reference without one must still work (normal YouTube controls)
+const noSegment: ReferenceLink = { ...wired, startSeconds: undefined, endSeconds: undefined };
 
 describe('Lesson video links', () => {
   it('the watch link opens the video at the start of the segment', () => {
     expect(watchUrl(wired)).toBe('https://www.youtube.com/watch?v=OWJCfOvochA&t=138s');
-    expect(watchUrl(noSegment)).toBe('https://www.youtube.com/watch?v=GzbKb59my3U');
+    expect(watchUrl(noSegment)).toBe('https://www.youtube.com/watch?v=OWJCfOvochA');
     // a start of 0 needs no time parameter
     expect(watchUrl(LESSON_BY_ID.module_2.references[0])).toBe('https://www.youtube.com/watch?v=RQWpF2Gb-gU');
   });
@@ -240,6 +241,8 @@ describe('Playing only the segment', () => {
       expect(clipOf(v) !== null, `${v.title}`).toBe(hasSegment);
       expect(embedUrl(v).includes('controls=0'), `${v.title}`).toBe(hasSegment);
     }
+    // every video in the course uses the app's own player, like the originals
+    expect(videos.every((v) => clipOf(v) !== null)).toBe(true);
     // the three original segments are still clipped
     const clipped = videos.filter((v) => clipOf(v));
     for (const id of ['OWJCfOvochA', 'RQWpF2Gb-gU']) expect(clipped.map((v) => v.youtubeId)).toContain(id);
