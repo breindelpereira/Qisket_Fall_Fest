@@ -233,8 +233,15 @@ describe('Playing only the segment', () => {
     expect(JSON.parse(JSON.stringify(playerCommand('pauseVideo')))).toEqual(playerCommand('pauseVideo'));
   });
 
-  it('only the three segment videos are restricted', () => {
-    const clips = LESSONS.flatMap((l) => l.references.filter((r) => r.kind === 'video')).filter((r) => clipOf(r));
-    expect(clips.map((r) => r.youtubeId)).toEqual(['OWJCfOvochA', 'RQWpF2Gb-gU', 'RQWpF2Gb-gU']);
+  it('only videos with a segment are restricted; whole videos keep the normal controls', () => {
+    const videos = LESSONS.flatMap((l) => l.references.filter((r) => r.kind === 'video'));
+    for (const v of videos) {
+      const hasSegment = v.startSeconds !== undefined || v.endSeconds !== undefined;
+      expect(clipOf(v) !== null, `${v.title}`).toBe(hasSegment);
+      expect(embedUrl(v).includes('controls=0'), `${v.title}`).toBe(hasSegment);
+    }
+    // the three original segments are still clipped
+    const clipped = videos.filter((v) => clipOf(v));
+    for (const id of ['OWJCfOvochA', 'RQWpF2Gb-gU']) expect(clipped.map((v) => v.youtubeId)).toContain(id);
   });
 });

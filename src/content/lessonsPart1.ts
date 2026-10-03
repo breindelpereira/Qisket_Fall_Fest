@@ -149,6 +149,7 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
+      video('How Quantum Computers Compute - Quantum Gates', 'Physics but Awesome', 'HHV-P4_Xp1E'),
       reading('Quantum computing for the very curious (interactive essay)', 'Quantum Country', 'https://quantum.country/qcvc'),
       reading(
         'Bits, gates, and circuits',
@@ -257,6 +258,8 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
+      video('Transporters and Quantum Teleportation', 'minutephysics', 'dAaHHGHuy1c'),
+      video('How Quantum Teleportation Really Works', 'Qiskit', 'jxqnzltpDdE'),
       reading(
         'Basics of Quantum Information (see the "Entanglement in action" lesson for teleportation)',
         'IBM Quantum Learning',
@@ -336,6 +339,8 @@ export const PART1_LESSONS: LessonRecord[] = [
       },
     ],
     references: [
+      video('How Quantum Computers Become Fault Tolerant', 'Qiskit', 'vja_KmolxAU'),
+      video('Quantum Error Mitigation and the Path to Useful Quantum Computing', 'IBM Technology', 'JCrvxWZEtSY'),
       reading(
         'Foundations of Quantum Error Correction',
         'IBM Quantum Learning',

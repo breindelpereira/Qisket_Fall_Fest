@@ -1,5 +1,5 @@
 import type { LessonRecord, MathExpr } from './types';
-import { makeLesson } from './lessonText';
+import { makeLesson, video } from './lessonText';
 
 const X_MATRIX: MathExpr = [{ mat: [['0', '1'], ['1', '0']] }];
 const H_MATRIX: MathExpr = [{ frac: ['1', '√2'] }, { mat: [['1', '1'], ['1', '−1']] }];
@@ -14,7 +14,9 @@ export const PART3_LESSONS: LessonRecord[] = [
     title: 'Primer',
     linkedConceptId: 'concept_math',
     activities: [],
-    references: [],
+    references: [
+      video('Vectors | Essence of linear algebra, chapter 1', '3Blue1Brown', 'fNk_zzaMoSs'),
+    ],
     blocks: [
       {
         type: 'bullets',
@@ -38,7 +40,10 @@ export const PART3_LESSONS: LessonRecord[] = [
     title: 'State Vectors & Dirac Notation',
     linkedConceptId: 'concept_math',
     activities: [],
-    references: [],
+    references: [
+      video('But what is quantum computing? (Grover\'s Algorithm), the state vector', '3Blue1Brown', 'RQWpF2Gb-gU', 363, 720),
+      video('Ch 6: What are bras and bra-ket notation?', 'Quantum Sense', 'lRR-qgjaKlg'),
+    ],
     blocks: [
       {
         type: 'bullets',
@@ -67,7 +72,10 @@ export const PART3_LESSONS: LessonRecord[] = [
     title: 'Gates as Matrices',
     linkedConceptId: 'concept_math',
     activities: [],
-    references: [],
+    references: [
+      video('Single qubit and its logic gates', 'Professor Nano', 'rD_fH7O-D5Y'),
+      video('The Hadamard Gate and the +, -, i and -i States', 'Quantum Soar', 'G9d0QWM82sU'),
+    ],
     blocks: [
       {
         type: 'paragraph',
@@ -96,7 +104,9 @@ export const PART3_LESSONS: LessonRecord[] = [
     title: 'Multiple Qubits',
     linkedConceptId: 'concept_math',
     activities: [],
-    references: [],
+    references: [
+      video('2-Qubit Computational Basis States, Tensor Products, Orthonormality, 4D Hilbert Space', 'Elucyda', 'ETkBuBdl3wc'),
+    ],
     blocks: [
       { type: 'paragraph', text: 'To combine qubits, we use the Tensor Product.' },
       {
@@ -120,7 +130,10 @@ export const PART3_LESSONS: LessonRecord[] = [
     title: 'Measurement, Phase, and Interference Math',
     linkedConceptId: 'concept_math',
     activities: [],
-    references: [],
+    references: [
+      video('The Born Rule', 'QuTech Academy', 'kk4gd4TIokw'),
+      video('The Born Rule', 'Looking Glass Universe', 'VHlqY44fOg0'),
+    ],
     blocks: [
       {
         type: 'bullets',
@@ -146,7 +159,10 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     quizId: 'quiz_math',
     activities: [],
-    references: [],
+    references: [
+      video('A Visual Introduction to Grover\'s Algorithm and Reflections', 'Gordon Ma', 'c30KrWjHaw4'),
+      video('But what is quantum computing? (Grover\'s Algorithm), why square root?', '3Blue1Brown', 'RQWpF2Gb-gU', 1887, 2041),
+    ],
     blocks: [
       {
         type: 'bullets',

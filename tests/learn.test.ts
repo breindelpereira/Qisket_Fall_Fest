@@ -130,7 +130,8 @@ describe('Learn content: links to the rest of the app', () => {
 
   it('video references are playable, with sensible segments', () => {
     const videos = LESSONS.flatMap((l) => l.references.filter((r) => r.kind === 'video'));
-    expect(videos).toHaveLength(6);
+    expect(videos.length).toBeGreaterThan(0);
+    expect(new Set(videos.map((v) => `${v.youtubeId}:${v.startSeconds ?? ''}`)).size).toBe(videos.length); // no duplicates in the app
     for (const v of videos) {
       expect(v.youtubeId).toMatch(/^[A-Za-z0-9_-]{11}$/);
       expect(v.url).toBe(`https://www.youtube.com/watch?v=${v.youtubeId}`);
@@ -140,6 +141,22 @@ describe('Learn content: links to the rest of the app', () => {
     expect([wired.startSeconds, wired.endSeconds]).toEqual([2 * 60 + 18, 6 * 60 + 15]);
     const grover = LESSON_BY_ID.module_6.references[0];
     expect([grover.startSeconds, grover.endSeconds]).toEqual([15 * 60 + 52, 29 * 60 + 30]);
+  });
+
+  it('every lesson in every part has at least one video, and none lists the same video twice', () => {
+    for (const lesson of LESSONS) {
+      const ids = lesson.references.filter((r) => r.kind === 'video').map((r) => `${r.youtubeId}:${r.startSeconds ?? ''}`);
+      expect(ids.length, `${lesson.id} needs a video`).toBeGreaterThan(0);
+      expect(new Set(ids).size, `${lesson.id} repeats a video`).toBe(ids.length);
+    }
+  });
+
+  it('every video has a title and a source channel, and clipped ones stay inside a sensible length', () => {
+    for (const v of LESSONS.flatMap((l) => l.references.filter((r) => r.kind === 'video'))) {
+      expect(v.title.length).toBeGreaterThan(5);
+      expect(v.source.length).toBeGreaterThan(1);
+      if (v.endSeconds !== undefined) expect(v.endSeconds - (v.startSeconds ?? 0)).toBeLessThanOrEqual(30 * 60);
+    }
   });
 
   it('reading references are https links', () => {
