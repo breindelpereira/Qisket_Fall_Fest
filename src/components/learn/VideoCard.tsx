@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BookOpen, Captions, CaptionsOff, CirclePlay, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, WifiOff } from 'lucide-react';
+import { BookOpen, Captions, CaptionsOff, Check, ChevronUp, CirclePlay, Gauge, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, WifiOff } from 'lucide-react';
 import type { ReferenceLink } from '../../content/types';
 import {
   SPEEDS, atClipEnd, captionCommands, clampSeek, clipOf, clipPosition, embedUrl, describePlayerError, formatClock, formatSpeed,
@@ -20,6 +20,76 @@ const storage = (): Storage | null => {
 };
 
 const iconButton: React.CSSProperties = { width: 48, minHeight: 48, padding: 0, justifyContent: 'center', flexShrink: 0 };
+
+/** Speed picker: one button that opens a short list, so the controls stay uncluttered. */
+const SpeedMenu: React.FC<{ speed: Speed; onChoose: (speed: Speed) => void }> = ({ speed, onChoose }) => {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} style={{ position: 'relative' }}>
+      <button
+        className="chip"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={`Playback speed ${formatSpeed(speed)}. Open menu`}
+        onClick={() => setOpen((v) => !v)}
+        style={{ justifyContent: 'center', padding: '8px 12px', minWidth: 96 }}
+      >
+        <Gauge size={18} />
+        <span>{formatSpeed(speed)}</span>
+        <ChevronUp size={14} style={{ transform: open ? 'none' : 'rotate(180deg)' }} />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          aria-label="Playback speed"
+          style={{
+            position: 'absolute', bottom: 'calc(100% + 6px)', left: 0, zIndex: 20, minWidth: 176, padding: 6,
+            background: '#1d0848', border: '2px solid var(--yellow)', borderRadius: 14,
+            boxShadow: '0 6px 0 var(--yellow-edge), 0 10px 24px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 2,
+          }}
+        >
+          {SPEEDS.map((v) => (
+            <button
+              key={v}
+              role="menuitemradio"
+              aria-checked={v === speed}
+              onClick={() => {
+                onChoose(v);
+                setOpen(false);
+              }}
+              style={{
+                minHeight: 44, padding: '0 12px', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+                color: '#fff', fontFamily: 'var(--font-pixel)', fontSize: '0.62rem', whiteSpace: 'nowrap',
+                background: v === speed ? 'rgba(255, 210, 63, 0.2)' : 'transparent',
+              }}
+            >
+              <span>{formatSpeed(v)}{v === 1 ? ' normal' : ''}</span>
+              {v === speed && <Check size={16} color="#ffd23f" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 /**
  * A lesson video. Tapping the poster plays it inside the app (nothing is loaded from YouTube until then).
@@ -239,18 +309,7 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
               )}
             </div>
             <div role="group" aria-label="Speed and captions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-              {SPEEDS.map((v: Speed) => (
-                <button
-                  key={v}
-                  className="chip"
-                  aria-pressed={prefs.speed === v}
-                  aria-label={`Speed ${formatSpeed(v)}`}
-                  onClick={() => choose({ ...prefs, speed: v })}
-                  style={{ minWidth: 48, justifyContent: 'center', padding: '8px 6px', fontSize: '0.55rem' }}
-                >
-                  {formatSpeed(v)}
-                </button>
-              ))}
+              <SpeedMenu speed={prefs.speed} onChoose={(v) => choose({ ...prefs, speed: v })} />
               <button
                 className="chip"
                 aria-pressed={prefs.captions}
