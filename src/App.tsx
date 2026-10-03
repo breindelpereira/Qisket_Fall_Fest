@@ -21,6 +21,7 @@ import type { HonestyTag } from './content/types';
 import { QuantumHeist } from './components/games/QuantumHeist';
 import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
 import { SchrodingersStealth } from './components/games/SchrodingersStealth';
+import { BlochRunner } from './components/games/BlochRunner';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 
 type Tab = 'home' | 'learn' | 'games' | 'sims';
@@ -71,10 +72,20 @@ const GAMES: GameEntry[] = [
     accent: 'var(--mint)',
     Component: SchrodingersStealth,
   },
+  {
+    id: 'bloch_runner',
+    title: 'Bloch Runner',
+    emoji: '🏃',
+    kicker: 'Gate puzzles · 8 levels',
+    blurb: 'Race around the Bloch sphere! Pick the right gate each move to steer your qubit onto the target, using as few moves as you can. No timer.',
+    tag: 'Accurate',
+    btn: 'btn-sky',
+    accent: 'var(--sky)',
+    Component: BlochRunner,
+  },
 ];
 
 const UPCOMING = [
-  { title: 'Bloch Runner', concept: 'Single-Qubit Rotations', tag: 'Accurate' as HonestyTag, phase: 'Phase 5' },
   { title: 'Photon Escape Room', concept: 'Interference & Phase', tag: 'Accurate' as HonestyTag, phase: 'Phase 8' },
   { title: 'Alice & Bob: Escape Together', concept: 'Entanglement & Bell', tag: 'Accurate' as HonestyTag, phase: 'Phase 6' },
 ];
