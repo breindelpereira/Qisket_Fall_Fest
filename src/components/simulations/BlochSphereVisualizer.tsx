@@ -7,6 +7,8 @@ interface Props {
   interactive?: boolean;
   onCoordinatesChange?: (theta: number, phi: number) => void;
   size?: number;
+  /** The x, y, z, θ, φ badge under the sphere; turn it off when the caller shows its own. */
+  showReadout?: boolean;
 }
 
 export const BlochSphereVisualizer: React.FC<Props> = ({
@@ -15,6 +17,7 @@ export const BlochSphereVisualizer: React.FC<Props> = ({
   interactive = false,
   onCoordinatesChange,
   size = 280,
+  showReadout = true,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -238,7 +241,7 @@ export const BlochSphereVisualizer: React.FC<Props> = ({
       </svg>
 
       {/* Coordinate Readout Badge */}
-      <div style={{
+      {showReadout && <div style={{
         display: 'flex',
         gap: 12,
         fontSize: '0.72rem',
@@ -254,7 +257,7 @@ export const BlochSphereVisualizer: React.FC<Props> = ({
         <span><b>z:</b> {coordinates.z}</span>
         <span><b>θ:</b> {(coordinates.theta * (180 / Math.PI)).toFixed(0)}°</span>
         <span><b>φ:</b> {(coordinates.phi * (180 / Math.PI)).toFixed(0)}°</span>
-      </div>
+      </div>}
     </div>
   );
 };

@@ -30,6 +30,9 @@ import { CircuitLab } from './components/simulations/CircuitLab';
 import { MachZehnderLab } from './components/simulations/MachZehnderLab';
 import { TwoQubitLab } from './components/simulations/TwoQubitLab';
 import { BellChshExplorer } from './components/simulations/BellChshExplorer';
+import { TeleportationLab } from './components/simulations/TeleportationLab';
+import { DeutschJozsaExplorer } from './components/simulations/DeutschJozsaExplorer';
+import { GroverExplorer } from './components/simulations/GroverExplorer';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { LESSONS, QUIZZES } from './content/lessons';
@@ -210,12 +213,42 @@ const SIMS: SimEntry[] = [
     accent: 'var(--violet)',
     Component: BellChshExplorer,
   },
+  {
+    id: 'teleportation_lab',
+    title: 'Teleportation Lab',
+    emoji: '📡',
+    kicker: 'Teleportation · 3 qubits',
+    blurb: 'Send an unknown qubit with a Bell pair and two classical bits. Step through it, then break it by withholding the bits.',
+    tag: 'Accurate',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: TeleportationLab,
+  },
+  {
+    id: 'deutsch_jozsa_explorer',
+    title: 'Deutsch–Jozsa Explorer',
+    emoji: '🕵️',
+    kicker: 'Algorithms · one query',
+    blurb: 'Build a black-box function and decide constant or balanced with a single quantum query.',
+    tag: 'Accurate',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: DeutschJozsaExplorer,
+  },
+  {
+    id: 'grover_explorer',
+    title: 'Grover Explorer',
+    emoji: '🔍',
+    kicker: 'Algorithms · search',
+    blurb: 'Hide a prize in a list and watch amplitude pile up on it, round by round. Then overshoot and watch it drain away.',
+    tag: 'Accurate',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
+    Component: GroverExplorer,
+  },
 ];
 
 const UPCOMING_SIMS: { title: string; concept: string; tag: HonestyTag }[] = [
-  { title: 'Teleportation Lab', concept: 'Teleportation & No-Cloning', tag: 'Accurate' },
-  { title: 'Deutsch–Jozsa Explorer', concept: 'Quantum algorithms', tag: 'Accurate' },
-  { title: 'Grover Explorer', concept: 'Quantum algorithms', tag: 'Accurate' },
   { title: 'Noise Lab', concept: 'Noise & Error Correction', tag: 'Simplified model' },
 ];
 

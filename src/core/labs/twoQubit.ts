@@ -21,8 +21,8 @@ export interface ReducedQubit {
   p1: number;
 }
 
-/** Reduced state of one qubit (partial trace over the other), as a Bloch vector. */
-export function reducedQubit(state: QuantumStateVector, qubit: 0 | 1): ReducedQubit {
+/** Reduced state of one qubit (partial trace over all the others), as a Bloch vector. */
+export function reducedQubit(state: QuantumStateVector, qubit: number): ReducedQubit {
   const bit = 1 << qubit;
   let r00 = 0;
   let r11 = 0;
