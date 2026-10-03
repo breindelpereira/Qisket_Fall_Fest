@@ -24,6 +24,9 @@ import { SchrodingersStealth } from './components/games/SchrodingersStealth';
 import { BlochRunner } from './components/games/BlochRunner';
 import { PhotonEscapeRoom } from './components/games/PhotonEscapeRoom';
 import { AliceAndBob } from './components/games/AliceAndBob';
+import { TeleportRelay } from './components/games/TeleportRelay';
+import { GateDeck } from './components/games/GateDeck';
+import { OracleDetective } from './components/games/OracleDetective';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 import { ShotsHistogramLab } from './components/simulations/ShotsHistogramLab';
 import { CircuitLab } from './components/simulations/CircuitLab';
@@ -119,12 +122,43 @@ const GAMES: GameEntry[] = [
     accent: 'var(--pink)',
     Component: AliceAndBob,
   },
+  {
+    id: 'teleport_relay',
+    title: 'Teleport Relay',
+    emoji: '📡',
+    kicker: 'Teleportation · repeater chain',
+    blurb: "Pass a qubit along a chain of repeaters. At every hop read Alice's two bits and fix the qubit, or the message is lost.",
+    tag: 'Accurate',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: TeleportRelay,
+  },
+  {
+    id: 'gate_deck',
+    title: 'Gate Deck',
+    emoji: '🃏',
+    kicker: 'Card puzzles · 9 levels',
+    blurb: 'Build the gate you need from the cards in your hand: Z from H and X, a reversed CNOT, even a SWAP. No timer.',
+    tag: 'Accurate',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: GateDeck,
+  },
+  {
+    id: 'oracle_detective',
+    title: 'Oracle Detective',
+    emoji: '🕵️',
+    kicker: 'Algorithms · 6 case files',
+    blurb: 'Constant or balanced? Open lockers one at a time, then call in the quantum informant who needs just one question.',
+    tag: 'Accurate',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: OracleDetective,
+  },
 ];
 
 const UPCOMING: { title: string; concept: string; tag: HonestyTag; phase: string }[] = [
-  { title: 'Teleport Relay', concept: 'Teleportation & No-Cloning', tag: 'Accurate', phase: 'Next up' },
   { title: 'Qubit Surgeon', concept: 'Noise & Error Correction', tag: 'Simplified model', phase: 'Phase 7' },
-  { title: 'Oracle Detective', concept: 'Oracles & Deutsch-Jozsa', tag: 'Accurate', phase: 'Phase 8' },
 ];
 
 const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
