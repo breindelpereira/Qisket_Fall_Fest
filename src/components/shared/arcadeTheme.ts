@@ -66,3 +66,11 @@ export const rowChip: CSSProperties = {
   fontSize: '0.5rem',
 };
 
+/** Like rowChip, but long labels wrap onto two lines instead of spilling into the next chip. */
+export const groupChip: CSSProperties = {
+  ...rowChip,
+  whiteSpace: 'normal',
+  textAlign: 'center',
+  lineHeight: 1.35,
+  fontSize: '0.52rem',
+};

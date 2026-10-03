@@ -25,6 +25,11 @@ import { BlochRunner } from './components/games/BlochRunner';
 import { PhotonEscapeRoom } from './components/games/PhotonEscapeRoom';
 import { AliceAndBob } from './components/games/AliceAndBob';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
+import { ShotsHistogramLab } from './components/simulations/ShotsHistogramLab';
+import { CircuitLab } from './components/simulations/CircuitLab';
+import { MachZehnderLab } from './components/simulations/MachZehnderLab';
+import { TwoQubitLab } from './components/simulations/TwoQubitLab';
+import { BellChshExplorer } from './components/simulations/BellChshExplorer';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { LESSONS, QUIZZES } from './content/lessons';
@@ -126,14 +131,103 @@ const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'sims', label: 'Labs', icon: FlaskConical },
 ];
 
+interface SimEntry {
+  id: string;
+  title: string;
+  emoji: string;
+  kicker: string;
+  blurb: string;
+  tag: HonestyTag;
+  btn: string;
+  accent: string;
+  Component: ComponentType;
+}
+
+const SIMS: SimEntry[] = [
+  {
+    id: 'single_qubit_lab',
+    title: 'Single-Qubit Lab',
+    emoji: '🧭',
+    kicker: 'Bloch sphere · qubits',
+    blurb: 'Steer one qubit around the Bloch sphere with gates and phase, then sample it to see the odds.',
+    tag: 'Accurate',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: SingleQubitLab,
+  },
+  {
+    id: 'shots_histogram_lab',
+    title: 'Shots + Histogram Lab',
+    emoji: '📊',
+    kicker: 'Measurement · statistics',
+    blurb: 'Repeat a measurement 10, 100, 1000 or 10,000 times and watch the histogram settle onto the prediction.',
+    tag: 'Accurate',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: ShotsHistogramLab,
+  },
+  {
+    id: 'circuit_lab',
+    title: 'Circuit Lab',
+    emoji: '🧩',
+    kicker: 'Gates · up to 3 qubits',
+    blurb: 'Drop H, X, Y, Z, S, T and CNOT gates onto wires and see every probability and amplitude. Famous circuits are one tap away.',
+    tag: 'Accurate',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
+    Component: CircuitLab,
+  },
+  {
+    id: 'mach_zehnder_lab',
+    title: 'Mach–Zehnder Lab',
+    emoji: '🔦',
+    kicker: 'Interference · one photon',
+    blurb: 'Turn the phase, block an arm, fire photons. See the fringes appear and vanish, and try the Elitzur–Vaidman bomb test.',
+    tag: 'Accurate',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: MachZehnderLab,
+  },
+  {
+    id: 'two_qubit_lab',
+    title: 'Two-Qubit Lab',
+    emoji: '🔗',
+    kicker: 'Entanglement · Bell pair',
+    blurb: 'Apply gates to Alice and Bob, build a Bell pair, and see why each qubit alone has no state of its own.',
+    tag: 'Accurate',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: TwoQubitLab,
+  },
+  {
+    id: 'bell_chsh_explorer',
+    title: 'Bell & CHSH Explorer',
+    emoji: '🎯',
+    kicker: 'Nonlocality · CHSH',
+    blurb: 'Choose four measurement angles and watch S climb past the classical limit of 2 toward 2√2.',
+    tag: 'Accurate',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: BellChshExplorer,
+  },
+];
+
+const UPCOMING_SIMS: { title: string; concept: string; tag: HonestyTag }[] = [
+  { title: 'Teleportation Lab', concept: 'Teleportation & No-Cloning', tag: 'Accurate' },
+  { title: 'Deutsch–Jozsa Explorer', concept: 'Quantum algorithms', tag: 'Accurate' },
+  { title: 'Grover Explorer', concept: 'Quantum algorithms', tag: 'Accurate' },
+  { title: 'Noise Lab', concept: 'Noise & Error Correction', tag: 'Simplified model' },
+];
+
 /** Labs that can be opened today. Games come from GAMES above; everything else in a lesson shows as "coming soon". */
-const AVAILABLE_SIM_IDS = ['single_qubit_lab'];
+const AVAILABLE_SIM_IDS = SIMS.map((s) => s.id);
 
 const sectionTitle = { fontSize: '0.82rem', lineHeight: 1.5 } as const;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const [selectedSim, setSelectedSim] = useState<string | null>(null);
   // Owned here (not inside the Learn tab) so a lesson is still open after a trip to a game or lab
   const [learnView, setLearnView] = useState<LearnView>({ kind: 'home' });
   const mainRef = useRef<HTMLElement>(null);
@@ -156,6 +250,11 @@ export default function App() {
     setActiveTab('games');
   };
 
+  const openSims = (id: string | null) => {
+    setSelectedSim(id);
+    setActiveTab('sims');
+  };
+
   const openLearn = (view: LearnView) => {
     setLearnView(view);
     setActiveTab('learn');
@@ -164,9 +263,10 @@ export default function App() {
   // Every new screen starts at the top
   useEffect(() => {
     mainRef.current?.scrollTo({ top: 0 });
-  }, [activeTab, learnView, selectedGame]);
+  }, [activeTab, learnView, selectedGame, selectedSim]);
 
   const activeGame = GAMES.find(g => g.id === selectedGame);
+  const activeSim = SIMS.find(x => x.id === selectedSim);
 
   const stats = [
     { label: 'Familiar', value: familiarCount, icon: Star, color: 'var(--yellow)' },
@@ -266,7 +366,7 @@ export default function App() {
               <h2 className="pixel" style={sectionTitle}>Choose your adventure</h2>
               {[
                 { title: 'Play', sub: 'Arcade games that teach quantum', icon: Gamepad2, color: 'var(--yellow)', edge: 'var(--yellow-edge)', go: () => openGames(null) },
-                { title: 'Experiment', sub: 'Interactive Bloch sphere lab', icon: FlaskConical, color: 'var(--pink)', edge: 'var(--pink-edge)', go: () => setActiveTab('sims') },
+                { title: 'Experiment', sub: 'Interactive labs: gates, light, entanglement', icon: FlaskConical, color: 'var(--pink)', edge: 'var(--pink-edge)', go: () => openSims(null) },
                 { title: 'Study', sub: 'Lessons and quizzes', icon: BookOpen, color: 'var(--mint)', edge: 'var(--mint-edge)', go: () => openLearn({ kind: 'home' }) },
               ].map(({ title, sub, icon: Icon, color, edge, go }) => (
                 <button key={title} className="card" onClick={go} style={{
@@ -300,7 +400,7 @@ export default function App() {
             availableGameIds={GAMES.map((g) => g.id)}
             availableSimIds={AVAILABLE_SIM_IDS}
             onOpenGame={openGames}
-            onOpenSim={() => setActiveTab('sims')}
+            onOpenSim={openSims}
           />
         )}
 
@@ -366,7 +466,60 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'sims' && <SingleQubitLab />}
+        {activeTab === 'sims' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {activeSim ? (
+              <div>
+                <button onClick={() => setSelectedSim(null)} className="chip" style={{ marginBottom: 12 }}>
+                  <ChevronLeft size={18} />
+                  <span>All Labs</span>
+                </button>
+                <activeSim.Component />
+              </div>
+            ) : (
+              <>
+                <div>
+                  <h2 className="pixel" style={sectionTitle}>Quantum Labs</h2>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                    Poke the physics and see what happens.
+                  </p>
+                </div>
+
+                {SIMS.map(x => (
+                  <article key={x.id} className="card" style={{
+                    padding: 18, display: 'flex', flexDirection: 'column', gap: 12, borderColor: x.accent,
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                      <span className="eyebrow" style={{ color: x.accent }}>{x.kicker}</span>
+                      <HonestyTagBadge tag={x.tag} />
+                    </div>
+                    <div>
+                      <h3 className="pixel" style={{ fontSize: '0.85rem', marginBottom: 8 }}>{x.emoji} {x.title}</h3>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', lineHeight: 1.45 }}>{x.blurb}</p>
+                    </div>
+                    <button className={`btn ${x.btn}`} onClick={() => setSelectedSim(x.id)}>
+                      <FlaskConical size={18} />
+                      <span>Open lab</span>
+                    </button>
+                  </article>
+                ))}
+
+                <div className="eyebrow" style={{ color: 'var(--text-tertiary)', marginTop: 6 }}>Coming soon</div>
+                {UPCOMING_SIMS.map(x => (
+                  <div key={x.title} className="card" style={{
+                    padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.85,
+                  }}>
+                    <div>
+                      <div className="pixel" style={{ fontSize: '0.68rem', marginBottom: 6 }}>🔒 {x.title}</div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{x.concept}</div>
+                    </div>
+                    <HonestyTagBadge tag={x.tag} />
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        )}
       </main>
 
       {tutorOpen && (
