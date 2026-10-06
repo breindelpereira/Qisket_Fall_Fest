@@ -7,18 +7,10 @@ import {
 } from '../../core/learn/video';
 import type { PlayerPrefs, Speed } from '../../core/learn/video';
 import { Banner } from '../shared/Arcade';
+import { safeStorage } from '../../utils/safeStorage';
 import { useYouTubePlayer } from './useYouTubePlayer';
 
 const linkStyle: React.CSSProperties = { textDecoration: 'none', color: 'inherit' };
-/** localStorage can be missing or blocked (private windows, previews); the player then just does not remember. */
-const storage = (): Storage | null => {
-  try {
-    return typeof localStorage === 'undefined' ? null : localStorage;
-  } catch {
-    return null;
-  }
-};
-
 const iconButton: React.CSSProperties = { width: 48, minHeight: 48, padding: 0, justifyContent: 'center', flexShrink: 0 };
 
 /** Speed picker: one button that opens a short list, so the controls stay uncluttered. */
@@ -107,7 +99,7 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' || navigator.onLine !== false);
   const [fullscreen, setFullscreen] = useState(false);
   const [fullscreenRefused, setFullscreenRefused] = useState(false);
-  const [prefs, setPrefs] = useState<PlayerPrefs>(() => readPrefs(storage()));
+  const [prefs, setPrefs] = useState<PlayerPrefs>(() => readPrefs(safeStorage()));
   const frameRef = useRef<HTMLIFrameElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -143,7 +135,7 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
 
   const choose = (next: PlayerPrefs) => {
     setPrefs(next);
-    writePrefs(storage(), next);
+    writePrefs(safeStorage(), next);
   };
 
   // Reached the end of the segment (or YouTube ended it): hold there rather than let YouTube show other videos

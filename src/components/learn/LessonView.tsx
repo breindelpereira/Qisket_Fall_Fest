@@ -1,11 +1,14 @@
-import React from 'react';
-import { Check, ChevronLeft, ChevronRight, Circle, FlaskConical, Gamepad2, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, ChevronLeft, ChevronRight, Circle, FlaskConical, Gamepad2, Lock, Video } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
 import { ACTIVITIES } from '../../content/activities';
 import { HARDWARE_SNAPSHOT_NOTE, LESSONS, PARTS, QUIZZES, quizForLesson } from '../../content/lessons';
 import type { ActivityLink, LessonBlock, LessonRecord } from '../../content/types';
 import { adjacentLessons, conceptEvidence, lessonStatus, moduleEyebrow } from '../../core/learn/curriculum';
 import { STEP_HINTS, STEP_TITLES, lessonFlow } from '../../core/learn/flow';
+import { flowFor, hasStarted, readStartChoices, startOffer, writeStartChoice } from '../../core/learn/start';
+import type { StartChoice } from '../../core/learn/start';
+import { safeStorage } from '../../utils/safeStorage';
 import { passRule, percent } from '../../core/learn/quiz';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { THEMES } from '../shared/arcadeTheme';
@@ -117,7 +120,13 @@ export const LessonView: React.FC<Props> = ({
   const evidence = conceptEvidence(lesson.linkedConceptId, progress, QUIZZES, lesson);
   const tier = progress.conceptMastery[lesson.linkedConceptId];
 
-  const { stages, soon } = lessonFlow(lesson, availableGameIds, availableSimIds);
+  // The first time a module that opens with a game or lab is visited, ask how to begin
+  const [choices, setChoices] = useState(() => readStartChoices(safeStorage()));
+  const choice = choices[lesson.id];
+  const offer = startOffer(lesson, availableGameIds, availableSimIds);
+  const started = hasStarted(choice, { status, played: evidence.played, explored: evidence.explored });
+  const choose = (c: StartChoice) => setChoices(writeStartChoice(safeStorage(), choices, lesson.id, c));
+  const { stages, soon } = lessonFlow({ ...lesson, flow: flowFor(lesson, choice) }, availableGameIds, availableSimIds);
 
   // Only ask for steps the learner can actually take today
   const canPlay = lesson.activities.some((a) => a.kind === 'game' && availableGameIds.includes(a.id));
@@ -128,8 +137,8 @@ export const LessonView: React.FC<Props> = ({
     { label: 'Pass the quiz', done: evidence.quizPassed },
   ];
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+  const top = (
+    <>
       <button className="chip" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
         <ChevronLeft size={18} />
         <span>{part.title}</span>
@@ -147,6 +156,53 @@ export const LessonView: React.FC<Props> = ({
           {lesson.honestyTag && <HonestyTagBadge tag={lesson.honestyTag} />}
         </div>
       </header>
+    </>
+  );
+
+  if (offer && !started) {
+    const info = ACTIVITIES[offer.activity.id];
+    const isGame = offer.activity.kind === 'game';
+    const open = () => {
+      choose('play');
+      if (isGame) onOpenGame(offer.activity.id);
+      else onOpenSim(offer.activity.id);
+    };
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        {top}
+        <section className="card" aria-label="How do you want to start?" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 14, background: 'var(--bg-surface-elevated)' }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <DrQuantum size={72} />
+            <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px', fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.4 }}>
+              {isGame ? "Let's start with a game!" : "Let's start in the lab!"}
+            </div>
+          </div>
+          <p style={{ fontSize: '0.95rem', lineHeight: 1.5, color: 'var(--text-secondary)' }}>
+            {isGame
+              ? 'You will feel the idea first, and the video makes more sense after you have tried it. No timer, and hints are there if you get stuck.'
+              : 'Here the lab is where the idea is explained step by step. After it, the video and the practice game will make more sense.'}
+          </p>
+          <button className="btn" onClick={open}>
+            {isGame ? <Gamepad2 size={20} /> : <FlaskConical size={20} />}
+            <span>{isGame ? 'Play' : 'Open'} {info.title}</span>
+          </button>
+          {offer.canWatch && (
+            <button className="btn btn-sky" onClick={() => choose('watch')}>
+              <Video size={20} />
+              <span>Watch the video first</span>
+            </button>
+          )}
+          <button className="chip" onClick={() => choose('all')} style={{ alignSelf: 'center' }}>
+            Show me the whole lesson
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {top}
 
       {lesson.part === 1 && quiz && (canPlay || canExplore) && (
         <section className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }} aria-label="Your path">
