@@ -69,3 +69,16 @@ describe('Progress store subscriptions', () => {
     expect(calls).toBe(1);
   });
 });
+
+describe('Game completion announcements', () => {
+  it('tells listeners which game was completed, every time, until they unsubscribe', () => {
+    const seen: string[] = [];
+    const off = ProgressStore.subscribeCompletions((id) => seen.push(id));
+    ProgressStore.recordGameCompletion('bloch_runner', 'concept_gates');
+    ProgressStore.recordGameCompletion('bloch_runner', 'concept_gates'); // a replay still announces
+    ProgressStore.recordGameCompletion('gate_deck', 'concept_gates');
+    off();
+    ProgressStore.recordGameCompletion('oracle_detective', 'concept_algorithms');
+    expect(seen).toEqual(['bloch_runner', 'bloch_runner', 'gate_deck']);
+  });
+});

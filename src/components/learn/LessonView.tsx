@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check, ChevronLeft, ChevronRight, Circle, FlaskConical, Gamepad2, Lock, Video } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
 import { ACTIVITIES } from '../../content/activities';
 import { HARDWARE_SNAPSHOT_NOTE, LESSONS, PARTS, QUIZZES, quizForLesson } from '../../content/lessons';
-import type { ActivityLink, LessonBlock, LessonRecord } from '../../content/types';
+import type { ActivityLink, LessonBlock, LessonRecord, LessonStep } from '../../content/types';
 import { adjacentLessons, conceptEvidence, lessonStatus, moduleEyebrow } from '../../core/learn/curriculum';
 import { STEP_HINTS, STEP_TITLES, lessonFlow } from '../../core/learn/flow';
 import { flowFor, hasStarted, readStartChoices, startOffer, writeStartChoice } from '../../core/learn/start';
@@ -19,8 +19,8 @@ import { ReadingCard, VideoCard } from './VideoCard';
 
 const sectionTitle: React.CSSProperties = { fontSize: '0.72rem', lineHeight: 1.5 };
 
-const Section: React.FC<{ title: string; hint?: string; children: React.ReactNode }> = ({ title, hint, children }) => (
-  <section style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+const Section: React.FC<{ title: string; hint?: string; id?: string; children: React.ReactNode }> = ({ title, hint, id, children }) => (
+  <section id={id} style={{ display: 'flex', flexDirection: 'column', gap: 10, scrollMarginTop: 8 }}>
     <div>
       <h3 className="pixel" style={sectionTitle}>{title}</h3>
       {hint && <p style={{ fontSize: '0.85rem', lineHeight: 1.45, color: 'var(--text-secondary)', marginTop: 6 }}>{hint}</p>}
@@ -105,13 +105,17 @@ interface Props {
   onBack: () => void;
   onOpenLesson: (lessonId: string) => void;
   onStartQuiz: () => void;
-  onOpenGame: (id: string) => void;
+  onOpenGame: (id: string, lessonId?: string) => void;
   onOpenSim: (id: string) => void;
+  /** Scroll to this stage when the page opens (the app sets it after a game, to land on the video). */
+  focusStep?: LessonStep;
 }
 
 export const LessonView: React.FC<Props> = ({
-  lesson, availableGameIds, availableSimIds, onBack, onOpenLesson, onStartQuiz, onOpenGame, onOpenSim,
+  lesson, availableGameIds, availableSimIds, onBack, onOpenLesson, onStartQuiz, onOpenGame: openGameFrom, onOpenSim, focusStep,
 }) => {
+  // Remember which lesson a game was opened from, so the app can offer this lesson's next step when it ends
+  const onOpenGame = (id: string) => openGameFrom(id, lesson.id);
   const { progress, setLessonRead } = useProgress();
   const part = PARTS.find((p) => p.part === lesson.part)!;
   const quiz = quizForLesson(lesson);
@@ -136,6 +140,13 @@ export const LessonView: React.FC<Props> = ({
     ...(canExplore ? [{ label: 'Try a lab', done: evidence.explored }] : []),
     { label: 'Pass the quiz', done: evidence.quizPassed },
   ];
+
+  useEffect(() => {
+    if (!focusStep) return;
+    // after the app's own scroll-to-top for a new screen
+    const t = window.setTimeout(() => document.getElementById(`step-${focusStep}`)?.scrollIntoView({ block: 'start' }), 120);
+    return () => window.clearTimeout(t);
+  }, [focusStep]);
 
   const top = (
     <>
@@ -227,7 +238,7 @@ export const LessonView: React.FC<Props> = ({
       )}
 
       {stages.map((stage, i) => (
-        <Section key={stage.step} title={`STEP ${i + 1} \u00b7 ${STEP_TITLES[stage.step].toUpperCase()}`} hint={STEP_HINTS[stage.step]}>
+        <Section key={stage.step} id={`step-${stage.step}`} title={`STEP ${i + 1} \u00b7 ${STEP_TITLES[stage.step].toUpperCase()}`} hint={STEP_HINTS[stage.step]}>
           {stage.step === 'watch'
             ? (
               <>

@@ -13,7 +13,7 @@ interface Props {
   /** Ids of the games and labs that are playable today; anything else shows as "coming soon". */
   availableGameIds: string[];
   availableSimIds: string[];
-  onOpenGame: (id: string) => void;
+  onOpenGame: (id: string, lessonId?: string) => void;
   onOpenSim: (id: string) => void;
 }
 
@@ -54,6 +54,7 @@ export const LearnTab: React.FC<Props> = ({ view, onNavigate, availableGameIds, 
         onStartQuiz={() => onNavigate({ kind: 'quiz', lessonId: lesson.id })}
         onOpenGame={onOpenGame}
         onOpenSim={onOpenSim}
+        focusStep={view.kind === 'lesson' ? view.focus : undefined}
       />
     );
   }

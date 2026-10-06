@@ -78,3 +78,29 @@ export function writeStartChoice(
   }
   return next;
 }
+
+/** What to offer once a game or lab from this lesson is finished. */
+export type NextStep =
+  | { kind: 'watch' }
+  | { kind: 'activity'; activity: ActivityLink }
+  | { kind: 'quiz' }
+  | { kind: 'lesson' };
+
+/**
+ * The step after `activityId` in the lesson's own order (as the learner chose to start it): usually the video, then the
+ * lab, then practice, and the quiz after the last stage. A lesson without a quiz just goes back to the lesson page.
+ */
+export function nextAfterActivity(
+  lesson: Pick<LessonRecord, 'activities' | 'references' | 'flow' | 'quizId'>,
+  activityId: string,
+  availableGameIds: string[],
+  availableSimIds: string[],
+  choice?: StartChoice,
+): NextStep {
+  const { stages } = lessonFlow({ ...lesson, flow: flowFor(lesson, choice) }, availableGameIds, availableSimIds);
+  const here = stages.findIndex((s) => s.activities.some((a) => a.id === activityId));
+  if (here < 0) return { kind: 'lesson' };
+  const next = stages[here + 1];
+  if (next) return next.step === 'watch' ? { kind: 'watch' } : { kind: 'activity', activity: next.activities[0] };
+  return lesson.quizId ? { kind: 'quiz' } : { kind: 'lesson' };
+}

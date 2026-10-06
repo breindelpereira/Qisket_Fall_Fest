@@ -55,6 +55,7 @@ function removeStorageItem(key: string): void {
 // Cached snapshot + listeners let every useProgress() consumer re-render when any one saves.
 let snapshot: ProgressState | null = null;
 const listeners = new Set<() => void>();
+const completionListeners = new Set<(gameId: string) => void>();
 
 function notify(): void {
   snapshot = null;
@@ -148,6 +149,14 @@ export const ProgressStore = {
     };
   },
 
+  /** Called every time a game reports it was completed (including replays), so the app can offer what to do next. */
+  subscribeCompletions: (listener: (gameId: string) => void): (() => void) => {
+    completionListeners.add(listener);
+    return () => {
+      completionListeners.delete(listener);
+    };
+  },
+
   recordGameCompletion: (gameId: string, conceptId: string): ProgressState => {
     const state = ProgressStore.get();
     if (!state.completedGames.includes(gameId)) {
@@ -161,6 +170,7 @@ export const ProgressStore = {
     }
     state.conceptMastery[conceptId] = deriveConceptMastery(conceptId, state);
     ProgressStore.save(state);
+    completionListeners.forEach((l) => l(gameId));
     return state;
   },
 

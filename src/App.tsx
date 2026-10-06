@@ -38,7 +38,10 @@ import { DeutschJozsaExplorer } from './components/simulations/DeutschJozsaExplo
 import { GroverExplorer } from './components/simulations/GroverExplorer';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
-import { LESSONS, QUIZZES } from './content/lessons';
+import { AfterGameSheet } from './components/learn/AfterGameSheet';
+import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
+import { ProgressStore } from './utils/progressStore';
+import { startOffer } from './core/learn/start';
 import { courseProgressPercent, moduleEyebrow, nextUpLesson } from './core/learn/curriculum';
 
 type Tab = 'home' | 'learn' | 'games' | 'sims';
@@ -299,6 +302,10 @@ export default function App() {
   const [learnView, setLearnView] = useState<LearnView>({ kind: 'home' });
   const mainRef = useRef<HTMLElement>(null);
   const [tutorOpen, setTutorOpen] = useState(false);
+  // The lesson a game was opened from (so finishing it can offer that lesson's next step) and the sheet that does so
+  const [originLesson, setOriginLesson] = useState<string | null>(null);
+  const promptedRef = useRef<Set<string>>(new Set());
+  const [afterGame, setAfterGame] = useState<{ gameId: string; lessonId: string } | null>(null);
   const [tutorInput, setTutorInput] = useState('');
 
   const { progress } = useProgress();
@@ -312,7 +319,8 @@ export default function App() {
   const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
   const started = progressPercent > 0 || familiarCount > 0 || Object.keys(progress.quizScores).length > 0;
 
-  const openGames = (id: string | null) => {
+  const openGames = (id: string | null, lessonId?: string) => {
+    setOriginLesson(lessonId ?? null);
     setSelectedGame(id);
     setActiveTab('games');
   };
@@ -331,6 +339,20 @@ export default function App() {
   useEffect(() => {
     mainRef.current?.scrollTo({ top: 0 });
   }, [activeTab, learnView, selectedGame, selectedSim]);
+
+  // When a game is finished, offer the next step of its lesson (once per game per visit, so replays do not nag)
+  useEffect(
+    () =>
+      ProgressStore.subscribeCompletions((gameId) => {
+        if (promptedRef.current.has(gameId)) return;
+        const origin = originLesson ? LESSON_BY_ID[originLesson] : undefined;
+        const lesson = origin?.activities.some((x) => x.id === gameId) ? origin : LESSONS.find((l) => l.activities.some((x) => x.id === gameId));
+        if (!lesson) return;
+        promptedRef.current.add(gameId);
+        setAfterGame({ gameId, lessonId: lesson.id });
+      }),
+    [originLesson],
+  );
 
   const activeGame = GAMES.find(g => g.id === selectedGame);
   const activeSim = SIMS.find(x => x.id === selectedSim);
@@ -393,7 +415,7 @@ export default function App() {
               </h1>
               <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 18 }}>
                 {nextLesson
-                  ? (nextLesson.activities.length > 0 ? 'Play first, then watch, then try the lab, then check yourself.' : 'Watch the video, read the notes, then check yourself.')
+                  ? (startOffer(nextLesson, GAMES.map((g) => g.id), AVAILABLE_SIM_IDS) ? 'Play first, then watch, then try the lab, then check yourself.' : 'Watch the video, read the notes, then check yourself.')
                   : 'You finished every module. Revisit any lesson from the Learn tab.'}
               </p>
 
@@ -588,6 +610,21 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {afterGame && LESSON_BY_ID[afterGame.lessonId] && (
+        <AfterGameSheet
+          lesson={LESSON_BY_ID[afterGame.lessonId]}
+          gameId={afterGame.gameId}
+          availableGameIds={GAMES.map((g) => g.id)}
+          availableSimIds={AVAILABLE_SIM_IDS}
+          onClose={() => setAfterGame(null)}
+          onWatch={() => { setAfterGame(null); openLearn({ kind: 'lesson', lessonId: afterGame.lessonId, focus: 'watch' }); }}
+          onOpenGame={(id) => { setAfterGame(null); openGames(id, afterGame.lessonId); }}
+          onOpenSim={(id) => { setAfterGame(null); openSims(id); }}
+          onQuiz={() => { setAfterGame(null); openLearn({ kind: 'quiz', lessonId: afterGame.lessonId }); }}
+          onLesson={() => { setAfterGame(null); openLearn({ kind: 'lesson', lessonId: afterGame.lessonId }); }}
+        />
+      )}
 
       {tutorOpen && (
         <div
