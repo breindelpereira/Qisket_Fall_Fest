@@ -122,7 +122,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     misconceptionToFix: `People think Z "does nothing" because the probabilities don't change, but it changes the phase.`,
     linkedConceptId: 'concept_gates',
     quizId: 'quiz_module_3',
-    activities: [game('bloch_runner'), game('gate_deck'), sim('circuit_lab')],
+    activities: [game('bloch_runner'), game('gate_deck', 'apply'), sim('circuit_lab')],
     blocks: [
       {
         type: 'paragraph',
@@ -241,7 +241,9 @@ export const PART1_LESSONS: LessonRecord[] = [
     ahaMoment: 'You can move a quantum state without copying it.',
     linkedConceptId: 'concept_teleportation',
     quizId: 'quiz_module_5b',
-    activities: [game('teleport_relay'), sim('teleportation_lab')],
+    activities: [game('teleport_relay', 'apply'), sim('teleportation_lab')],
+    // The lab's step-through is what explains teleportation, and the game only tests the rule it teaches
+    flow: ['explore', 'watch', 'apply'],
     blocks: [
       {
         type: 'bullets',
@@ -277,7 +279,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     ahaMoment: 'Algorithms arrange interference so wrong answers cancel.',
     linkedConceptId: 'concept_algorithms',
     quizId: 'quiz_module_6',
-    activities: [game('gate_deck'), game('oracle_detective'), sim('deutsch_jozsa_explorer'), sim('grover_explorer')],
+    activities: [game('oracle_detective'), game('gate_deck', 'apply'), sim('deutsch_jozsa_explorer'), sim('grover_explorer')],
     blocks: [
       {
         type: 'bullets',

@@ -1,4 +1,4 @@
-import type { ActivityLink, LessonBlock, LessonRecord, MathExpr, MathPart, ReferenceLink } from './types';
+import type { ActivityLink, ActivityRole, LessonBlock, LessonRecord, MathExpr, MathPart, ReferenceLink } from './types';
 
 /** Plain-text rendering of a maths expression, for search, the AI Tutor and tests. */
 export function mathToText(expr: MathExpr): string {
@@ -24,8 +24,8 @@ export function blocksToText(blocks: LessonBlock[]): string {
     .join('\n');
 }
 
-export const game = (id: string): ActivityLink => ({ kind: 'game', id });
-export const sim = (id: string): ActivityLink => ({ kind: 'sim', id });
+export const game = (id: string, role?: ActivityRole): ActivityLink => (role ? { kind: 'game', id, role } : { kind: 'game', id });
+export const sim = (id: string, role?: ActivityRole): ActivityLink => (role ? { kind: 'sim', id, role } : { kind: 'sim', id });
 
 export const video = (
   title: string,

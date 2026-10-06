@@ -72,9 +72,20 @@ export interface ReferenceLink {
   endSeconds?: number;
 }
 
+/**
+ * Where an activity sits in a lesson: `discover` activities come before the video (the learner meets the idea by doing),
+ * `explore` ones after it (see how it really works), `apply` ones last (practise with what the lesson taught).
+ * Games default to `discover` and labs to `explore`.
+ */
+export type ActivityRole = 'discover' | 'explore' | 'apply';
+
+/** The stages of a lesson page, in the order the learner meets them. */
+export type LessonStep = ActivityRole | 'watch';
+
 export interface ActivityLink {
   kind: 'game' | 'sim';
   id: string;
+  role?: ActivityRole;
 }
 
 export interface LessonRecord {
@@ -96,6 +107,8 @@ export interface LessonRecord {
   linkedSimId?: string;
   /** Games and labs that practise this lesson, in suggested order. */
   activities: ActivityLink[];
+  /** Stage order for this lesson's page. Defaults to discover, watch, explore, apply (see core/learn/flow.ts). */
+  flow?: LessonStep[];
   quizId?: string;
   /** Only set when a lesson itself needs one (e.g. Frontier ideas is Experimental/Contested). */
   honestyTag?: HonestyTag;

@@ -393,7 +393,7 @@ export default function App() {
               </h1>
               <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 18 }}>
                 {nextLesson
-                  ? nextLesson.ahaMoment ?? 'Read the notes, then check yourself.'
+                  ? (nextLesson.activities.length > 0 ? 'Play first, then watch, then try the lab, then check yourself.' : 'Watch the video, read the notes, then check yourself.')
                   : 'You finished every module. Revisit any lesson from the Learn tab.'}
               </p>
 

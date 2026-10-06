@@ -3,8 +3,9 @@ import { Check, ChevronLeft, ChevronRight, Circle, FlaskConical, Gamepad2, Lock 
 import { useProgress } from '../../hooks/useProgress';
 import { ACTIVITIES } from '../../content/activities';
 import { HARDWARE_SNAPSHOT_NOTE, LESSONS, PARTS, QUIZZES, quizForLesson } from '../../content/lessons';
-import type { LessonBlock, LessonRecord } from '../../content/types';
+import type { ActivityLink, LessonBlock, LessonRecord } from '../../content/types';
 import { adjacentLessons, conceptEvidence, lessonStatus, moduleEyebrow } from '../../core/learn/curriculum';
+import { STEP_HINTS, STEP_TITLES, lessonFlow } from '../../core/learn/flow';
 import { passRule, percent } from '../../core/learn/quiz';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { THEMES } from '../shared/arcadeTheme';
@@ -15,12 +16,57 @@ import { ReadingCard, VideoCard } from './VideoCard';
 
 const sectionTitle: React.CSSProperties = { fontSize: '0.72rem', lineHeight: 1.5 };
 
-const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+const Section: React.FC<{ title: string; hint?: string; children: React.ReactNode }> = ({ title, hint, children }) => (
   <section style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-    <h3 className="pixel" style={sectionTitle}>{title}</h3>
+    <div>
+      <h3 className="pixel" style={sectionTitle}>{title}</h3>
+      {hint && <p style={{ fontSize: '0.85rem', lineHeight: 1.45, color: 'var(--text-secondary)', marginTop: 6 }}>{hint}</p>}
+    </div>
     {children}
   </section>
 );
+
+interface ActivityCardProps {
+  activity: ActivityLink;
+  ready: boolean;
+  onOpenGame: (id: string) => void;
+  onOpenSim: (id: string) => void;
+}
+
+const ActivityCard: React.FC<ActivityCardProps> = ({ activity: a, ready, onOpenGame, onOpenSim }) => {
+  const info = ACTIVITIES[a.id];
+  const Icon = a.kind === 'game' ? Gamepad2 : FlaskConical;
+  return (
+    <div className="card" style={{ padding: 12, display: 'flex', alignItems: 'center', gap: 12, minHeight: 72, opacity: ready ? 1 : 0.8 }}>
+      <span style={{
+        width: 44, height: 44, borderRadius: 14, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: a.kind === 'game' ? 'var(--yellow)' : 'var(--pink)',
+        boxShadow: `0 4px 0 ${a.kind === 'game' ? 'var(--yellow-edge)' : 'var(--pink-edge)'}`,
+      }}>
+        <Icon size={22} color="var(--ink)" strokeWidth={2.6} />
+      </span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ display: 'block', fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.3 }}>{info.title}</span>
+        <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+          {a.kind === 'game' ? 'Game' : 'Lab'}
+        </span>
+      </span>
+      {ready ? (
+        <button
+          className="btn"
+          onClick={() => (a.kind === 'game' ? onOpenGame(a.id) : onOpenSim(a.id))}
+          style={{ width: 'auto', minWidth: 88, minHeight: 44, padding: '8px 14px', fontSize: '0.6rem' }}
+        >
+          {a.kind === 'game' ? 'Play' : 'Open'}
+        </button>
+      ) : (
+        <span className="chip" style={{ minHeight: 36, padding: '4px 12px' }}>
+          <Lock size={14} /> Soon
+        </span>
+      )}
+    </div>
+  );
+};
 
 const Blocks: React.FC<{ blocks: LessonBlock[] }> = ({ blocks }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -71,8 +117,7 @@ export const LessonView: React.FC<Props> = ({
   const evidence = conceptEvidence(lesson.linkedConceptId, progress, QUIZZES, lesson);
   const tier = progress.conceptMastery[lesson.linkedConceptId];
 
-  const videos = lesson.references.filter((r) => r.kind === 'video');
-  const readings = lesson.references.filter((r) => r.kind === 'reading');
+  const { stages, soon } = lessonFlow(lesson, availableGameIds, availableSimIds);
 
   // Only ask for steps the learner can actually take today
   const canPlay = lesson.activities.some((a) => a.kind === 'game' && availableGameIds.includes(a.id));
@@ -103,73 +148,6 @@ export const LessonView: React.FC<Props> = ({
         </div>
       </header>
 
-      {lesson.ahaMoment && (
-        <div className="card" style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center', background: 'var(--bg-surface-elevated)' }}>
-          <DrQuantum size={64} />
-          <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px' }}>
-            <div className="pixel" style={{ fontSize: '0.5rem', color: '#8b5cf6', marginBottom: 6 }}>THE "AHA!" MOMENT</div>
-            <div style={{ fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.4 }}>{lesson.ahaMoment}</div>
-          </div>
-        </div>
-      )}
-
-      {lesson.misconceptionToFix && (
-        <Banner tone="warn" title="COMMON MIX-UP">{lesson.misconceptionToFix}</Banner>
-      )}
-
-      <Section title="Lecture notes">
-        <div className="card" style={{ padding: 16 }}>
-          <Blocks blocks={lesson.blocks} />
-        </div>
-      </Section>
-
-      {lesson.references.length > 0 && (
-        <Section title={videos.length ? 'Watch and read' : 'Read more'}>
-          {videos.map((v) => <VideoCard key={v.url} reference={v} />)}
-          {readings.map((r) => <ReadingCard key={r.url} reference={r} />)}
-        </Section>
-      )}
-
-      {lesson.activities.length > 0 && (
-        <Section title="Try it">
-          {lesson.activities.map((a) => {
-            const info = ACTIVITIES[a.id];
-            const ready = a.kind === 'game' ? availableGameIds.includes(a.id) : availableSimIds.includes(a.id);
-            const Icon = a.kind === 'game' ? Gamepad2 : FlaskConical;
-            return (
-              <div key={a.id} className="card" style={{ padding: 12, display: 'flex', alignItems: 'center', gap: 12, minHeight: 72, opacity: ready ? 1 : 0.8 }}>
-                <span style={{
-                  width: 44, height: 44, borderRadius: 14, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: a.kind === 'game' ? 'var(--yellow)' : 'var(--pink)',
-                  boxShadow: `0 4px 0 ${a.kind === 'game' ? 'var(--yellow-edge)' : 'var(--pink-edge)'}`,
-                }}>
-                  <Icon size={22} color="var(--ink)" strokeWidth={2.6} />
-                </span>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.3 }}>{info.title}</span>
-                  <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
-                    {a.kind === 'game' ? 'Game' : 'Lab'}
-                  </span>
-                </span>
-                {ready ? (
-                  <button
-                    className="btn"
-                    onClick={() => (a.kind === 'game' ? onOpenGame(a.id) : onOpenSim(a.id))}
-                    style={{ width: 'auto', minWidth: 88, minHeight: 44, padding: '8px 14px', fontSize: '0.6rem' }}
-                  >
-                    {a.kind === 'game' ? 'Play' : 'Open'}
-                  </button>
-                ) : (
-                  <span className="chip" style={{ minHeight: 36, padding: '4px 12px' }}>
-                    <Lock size={14} /> Soon
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </Section>
-      )}
-
       {lesson.part === 1 && quiz && (canPlay || canExplore) && (
         <section className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }} aria-label="Your path">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -191,6 +169,50 @@ export const LessonView: React.FC<Props> = ({
           </div>
         </section>
       )}
+
+      {stages.map((stage, i) => (
+        <Section key={stage.step} title={`STEP ${i + 1} \u00b7 ${STEP_TITLES[stage.step].toUpperCase()}`} hint={STEP_HINTS[stage.step]}>
+          {stage.step === 'watch'
+            ? (
+              <>
+                {stage.videos.map((v) => <VideoCard key={v.url} reference={v} />)}
+                {stage.readings.map((r) => <ReadingCard key={r.url} reference={r} />)}
+              </>
+            )
+            : stage.activities.map((act) => (
+              <ActivityCard key={act.id} activity={act} ready onOpenGame={onOpenGame} onOpenSim={onOpenSim} />
+            ))}
+        </Section>
+      ))}
+
+      {soon.length > 0 && (
+        <Section title="Coming soon">
+          {soon.map((act) => (
+            <ActivityCard key={act.id} activity={act} ready={false} onOpenGame={onOpenGame} onOpenSim={onOpenSim} />
+          ))}
+        </Section>
+      )}
+
+      {/* The punchline and the common mix-up come after the learner has met the idea, so they do not spoil the game */}
+      {lesson.ahaMoment && (
+        <div className="card" style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center', background: 'var(--bg-surface-elevated)' }}>
+          <DrQuantum size={64} />
+          <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px' }}>
+            <div className="pixel" style={{ fontSize: '0.5rem', color: '#8b5cf6', marginBottom: 6 }}>THE "AHA!" MOMENT</div>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.4 }}>{lesson.ahaMoment}</div>
+          </div>
+        </div>
+      )}
+
+      {lesson.misconceptionToFix && (
+        <Banner tone="warn" title="COMMON MIX-UP">{lesson.misconceptionToFix}</Banner>
+      )}
+
+      <Section title="Lecture notes" hint={stages.length > 0 ? 'A recap to keep. Come back to it any time.' : undefined}>
+        <div className="card" style={{ padding: 16 }}>
+          <Blocks blocks={lesson.blocks} />
+        </div>
+      </Section>
 
       {quiz ? (
         <Section title="Check yourself">
