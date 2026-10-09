@@ -30,3 +30,10 @@ android/app/build
 android/local.properties
 .gradle
 
+
+# AI Tutor: local secrets and tool folders (the Gemini key must never be committed)
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler

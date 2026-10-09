@@ -1,0 +1,12 @@
+# Cloudflare Workers settings for the AI Tutor function. Steps to deploy are in worker/README.md.
+# The Gemini key is NOT here: it is stored with `npx wrangler secret put GEMINI_API_KEY`.
+name = "qisket-tutor"
+main = "index.ts"
+compatibility_date = "2025-09-01"
+
+[vars]
+# Model code from Google AI Studio. Change it here if Google renames or retires it, then deploy again.
+TUTOR_MODEL = "gemini-3.5-flash-lite"
+# Web addresses allowed to call the function from a browser. https://localhost is the Android app
+# (capacitor.config.ts uses androidScheme "https"). Add your website's address, with no trailing slash.
+ALLOWED_ORIGINS = "https://localhost,http://localhost:5173"

@@ -8,8 +8,6 @@ import {
   Sparkles,
   Play,
   ChevronLeft,
-  X,
-  Send,
   Star,
   Compass,
   Trophy,
@@ -39,6 +37,8 @@ import { GroverExplorer } from './components/simulations/GroverExplorer';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { AfterGameSheet } from './components/learn/AfterGameSheet';
+import { TutorDrawer } from './components/tutor/TutorDrawer';
+import { tutorPosition } from './core/tutor/position';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
 import { ProgressStore } from './utils/progressStore';
 import { startOffer } from './core/learn/start';
@@ -306,7 +306,6 @@ export default function App() {
   const [originLesson, setOriginLesson] = useState<string | null>(null);
   const promptedRef = useRef<Set<string>>(new Set());
   const [afterGame, setAfterGame] = useState<{ gameId: string; lessonId: string } | null>(null);
-  const [tutorInput, setTutorInput] = useState('');
 
   const { progress } = useProgress();
 
@@ -318,6 +317,15 @@ export default function App() {
   const progressPercent = courseProgressPercent(LESSONS, QUIZZES, progress);
   const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
   const started = progressPercent > 0 || familiarCount > 0 || Object.keys(progress.quizScores).length > 0;
+
+  // The lesson the tutor should treat as current: the lesson or quiz that is open, or the one a game was opened from
+  const openLessonId =
+    activeTab === 'learn' && (learnView.kind === 'lesson' || learnView.kind === 'quiz')
+      ? learnView.lessonId
+      : activeTab === 'games' && selectedGame
+        ? (originLesson ?? undefined)
+        : undefined;
+  const tutorAt = tutorPosition(LESSONS, QUIZZES, progress, openLessonId);
 
   const openGames = (id: string | null, lessonId?: string) => {
     setOriginLesson(lessonId ?? null);
@@ -626,67 +634,13 @@ export default function App() {
         />
       )}
 
-      {tutorOpen && (
-        <div
-          onClick={() => setTutorOpen(false)}
-          style={{
-            position: 'fixed', inset: 0, background: 'rgba(23, 6, 54, 0.7)', backdropFilter: 'blur(6px)',
-            display: 'flex', justifyContent: 'center', alignItems: 'flex-end', zIndex: 50,
-          }}
-        >
-          <div
-            role="dialog"
-            aria-label="AI Quantum Tutor"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              width: '100%', maxWidth: 440, background: 'var(--bg-surface-elevated)',
-              borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 20,
-              borderTop: '3px solid var(--yellow)', display: 'flex', flexDirection: 'column', gap: 14, maxHeight: '75vh',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="pixel" style={{ fontSize: '0.8rem' }}>Ask Dr Quantum</span>
-              <button
-                aria-label="Close tutor"
-                onClick={() => setTutorOpen(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.14)', borderRadius: '50%', width: 44, height: 44,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff',
-                }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <DrQuantum size={64} />
-              <div style={{
-                background: '#fff', color: 'var(--ink)', borderRadius: 18, padding: '12px 14px',
-                fontSize: '0.9rem', fontWeight: 700, lineHeight: 1.45,
-              }}>
-                Ask me anything about qubits, superposition, or quantum algorithms!
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 8 }}>
-              <input
-                type="text"
-                placeholder="Ask a question..."
-                aria-label="Your question"
-                value={tutorInput}
-                onChange={(e) => setTutorInput(e.target.value)}
-                style={{
-                  flex: 1, minHeight: 48, background: 'rgba(0, 0, 0, 0.3)', border: '2px solid var(--border-subtle)',
-                  borderRadius: 16, padding: '10px 14px', color: '#fff', fontSize: '1rem', fontWeight: 600,
-                }}
-              />
-              <button className="btn" aria-label="Send" style={{ width: 56, padding: 0 }}>
-                <Send size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <TutorDrawer
+        open={tutorOpen}
+        onClose={() => setTutorOpen(false)}
+        position={tutorAt}
+        inQuiz={activeTab === 'learn' && learnView.kind === 'quiz'}
+        onOpenLesson={(lessonId) => { setTutorOpen(false); openLearn({ kind: 'lesson', lessonId }); }}
+      />
 
       <nav style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: 68, background: 'var(--bg-nav)',

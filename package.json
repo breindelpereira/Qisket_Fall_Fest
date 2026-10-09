@@ -12,7 +12,10 @@
     "preview": "vite preview",
     "cap:sync": "cap sync android",
     "cap:open": "cap open android",
-    "cap:run": "cap run android"
+    "cap:run": "cap run android",
+    "tutor:index": "tsx scripts/build-tutor-index.ts",
+    "tutor:eval": "tsx scripts/run-tutor-eval.ts",
+    "check:no-keys": "tsx scripts/check-no-keys.ts"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.1",
@@ -28,6 +31,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^4.1.0"

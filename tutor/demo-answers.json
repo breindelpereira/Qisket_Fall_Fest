@@ -1,0 +1,71 @@
+[
+  {
+    "id": "what_is_a_qubit",
+    "questions": ["What is a qubit?", "Explain what a qubit is", "What's a qubit", "Tell me about qubits"],
+    "answer": "A qubit is the quantum version of a bit. A bit is always 0 or 1. A qubit's state is described by two amplitudes, one for the outcome 0 and one for the outcome 1, and the probability of each outcome is its amplitude squared. When you measure a qubit you always get a plain 0 or 1. You can picture one qubit's state as a point on the Bloch sphere, with |0⟩ at the North Pole and |1⟩ at the South Pole (a simplified picture that works for a single qubit only).",
+    "sources": [
+      { "lessonId": "module_1", "heading": "Bits, qubits and amplitudes", "where": "Module 1" },
+      { "lessonId": "module_1", "heading": "The Bloch sphere", "where": "Module 1" }
+    ]
+  },
+  {
+    "id": "both_zero_and_one",
+    "questions": [
+      "Is a qubit 0 and 1 at the same time?",
+      "Is a qubit both 0 and 1 at the same time?",
+      "Is a qubit 0 and 1 at once?",
+      "Is a qubit really both 0 and 1?"
+    ],
+    "answer": "Not exactly. A qubit in superposition has an amplitude for 0 and an amplitude for 1, which is why it behaves differently from a bit that is just unknown. But it does not store two answers you could read out together. When you measure it, you always get a single 0 or 1, with probabilities given by the amplitudes squared. A better way to say it: the qubit's state is a blend of |0⟩ and |1⟩, not \"both at once\".",
+    "sources": [{ "lessonId": "module_1", "heading": "Is a qubit really 0 and 1 at the same time?", "where": "Module 1" }]
+  },
+  {
+    "id": "what_is_superposition",
+    "questions": ["What is superposition?", "Explain superposition", "What does superposition mean?"],
+    "answer": "Superposition means a qubit's state is a combination of the basis states |0⟩ and |1⟩, each with an amplitude. Any state that is not exactly |0⟩ or |1⟩ is a superposition. Measuring it gives 0 or 1 with the probabilities the amplitudes give. For example, (|0⟩ + |1⟩)/√2 gives 0 or 1 with a 50% chance each.",
+    "sources": [{ "lessonId": "module_1", "heading": "What is superposition?", "where": "Module 1" }]
+  },
+  {
+    "id": "what_is_the_bloch_sphere",
+    "questions": ["What is the Bloch sphere?", "Explain the Bloch sphere", "What's the Bloch sphere"],
+    "answer": "The Bloch sphere is a globe that shows the state of one qubit as a point. The North Pole is |0⟩ and the South Pole is |1⟩. The equator holds the equal blends, like |+⟩ and |−⟩, where measuring gives 0 or 1 with a 50% chance each. How far north or south the point is gives the probabilities, and how far around the globe it is gives the phase. It is a simplified model: it only works for a single qubit.",
+    "sources": [{ "lessonId": "module_1", "heading": "What is the Bloch sphere?", "where": "Module 1" }]
+  },
+  {
+    "id": "what_does_measurement_do",
+    "questions": [
+      "What does measurement do to a qubit?",
+      "What happens when you measure a qubit?",
+      "What happens when I measure a qubit?",
+      "What is measurement?"
+    ],
+    "answer": "When you measure a qubit you get a plain 0 or 1, never a blend. The Born rule says the probability of each result is its amplitude squared: amplitudes 0.6 and 0.8, for example, give 36% for 0 and 64% for 1. Afterwards the qubit is in the state you measured, so measuring again gives the same result. This sudden change is called collapse. Because one measurement is random, quantum computers run a circuit many times (these runs are called shots) and count the results in a histogram.",
+    "sources": [
+      { "lessonId": "module_2", "heading": "The Born rule and collapse", "where": "Module 2" },
+      { "lessonId": "module_2", "heading": "Shots and histograms", "where": "Module 2" }
+    ]
+  },
+  {
+    "id": "not_every_answer_at_once",
+    "questions": [
+      "Does a quantum computer try every answer at once?",
+      "Why doesn't a quantum computer try every answer at once?",
+      "Does a quantum computer try all answers at once?",
+      "Does a quantum computer check every answer at once?"
+    ],
+    "answer": "No. If a quantum computer simply tried every answer at once, measuring would just give a random answer. The real power comes from interference: the algorithm arranges the amplitudes so that wrong answers cancel out and the right answer is strengthened before you measure. This only works for problems with the right structure, which is why quantum computers are specialist tools and not faster laptops.",
+    "sources": [{ "lessonId": "module_0", "heading": "Does a quantum computer try every answer at once?", "where": "Module 0" }]
+  },
+  {
+    "id": "does_z_do_nothing",
+    "questions": ["Does the Z gate do nothing?", "What does the Z gate do?", "Why does the Z gate not change the probabilities?"],
+    "answer": "It does not do nothing. The Z gate flips the sign of the |1⟩ amplitude, which changes the phase. If you measure straight afterwards, the probabilities of 0 and 1 are the same as before, so it looks like nothing happened. But a following H gate turns the phase change into a visible difference: for example, H, then Z, then H together act exactly like an X gate.",
+    "sources": [{ "lessonId": "module_3", "heading": "Does the Z gate do nothing?", "where": "Module 3" }]
+  },
+  {
+    "id": "what_does_h_do",
+    "questions": ["What does the Hadamard gate do?", "What is the Hadamard gate?", "What does the H gate do?", "What is the H gate?"],
+    "answer": "The Hadamard (H) gate moves a qubit between the poles and the equator of the Bloch sphere. Applied to |0⟩ it makes the equal blend |+⟩, so measuring gives 0 or 1 with a 50% chance each. Applied to |+⟩ it gives |0⟩ back. It is the most common gate for making a superposition.",
+    "sources": [{ "lessonId": "module_3", "heading": "What does the Hadamard (H) gate do?", "where": "Module 3" }]
+  }
+]
