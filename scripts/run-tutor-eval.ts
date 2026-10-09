@@ -49,7 +49,7 @@ for (const [i, q] of questions.entries()) {
     problem = `request failed: ${(e as Error).message}`;
   }
 
-  if (reply && reply.provider === 'offline') problem = `the function did not reach the model (${reply.reason ?? 'unknown reason'})`;
+  if (reply && reply.provider === 'offline') problem = `the function did not reach the model (${reply.reason ?? 'unknown reason'}${reply.detail ? `; ${reply.detail}` : ''})`;
   const text = (reply?.answer ?? '').toLowerCase();
   if (reply && !problem) {
     if (q.mustContainAny && !q.mustContainAny.some((p) => text.includes(p.toLowerCase()))) problem = `answer has none of: ${q.mustContainAny.join(' | ')}`;

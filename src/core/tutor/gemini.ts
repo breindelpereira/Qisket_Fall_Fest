@@ -5,7 +5,7 @@ export type GeminiFailure = 'rate_limited' | 'timeout' | 'server' | 'network' | 
 
 export type GeminiResult =
   | { ok: true; text: string; truncated: boolean }
-  | { ok: false; kind: GeminiFailure; status?: number };
+  | { ok: false; kind: GeminiFailure; status?: number; message?: string };
 
 export interface GeminiConfig {
   apiKey: string;
@@ -43,28 +43,32 @@ interface GeminiPart {
 interface GeminiBody {
   candidates?: { content?: { parts?: GeminiPart[] }; finishReason?: string }[];
   promptFeedback?: { blockReason?: string };
+  error?: { message?: unknown };
 }
 
 const BLOCKED_FINISH = new Set(['SAFETY', 'PROHIBITED_CONTENT', 'BLOCKLIST', 'SPII', 'RECITATION']);
 
 /** Turns an HTTP status and body into either the answer text or the reason there is none. */
 export function parseGeminiResponse(status: number, body: unknown): GeminiResult {
-  if (status === 429) return { ok: false, kind: 'rate_limited', status };
-  if (status === 401 || status === 403) return { ok: false, kind: 'auth', status };
-  if (status === 408 || status === 504) return { ok: false, kind: 'timeout', status };
-  if (status >= 500) return { ok: false, kind: 'server', status };
-  if (status >= 400) return { ok: false, kind: 'bad_request', status };
-
   const data = (body ?? {}) as GeminiBody;
-  if (data.promptFeedback?.blockReason) return { ok: false, kind: 'blocked', status };
+  // Google's own explanation of an error, kept short so it can be logged and shown to the team
+  const message = typeof data.error?.message === 'string' ? data.error.message.slice(0, 200) : undefined;
+  const fail = (kind: GeminiFailure): GeminiResult => ({ ok: false, kind, status, message });
+  if (status === 429) return fail('rate_limited');
+  if (status === 401 || status === 403) return fail('auth');
+  if (status === 408 || status === 504) return fail('timeout');
+  if (status >= 500) return fail('server');
+  if (status >= 400) return fail('bad_request');
+
+  if (data.promptFeedback?.blockReason) return fail('blocked');
   const candidate = data.candidates?.[0];
-  if (candidate?.finishReason && BLOCKED_FINISH.has(candidate.finishReason)) return { ok: false, kind: 'blocked', status };
+  if (candidate?.finishReason && BLOCKED_FINISH.has(candidate.finishReason)) return fail('blocked');
   const text = (candidate?.content?.parts ?? [])
     .filter((p) => !p.thought && typeof p.text === 'string')
     .map((p) => p.text)
     .join('')
     .trim();
-  if (!text) return { ok: false, kind: 'empty', status };
+  if (!text) return { ok: false, kind: 'empty', status, message: candidate?.finishReason ? `finish reason ${candidate.finishReason}` : undefined };
   return { ok: true, text, truncated: candidate?.finishReason === 'MAX_TOKENS' };
 }
 

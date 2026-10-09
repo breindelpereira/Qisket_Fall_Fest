@@ -17,7 +17,7 @@ export interface AskContext {
 }
 
 /** Longer than the function's own timeout plus its one retry, so the function gets to give its answer. */
-export const CLIENT_TIMEOUT_MS = 20_000;
+export const CLIENT_TIMEOUT_MS = 28_000;
 
 const REASONS = ['rate_limited', 'unavailable', 'busy', 'off'] as const;
 
@@ -31,7 +31,8 @@ export function readReply(raw: unknown): TutorResponse | null {
   if (typeof r.answer !== 'string' || (r.provider !== 'gemini' && r.provider !== 'prepared' && r.provider !== 'offline')) return null;
   const sources = Array.isArray(r.sources) ? r.sources.filter(isSource).map((s) => ({ lessonId: s.lessonId, heading: s.heading, where: s.where })) : [];
   const reason = (REASONS as readonly unknown[]).includes(r.reason) ? (r.reason as TutorResponse['reason']) : undefined;
-  return { answer: r.answer, sources, provider: r.provider, reason };
+  const detail = typeof r.detail === 'string' ? r.detail.slice(0, 240) : undefined;
+  return { answer: r.answer, sources, provider: r.provider, reason, detail };
 }
 
 /**

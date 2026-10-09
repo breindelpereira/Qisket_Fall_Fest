@@ -475,11 +475,20 @@ describe('The tutor function end to end (with a pretend Gemini)', () => {
     expect(r.body).toMatchObject({ provider: 'prepared', sources: [] });
   });
 
-  it('says where a later topic is taught, without teaching it', async () => {
+  it('says where a later topic is taught, without teaching it or spending any quota', async () => {
     const f = fakeFetch({ status: 200, body: answerWith('nope') });
-    const r = await run(f, createServerState(), { ...ask, order: 1, lessonId: 'module_1', question: "Explain Grover's algorithm" });
+    const r = await run(f, createServerState(), { ...ask, order: 1, lessonId: 'module_1', question: 'What is a transmon?' });
     expect(f).not.toHaveBeenCalled();
-    expect((r.body as { answer: string }).answer).toMatch(/covered later, in Module 6A & 6B/);
+    expect((r.body as { answer: string }).answer).toMatch(/covered later, in Hardware module 1/);
+  });
+
+  it('lets the model decide when only a weak match exists, and tells it which modules are not taught yet', async () => {
+    const f = fakeFetch({ status: 200, body: answerWith('That one comes later, in Module 6.') });
+    const r = await run(f, createServerState(), { ...ask, order: 1, lessonId: 'module_1', question: "Explain Grover's algorithm" });
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(r.body).toMatchObject({ provider: 'gemini' });
+    const sent = JSON.parse(String(f.mock.calls[0][1]!.body)) as { systemInstruction: { parts: { text: string }[] } };
+    expect(sent.systemInstruction.parts[0].text).toContain('Module 6A & 6B: Circuits, Oracles, and Search [LATER]');
   });
 
   it('tries once more after a short outage', async () => {
@@ -498,6 +507,39 @@ describe('The tutor function end to end (with a pretend Gemini)', () => {
     const second = await run(f, state);
     expect(second.body).toMatchObject({ provider: 'offline', reason: 'rate_limited' });
     expect(f).toHaveBeenCalledTimes(2);
+  });
+
+  it('is patient with a busy model: up to two more tries, then it says why it gave up', async () => {
+    const recovers = fakeFetch({ status: 503, body: {} }, { status: 503, body: {} }, { status: 200, body: answerWith('Third time lucky [P1]') });
+    expect((await run(recovers)).body).toMatchObject({ provider: 'gemini', answer: 'Third time lucky' });
+    expect(recovers).toHaveBeenCalledTimes(3);
+
+    const busy = fakeFetch({ status: 503, body: { error: { message: 'The model is overloaded. Please try again later.' } } });
+    const r = await run(busy);
+    expect(busy).toHaveBeenCalledTimes(3);
+    expect(r.body).toMatchObject({ provider: 'offline', reason: 'unavailable' });
+    expect((r.body as { detail: string }).detail).toBe('server 503: The model is overloaded. Please try again later.');
+    expect(JSON.stringify(r.body)).not.toContain('SECRET-KEY-VALUE');
+  });
+
+  it('pauses only briefly after a hiccup and for a minute after an out-of-quota error, and remembers which', async () => {
+    let t = 1_000_000;
+    const state = createServerState(undefined, () => t);
+    const hiccup = fakeFetch({ status: 503, body: {} });
+    await run(hiccup, state);
+    expect((await run(hiccup, state)).body).toMatchObject({ reason: 'unavailable', detail: 'paused after: server' });
+    expect(hiccup).toHaveBeenCalledTimes(3);
+    t += 10_001;
+    const recovered = fakeFetch({ status: 200, body: answerWith('Fine [P1]') });
+    expect((await run(recovered, state)).body).toMatchObject({ provider: 'gemini' });
+
+    const quota = fakeFetch({ status: 429, body: { error: { message: 'Quota exceeded' } } });
+    const exhausted = await run(quota, state);
+    expect(exhausted.body).toMatchObject({ reason: 'rate_limited', detail: 'rate_limited 429: Quota exceeded' });
+    t += 30_000;
+    expect((await run(quota, state)).body).toMatchObject({ reason: 'rate_limited', detail: 'paused after: rate_limited' });
+    t += 31_000;
+    expect((await run(recovered, state)).body).toMatchObject({ provider: 'gemini' });
   });
 
   it('does not let one empty answer shut the model out', async () => {
@@ -713,11 +755,32 @@ describe('The 20-question set: the notes find the right lesson', () => {
     it(`${q.id}: "${q.question}" is recognised as a topic for ${q.expectLater}, which comes later`, () => {
       const order = orderOf(q.lessonId);
       const [top] = SEARCHER.search(q.question, { maxOrder: order, focusLessonId: q.lessonId });
-      const later = laterTopic(SEARCHER, { question: q.question, order, lessonId: q.lessonId, level: q.level }, top?.score);
+      const later = laterTopic(SEARCHER, { question: q.question, order, lessonId: q.lessonId, level: q.level }, top);
       expect(later?.chunk.lessonId).toBe(q.expectLater);
       expect(orderOf(q.expectLater!)).toBeGreaterThan(order);
     });
   }
+
+  it('no question is wrongly sent to a later module by one stray word', () => {
+    // these matched a single word of a later lesson ("win", "backup", "module") when the tutor was first tried for real
+    for (const q of EVAL.filter((x) => x.category !== 'later-topic')) {
+      const order = orderOf(q.lessonId);
+      const [top] = SEARCHER.search(q.question, { maxOrder: order, focusLessonId: q.lessonId });
+      const later = laterTopic(SEARCHER, { question: q.question, order, lessonId: q.lessonId, level: q.level }, top);
+      expect(later?.chunk.lessonId, `${q.id}: ${q.question}`).toBeUndefined();
+    }
+  });
+
+  it('keeps asking "what is a transmon?" apart from a question the notes can already answer', () => {
+    const ask = (question: string, order: number) => {
+      const [top] = SEARCHER.search(question, { maxOrder: order });
+      return laterTopic(SEARCHER, { question, order, level: 'beginner' }, top)?.chunk.lessonId;
+    };
+    expect(ask('What is a transmon qubit?', orderOf('module_1'))).toBe('hw_module_1');
+    expect(ask('Explain the Grover search', orderOf('module_1'))).toBe('module_6');
+    expect(ask('What is a qubit?', orderOf('module_1'))).toBeUndefined();
+    expect(ask('Can I clone a qubit so I have a backup?', orderOf('module_5b'))).toBeUndefined();
+  });
 
   it('the offline answers also pass the written checks for the questions they can answer', () => {
     for (const q of EVAL.filter((x) => x.category === 'later-topic' || x.category === 'out-of-scope')) {

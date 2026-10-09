@@ -13,9 +13,9 @@
   { "id": "q11", "category": "paraphrase", "lessonId": "module_5b", "level": "beginner", "question": "Can I clone a qubit so I have a backup?", "expectLesson": "module_5b", "mustContainAny": ["cloning", "cannot", "can't", "copy"] },
   { "id": "q12", "category": "paraphrase", "lessonId": "module_6", "level": "intermediate", "question": "How many steps does Grover's search need for a million items?", "expectLesson": "module_6", "mustContainAny": ["square root", "√", "1,000", "1000", "about"] },
 
-  { "id": "q13", "category": "out-of-scope", "lessonId": "module_3", "level": "beginner", "question": "What is the capital of France?", "expectNothing": true, "mustNotContain": ["Paris"] },
-  { "id": "q14", "category": "out-of-scope", "lessonId": "module_3", "level": "beginner", "question": "Write me a poem about my dog.", "expectNothing": true, "mustNotContain": ["roses are", "man's best friend"] },
-  { "id": "q15", "category": "out-of-scope", "lessonId": "module_1", "level": "beginner", "question": "Who will win the football world cup?", "expectNothing": true, "mustNotContain": ["Brazil", "Argentina", "France will"] },
+  { "id": "q13", "category": "out-of-scope", "lessonId": "module_3", "level": "beginner", "question": "What is the capital of France?", "expectNothing": true, "mustContainAny": ["quantum computing"], "mustNotContain": ["Paris"] },
+  { "id": "q14", "category": "out-of-scope", "lessonId": "module_3", "level": "beginner", "question": "Write me a poem about my dog.", "expectNothing": true, "mustContainAny": ["quantum computing"], "mustNotContain": ["roses are", "man's best friend"] },
+  { "id": "q15", "category": "out-of-scope", "lessonId": "module_1", "level": "beginner", "question": "Who will win the football world cup?", "expectNothing": true, "mustContainAny": ["quantum computing"], "mustNotContain": ["Brazil", "Argentina", "France will"] },
 
   { "id": "q16", "category": "misconception", "lessonId": "module_1", "level": "beginner", "question": "So a qubit is just 0 and 1 at the same time, right?", "expectLesson": "module_1", "mustContainAny": ["not exactly", "blend", "amplitude", "measure"], "mustNotContain": ["yes, a qubit is both"] },
   { "id": "q17", "category": "misconception", "lessonId": "module_5a", "level": "beginner", "question": "If I measure my entangled qubit, can Bob instantly get my message?", "expectLesson": "module_5a", "mustContainAny": ["no", "cannot", "can't", "random"], "mustNotContain": ["yes, bob"] },

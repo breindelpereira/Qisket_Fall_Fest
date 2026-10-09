@@ -80,6 +80,8 @@ export interface TutorResponse {
   provider: TutorProvider;
   /** Why the online tutor was not used, when it was wanted. */
   reason?: 'rate_limited' | 'unavailable' | 'busy' | 'off';
+  /** For the team, not the learner: what went wrong (for example "server 503"). Never contains a key. */
+  detail?: string;
 }
 
 /** Input limits, shared by the app (to stop typing) and the function (to refuse anything bigger). */

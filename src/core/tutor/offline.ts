@@ -17,19 +17,22 @@ const body = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
 export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' | 'level'>;
 
-/** A later passage has to score this many times higher than the best earlier one before the question counts as a later topic. */
-const LATER_DOMINATES = 1.5;
+/** A later passage must contain at least this share of the question's words before we say the question is about it. */
+const LATER_MIN_COVERAGE = 0.6;
+/** If a passage the learner can already see contains this many of the question's words, it can answer, even if a later one matches too. */
+const EARLY_GOOD_ENOUGH = 2;
 
 /**
- * Is this question really about something taught later in the course? Words like "algorithm" can match early notes by chance,
- * so a later passage must clearly beat the best early one. `bestScore` is the best early match, if there was one.
+ * Is this question really about something taught later in the course? One stray word is not enough ("win" in "world cup" appears
+ * in a later lesson): the later passage has to contain most of the question, and the best passage the learner can already see
+ * must contain clearly less of it (a single shared word like "algorithm" does not count). `best` is the best early match, if any.
  */
-export function laterTopic(searcher: Searcher, input: OfflineInput, bestScore?: number): SearchHit | undefined {
+export function laterTopic(searcher: Searcher, input: OfflineInput, best?: SearchHit): SearchHit | undefined {
   const [later] = searcher.search(input.question, { maxOrder: Number.MAX_SAFE_INTEGER, minOrder: input.order + 1, allowPart3: true, limit: 1 });
-  if (!later) return undefined;
-  if (bestScore === undefined) return later;
+  if (!later || later.coverage < LATER_MIN_COVERAGE) return undefined;
+  if (!best) return later;
   // pointing a beginner at the Math Companion is only worth it when nothing in the course so far matches
-  return later.chunk.part !== 3 && later.score > bestScore * LATER_DOMINATES ? later : undefined;
+  return later.chunk.part !== 3 && best.matched < EARLY_GOOD_ENOUGH && later.matched > best.matched ? later : undefined;
 }
 
 /** The "that comes later" reply. It names the module and teaches nothing. */
@@ -49,7 +52,7 @@ export function laterAnswer(later: SearchHit, index: Pick<TutorIndex, 'courseMap
 export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: TutorIndex): TutorResponse {
   const allowPart3 = input.level === 'math';
   const [top] = searcher.search(input.question, { maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, limit: 1 });
-  const later = laterTopic(searcher, input, top?.score);
+  const later = laterTopic(searcher, input, top);
   if (later) return laterAnswer(later, index);
   if (top) {
     const c = top.chunk;

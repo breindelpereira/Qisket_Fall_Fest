@@ -18,7 +18,10 @@ const STOP_WORDS = new Set(
     // everyday verbs and nouns that would otherwise match a passage by accident ("write me a poem")
     'write writes written wrote look looks looked see seen say says said use used uses using work works working ' +
     'give gives show shows need needs want wants find finds help helps happen happens happened example examples ' +
-    'know knows think thinks way ways kind sort try tries'
+    'know knows think thinks way ways kind sort try tries ' +
+    // small English words that carry no topic
+    'after before during between each other another again always never often still even only same such own both either ' +
+    'whether because while since until over under down out off now new ever back'
   ).split(' '),
 );
 
@@ -144,6 +147,10 @@ export interface SearchOptions {
 export interface SearchHit {
   chunk: TutorChunk;
   score: number;
+  /** How many of the question's own words (not the alternative names) the passage contains. */
+  matched: number;
+  /** The same as a share of the question's words, 0 to 1. */
+  coverage: number;
 }
 
 export interface Searcher {
@@ -190,6 +197,7 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
       if (terms.size === 0) return [];
       const { maxOrder, minOrder = 0, focusLessonId, allowPart3 = false, limit = 5, maxWords = 1800 } = options;
 
+      const asked = [...terms].filter(([, weight]) => weight === 1).map(([term]) => term);
       const hits: SearchHit[] = [];
       for (const d of docs) {
         const c = d.chunk;
@@ -206,7 +214,8 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
         if (c.kind === 'misconception') score *= BOOSTS.misconception;
         if (c.kind === 'faq') score *= BOOSTS.faq;
         if (c.from === 'notes') score *= NOTES_BOOST;
-        hits.push({ chunk: c, score });
+        const covered = asked.filter((term) => d.tf.has(term)).length;
+        hits.push({ chunk: c, score, matched: covered, coverage: asked.length ? covered / asked.length : 0 });
       }
       hits.sort((a, b) => b.score - a.score || a.chunk.order - b.chunk.order || a.chunk.id.localeCompare(b.chunk.id));
 

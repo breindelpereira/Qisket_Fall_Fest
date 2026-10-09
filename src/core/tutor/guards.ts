@@ -109,19 +109,24 @@ export function createLimiter(options: LimiterOptions, now: () => number = Date.
 }
 
 export interface Breaker {
-  /** Stop calling the model for a while, for example after a 429. */
-  trip(): void;
+  /** Stop calling the model for a while, for example after a 429. A shorter `cooldownMs` suits a passing hiccup. */
+  trip(reason?: string, cooldownMs?: number): void;
   isOpen(): boolean;
   remainingMs(): number;
+  /** Why it was last tripped. */
+  reason(): string | undefined;
 }
 
 export function createBreaker(cooldownMs: number, now: () => number = Date.now): Breaker {
   let until = 0;
+  let why: string | undefined;
   return {
-    trip() {
-      until = now() + cooldownMs;
+    trip(reason, ms) {
+      until = now() + (ms ?? cooldownMs);
+      why = reason;
     },
     isOpen: () => now() < until,
     remainingMs: () => Math.max(0, until - now()),
+    reason: () => why,
   };
 }

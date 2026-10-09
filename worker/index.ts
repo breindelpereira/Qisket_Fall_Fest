@@ -86,7 +86,7 @@ export default {
         apiKey: env.GEMINI_API_KEY ?? '',
         model: env.TUTOR_MODEL ?? DEFAULT_MODEL,
         temperature: env.TUTOR_TEMPERATURE ? num(env.TUTOR_TEMPERATURE, 1) : undefined,
-        timeoutMs: 8000,
+        timeoutMs: 7000,
       },
       state,
       { index: tutorIndex, searcher },
