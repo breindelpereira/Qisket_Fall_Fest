@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { BookOpen, Bookmark, BookmarkCheck, Library, Save, Send, Trash2, X } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
 import { DrQuantum } from '../shared/DrQuantum';
 import { askTutor } from '../../core/tutor/client';
 import { loadTutorKnowledge } from '../../core/tutor/loader';
@@ -9,7 +9,7 @@ import type { TutorPosition } from '../../core/tutor/position';
 import { readConsent, readLevel, writeConsent, writeLevel } from '../../core/tutor/prefs';
 import type { TutorConsent } from '../../core/tutor/prefs';
 import {
-  MAX_SAVED, addItem, answerId, canSaveAnswer, isSaved, makeAnswerItem, makeChatItem, readSaved, removeItem, writeSaved,
+  MAX_SAVED, addItem, answerId, canSaveAnswer, isSaved, makeAnswerItem, makeChatItem, readHistory, readSaved, removeItem, upsertHistory, writeHistory, writeSaved,
 } from '../../core/tutor/saved';
 import type { SavedItem, SavedMessage } from '../../core/tutor/saved';
 import { starterQuestions } from '../../core/tutor/starters';
@@ -17,6 +17,7 @@ import { LEVEL_LABELS, LIMITS, TUTOR_LEVELS } from '../../core/tutor/types';
 import type { TutorLevel, TutorResponse, TutorSource } from '../../core/tutor/types';
 import { safeStorage } from '../../utils/safeStorage';
 import { SavedList } from './SavedList';
+import type { KeptTab } from './SavedList';
 import { bubble, textChip, toolChip } from './tutorStyles';
 
 interface Props {
@@ -42,6 +43,9 @@ interface Message {
 const TUTOR_URL = (import.meta.env.VITE_TUTOR_URL as string | undefined)?.trim() ?? '';
 
 const newChatId = (): string => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+
+/** Chats and answers picked out of History get today's date in the saved list. */
+const fresh = (item: SavedItem): SavedItem => ({ ...item, savedAt: new Date().toISOString() });
 
 const toSaved = (m: Message): SavedMessage => ({ role: m.role, text: m.text, sources: m.sources, provider: m.provider });
 
@@ -69,6 +73,9 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<'chat' | 'saved'>('chat');
   const [saved, setSaved] = useState<SavedItem[]>(() => readSaved(safeStorage()));
+  // earlier chats, kept automatically so an answer from one of them can still be saved later
+  const [pastChats, setPastChats] = useState<SavedItem[]>(() => readHistory(safeStorage()));
+  const [keptTab, setKeptTab] = useState<KeptTab>('saved');
   // stays the same while a chat goes on, so saving the chat again updates the saved copy instead of adding another
   const [chatId, setChatId] = useState(newChatId);
   const [notice, setNotice] = useState<string | null>(null);
@@ -131,22 +138,30 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
     async (raw: string) => {
       const question = raw.trim();
       if (!question || busy || !knowledge || consent === null) return;
-      const history = messages.slice(-LIMITS.historyTurns).map((m) => ({ role: m.role, text: m.text.slice(0, LIMITS.turnChars) }));
-      setMessages((prev) => [...prev, { id: nextId.current++, role: 'user', text: question }]);
+      const recent = messages.slice(-LIMITS.historyTurns).map((m) => ({ role: m.role, text: m.text.slice(0, LIMITS.turnChars) }));
+      const userMessage: Message = { id: nextId.current++, role: 'user', text: question };
+      setMessages((prev) => [...prev, userMessage]);
       setInput('');
       setBusy(true);
       const reply = await askTutor({
-        request: { question, lessonId: position.lessonId, order: position.order, level, history, inQuiz },
+        request: { question, lessonId: position.lessonId, order: position.order, level, history: recent, inQuiz },
         index: knowledge.index,
         searcher: knowledge.searcher,
         prepared: knowledge.prepared,
         online: consent === 'online',
         url: TUTOR_URL,
       });
-      setMessages((prev) => [...prev, { id: nextId.current++, role: 'tutor', text: reply.answer, sources: reply.sources, provider: reply.provider, reason: reply.reason }]);
+      const tutorMessage: Message = { id: nextId.current++, role: 'tutor', text: reply.answer, sources: reply.sources, provider: reply.provider, reason: reply.reason };
+      setMessages((prev) => [...prev, tutorMessage]);
       setBusy(false);
+      // keep the conversation so far in History, so it is not lost when a new chat is started or the app is closed
+      const where = knowledge.index.courseMap.find((e) => e.lessonId === position.lessonId)?.where;
+      const chat = makeChatItem(chatId, [...messages, userMessage, tutorMessage].map(toSaved), { lessonId: position.lessonId, where, level });
+      const list = upsertHistory(pastChats, chat);
+      writeHistory(safeStorage(), list);
+      setPastChats(list);
     },
-    [busy, knowledge, consent, messages, position, level, inQuiz],
+    [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats],
   );
 
   if (!open) return null;
@@ -184,11 +199,8 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
   /** The question a tutor message answered. */
   const questionFor = (index: number): Message | undefined => messages.slice(0, index).reverse().find((m) => m.role === 'user');
 
-  const toggleAnswer = (index: number) => {
-    const answer = messages[index];
-    const question = questionFor(index);
-    if (!answer || !question) return;
-    const item = makeAnswerItem(toSaved(question), toSaved(answer), saveContext);
+  /** Saves an answer, or takes it back out if it was already saved. */
+  const toggleItem = (item: SavedItem) => {
     if (isSaved(saved, item.id)) {
       commit(removeItem(saved, item.id), 'Removed from saved.');
       return;
@@ -201,8 +213,14 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
     commit(result.list, 'Answer saved.');
   };
 
-  const saveChat = () => {
-    const item = makeChatItem(chatId, messages.map(toSaved), saveContext);
+  const toggleAnswer = (index: number) => {
+    const answer = messages[index];
+    const question = questionFor(index);
+    if (answer && question) toggleItem(makeAnswerItem(toSaved(question), toSaved(answer), saveContext));
+  };
+
+  /** Saves a whole conversation. Saving the same chat again updates the saved copy. */
+  const keepChat = (item: SavedItem) => {
     const result = addItem(saved, item);
     if (!result.ok) {
       flash(`Your saved list is full (${MAX_SAVED}). Open Saved and delete something first.`);
@@ -211,10 +229,25 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
     commit(result.list, result.updated ? 'Saved chat updated.' : 'Chat saved.');
   };
 
-  const clearChat = () => {
+  const saveChat = () => keepChat(makeChatItem(chatId, messages.map(toSaved), saveContext));
+
+  // the chat so far stays in History, so starting a new one loses nothing
+  const newChat = () => {
     setMessages([]);
     setChatId(newChatId());
+    flash('New chat started. The last one is in History.');
   };
+
+  const openKept = (tab: KeptTab) => {
+    setKeptTab(tab);
+    setView('saved');
+  };
+
+  const keepHistory = (list: SavedItem[]) => {
+    writeHistory(safeStorage(), list);
+    setPastChats(list);
+  };
+
 
   const inSaved = view === 'saved';
 
@@ -255,12 +288,27 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
         </div>
 
         {inSaved ? (
-          <SavedList
-            items={saved}
-            onDelete={(id) => commit(removeItem(saved, id), 'Deleted.')}
+          <>
+            {notice && (
+              <div role="status" style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--mint)', lineHeight: 1.35 }}>
+                {notice}
+              </div>
+            )}
+            <SavedList
+            tab={keptTab}
+            onTab={setKeptTab}
+            saved={saved}
+            history={pastChats}
+            isSavedId={(id) => isSaved(saved, id)}
+            onToggleAnswer={(answer) => toggleItem(fresh(answer))}
+            onSaveChat={(chat) => keepChat(fresh(chat))}
+            onDeleteSaved={(id) => commit(removeItem(saved, id), 'Deleted.')}
+            onDeleteHistory={(id) => keepHistory(removeItem(pastChats, id))}
+            onClearHistory={() => keepHistory([])}
             onOpenLesson={onOpenLesson}
             onBack={() => setView('chat')}
           />
+          </>
         ) : (
           <>
             {messages.length === 0 && (
@@ -374,9 +422,13 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
                     No online tutor in this build, so answers come from the notes on your device.
                   </span>
                 )}
-                <button className="chip" onClick={() => setView('saved')} style={toolChip}>
+                <button className="chip" onClick={() => openKept('saved')} style={toolChip}>
                   <Library size={14} />
                   <span>Saved ({saved.length})</span>
+                </button>
+                <button className="chip" onClick={() => openKept('history')} style={toolChip}>
+                  <HistoryIcon size={14} />
+                  <span>History ({pastChats.length})</span>
                 </button>
                 {messages.length >= 2 && (
                   <button className="chip" onClick={saveChat} style={toolChip}>
@@ -385,9 +437,9 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
                   </button>
                 )}
                 {messages.length > 0 && (
-                  <button className="chip" onClick={clearChat} style={toolChip}>
-                    <Trash2 size={14} />
-                    <span>Clear chat</span>
+                  <button className="chip" onClick={newChat} style={toolChip}>
+                    <Plus size={14} />
+                    <span>New chat</span>
                   </button>
                 )}
               </div>

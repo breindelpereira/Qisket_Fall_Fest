@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  MAX_CHAT_MESSAGES, MAX_SAVED, SAVED_KEY, addItem, answerId, canSaveAnswer, isSaved, makeAnswerItem, makeChatItem, readSaved, removeItem, titleFor, writeSaved,
+  HISTORY_KEY, MAX_CHAT_MESSAGES, MAX_HISTORY, MAX_SAVED, SAVED_KEY, addItem, answerFromChat, answerId, canSaveAnswer, isSaved, makeAnswerItem, makeChatItem,
+  readHistory, readSaved, removeItem, titleFor, upsertHistory, writeHistory, writeSaved,
 } from '../src/core/tutor/saved';
 import type { SavedItem, SavedMessage } from '../src/core/tutor/saved';
 
@@ -122,5 +123,56 @@ describe('Saved tutor answers and chats', () => {
     expect(canSaveAnswer({ role: 'tutor', provider: 'prepared', sources: [] })).toBe(false);
     expect(canSaveAnswer({ role: 'tutor', provider: 'offline' })).toBe(false);
     expect(canSaveAnswer({ role: 'user', provider: 'gemini' })).toBe(false);
+  });
+});
+
+describe('Chat history: earlier answers can still be saved', () => {
+  const chat = (id: string, n = 2) => makeChatItem(id, Array.from({ length: n }, (_, i) => (i % 2 === 0 ? q(`Question ${id}-${i}`) : a(`Answer ${id}-${i}`))), ctx, NOW);
+
+  it('keeps the newest chats on top, replaces a chat that went on, and keeps only the last 20', () => {
+    let list: SavedItem[] = [];
+    list = upsertHistory(list, chat('one'));
+    list = upsertHistory(list, chat('two'));
+    expect(list.map((c) => c.id)).toEqual(['c:two', 'c:one']);
+    list = upsertHistory(list, chat('one', 4));
+    expect(list.map((c) => c.id)).toEqual(['c:one', 'c:two']);
+    expect(list[0].messages).toHaveLength(4);
+
+    for (let i = 0; i < 30; i += 1) list = upsertHistory(list, chat(`n${i}`));
+    expect(list).toHaveLength(MAX_HISTORY);
+    expect(list[0].id).toBe('c:n29');
+    expect(list.some((c) => c.id === 'c:one')).toBe(false);
+  });
+
+  it('remembers the history separately from what was saved, and survives broken data', () => {
+    const data: Record<string, string> = {};
+    const store = { getItem: (k: string) => data[k] ?? null, setItem: (k: string, v: string) => { data[k] = v; } };
+    expect(readHistory(store)).toEqual([]);
+    expect(writeHistory(store, [chat('one')])).toBe(true);
+    expect(readHistory(store)).toEqual([chat('one')]);
+    expect(readSaved(store)).toEqual([]);
+    expect(data[HISTORY_KEY]).toBeDefined();
+    expect(data[SAVED_KEY]).toBeUndefined();
+
+    data[HISTORY_KEY] = JSON.stringify(Array.from({ length: 30 }, (_, i) => chat(`m${i}`)));
+    expect(readHistory(store)).toHaveLength(MAX_HISTORY);
+    data[HISTORY_KEY] = 'not json';
+    expect(readHistory(store)).toEqual([]);
+    const blocked = { getItem: () => { throw new Error('no'); }, setItem: () => { throw new Error('full'); } };
+    expect(readHistory(blocked)).toEqual([]);
+    expect(writeHistory(blocked, [])).toBe(false);
+  });
+
+  it('turns any answer in an old chat into a saved answer with the question it replied to', () => {
+    const old = makeChatItem('old', [q('First?'), a('First answer'), q('Second?'), a('Second answer'), q('Hi'), { role: 'tutor', text: 'Hello!', provider: 'prepared' }], ctx, NOW);
+    expect(answerFromChat(old, 1, NOW)).toMatchObject({ kind: 'answer', title: 'First?', where: 'Module 1' });
+    const second = answerFromChat(old, 3, NOW);
+    expect(second?.messages.map((m) => m.text)).toEqual(['Second?', 'Second answer']);
+    expect(second?.id).toBe(answerId('Second?', 'Second answer'));
+    expect(answerFromChat(old, 0)).toBeNull();
+    expect(answerFromChat(old, 5)).toBeNull();
+    expect(answerFromChat(old, 99)).toBeNull();
+    // the same answer saved from the live chat and from history is one item, not two
+    expect(makeAnswerItem(q('Second?'), a('Second answer'), ctx, NOW).id).toBe(second?.id);
   });
 });

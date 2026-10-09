@@ -9,6 +9,12 @@ import type { TutorLevel, TutorProvider, TutorSource } from './types.ts';
 export const SAVED_KEY = 'qisket_tutor_saved_v1';
 /** The most things that can be saved. When it is full the learner is asked to delete something, rather than losing an old one silently. */
 export const MAX_SAVED = 50;
+/**
+ * Past conversations are kept too, automatically and on the device only, so an answer from an earlier chat can still be found and
+ * saved later (after "New chat", or after the app was closed). Only the most recent ones are kept.
+ */
+export const HISTORY_KEY = 'qisket_tutor_history_v1';
+export const MAX_HISTORY = 20;
 export const MAX_CHAT_MESSAGES = 40;
 const MAX_TEXT = 4000;
 const MAX_SOURCES = 8;
@@ -147,11 +153,11 @@ function cleanItem(raw: unknown): SavedItem | null {
   };
 }
 
-/** Reads what was saved before. Anything damaged or unexpected is dropped instead of breaking the tutor. */
-export function readSaved(store: Store): SavedItem[] {
+/** Reads a stored list. Anything damaged or unexpected is dropped instead of breaking the tutor. */
+function readList(store: Store, key: string, max: number): SavedItem[] {
   let raw: string | null = null;
   try {
-    raw = store?.getItem(SAVED_KEY) ?? null;
+    raw = store?.getItem(key) ?? null;
   } catch {
     return [];
   }
@@ -168,21 +174,40 @@ export function readSaved(store: Store): SavedItem[] {
         items.push(item);
       }
     }
-    return items.slice(0, MAX_SAVED);
+    return items.slice(0, max);
   } catch {
     return [];
   }
 }
 
 /** Returns false when the browser would not store it (storage full or blocked), so the app can say so instead of pretending. */
-export function writeSaved(store: Store, list: SavedItem[]): boolean {
+function writeList(store: Store, key: string, list: SavedItem[]): boolean {
   if (!store) return false;
   try {
-    store.setItem(SAVED_KEY, JSON.stringify(list));
+    store.setItem(key, JSON.stringify(list));
     return true;
   } catch {
     return false;
   }
+}
+
+export const readSaved = (store: Store): SavedItem[] => readList(store, SAVED_KEY, MAX_SAVED);
+export const writeSaved = (store: Store, list: SavedItem[]): boolean => writeList(store, SAVED_KEY, list);
+export const readHistory = (store: Store): SavedItem[] => readList(store, HISTORY_KEY, MAX_HISTORY);
+export const writeHistory = (store: Store, list: SavedItem[]): boolean => writeList(store, HISTORY_KEY, list);
+
+/** Puts a conversation at the top of the history (the same chat, asked more, replaces its older copy) and keeps only the latest few. */
+export function upsertHistory(list: SavedItem[], chat: SavedItem): SavedItem[] {
+  return [chat, ...list.filter((s) => s.id !== chat.id)].slice(0, MAX_HISTORY);
+}
+
+/** The answer at `index` of a stored chat, with the question it replied to, ready to save on its own. Null if it is not worth saving. */
+export function answerFromChat(chat: SavedItem, index: number, now: Date = new Date()): SavedItem | null {
+  const answer = chat.messages[index];
+  if (!answer || !canSaveAnswer(answer)) return null;
+  const question = chat.messages.slice(0, index).reverse().find((m) => m.role === 'user');
+  if (!question) return null;
+  return makeAnswerItem(question, answer, { lessonId: chat.lessonId, where: chat.where, level: chat.level }, now);
 }
 
 /** Whether an answer is worth keeping: a model answer, or any answer that points at a lesson. Greetings and "not found" replies are not. */
