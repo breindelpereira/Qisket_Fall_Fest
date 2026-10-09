@@ -62,9 +62,10 @@ export default {
     if (!originOk) return json({ error: 'origin_not_allowed' }, 403, cors);
 
     if (request.method === 'GET' && url.pathname === '/api/health') {
-      // `colo` is the Cloudflare data centre that ran this request: it shows whether the placement setting took effect
-      const colo = (request as unknown as { cf?: { colo?: string } }).cf?.colo;
-      return json({ ok: true, configured: Boolean(env.GEMINI_API_KEY), model: env.TUTOR_MODEL ?? DEFAULT_MODEL, passages: tutorIndex.chunks.length, colo }, 200, cors);
+      // `entry` is the data centre the request came in through (near the learner), not where the function runs: the
+      // `Cf-Placement` response header says that (for example `remote-IAD` means it ran in Washington, D.C.)
+      const entry = (request as unknown as { cf?: { colo?: string } }).cf?.colo;
+      return json({ ok: true, configured: Boolean(env.GEMINI_API_KEY), model: env.TUTOR_MODEL ?? DEFAULT_MODEL, passages: tutorIndex.chunks.length, entry }, 200, cors);
     }
     if (request.method !== 'POST' || (url.pathname !== '/api/tutor' && url.pathname !== '/')) return json({ error: 'not_found' }, 404, cors);
 
@@ -89,7 +90,7 @@ export default {
         apiKey: env.GEMINI_API_KEY ?? '',
         model: env.TUTOR_MODEL ?? DEFAULT_MODEL,
         temperature: env.TUTOR_TEMPERATURE ? num(env.TUTOR_TEMPERATURE, 1) : undefined,
-        timeoutMs: 7000,
+        timeoutMs: 10000,
       },
       state,
       { index: tutorIndex, searcher },

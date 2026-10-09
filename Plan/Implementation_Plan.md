@@ -254,7 +254,7 @@ Qisket/
 
 This is the working design for Phase 3. It was chosen for a competition: free, small, and it must not fail during a demo.
 
-**Status (October 2026):** the tutor is built and tested in code (search, prompt, Gemini call, limits, offline answers, drawer, key check, 20-question set). It has not been deployed yet, because that needs a Gemini key and a Cloudflare account (steps in `worker/README.md`). Changes from the design below: the backup model is **not built for now** (Gemini, then offline answers); the course map, the lesson passages and the "common mix-up" passages are generated from the lesson data instead of being written by hand; hand-written notes exist for Part 1 (modules 0 to 7), and Parts 2 and 3 use their lesson text until someone writes richer notes (`tutor/README.md`).
+**Status (October 2026):** the tutor is built and tested in code (search, prompt, Gemini call, limits, offline answers, drawer, key check, 20-question set). It is deployed on Cloudflare Workers (steps in `worker/README.md`) and was tried for real with `npm run tutor:eval`: 19 of 20 passed, the one failure being a slow Gemini reply (the function now waits longer). Still to do: the airplane-mode and Android checks, and notes for Parts 2 and 3. Changes from the design below: the backup model is **not built for now** (Gemini, then offline answers); the course map, the lesson passages and the "common mix-up" passages are generated from the lesson data instead of being written by hand; hand-written notes exist for Part 1 (modules 0 to 7), and Parts 2 and 3 use their lesson text until someone writes richer notes (`tutor/README.md`).
 
 #### 1. Provider and keys
 - **Main model:** Gemini API, free tier, the newest Flash-Lite model listed in Google AI Studio (`gemini-3.5-flash-lite` when this was built; Google's docs recommend it for new projects). The model name lives in an environment variable (`TUTOR_MODEL`), so it can change without touching the app.
@@ -320,11 +320,11 @@ The course map and the "common mix-up" passages are generated from the lesson da
 1. Notes template and notes for the demo path. **Done** for Part 1 (modules 0 to 7).
 2. `search.ts`, the build script and `tests/tutor.test.ts`. **Done.**
 3. Offline fallback and the drawer UI wired to it (works with no backend). **Done.**
-4. The function: Gemini call, system prompt, guards. **Code done and tested against a pretend Gemini; not deployed.** To do: deploy and test from the phone.
+4. The function: Gemini call, system prompt, guards. **Done and deployed.** To do: test from a phone.
 5. Backup model. **Dropped for now.** The circuit breaker, rate limits and global cap are **done**.
 6. Consent switch, level picker, starter questions, demo answers. **Done.**
 7. Notes for the remaining modules (Parts 2 and 3). **To do**, by the team (`tutor/README.md`).
-8. The 20-question test against the deployed function, the airplane-mode check and the key check. **Key check done; the other two need the deployment.**
+8. The 20-question test against the deployed function, the airplane-mode check and the key check. **Key check and the 20-question test (19 of 20) done; airplane mode on a phone still to do.**
 
 Rough size: 1.5 to 2 days of coding plus the time to write notes.
 

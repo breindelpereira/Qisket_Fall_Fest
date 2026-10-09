@@ -522,6 +522,13 @@ describe('The tutor function end to end (with a pretend Gemini)', () => {
     expect(JSON.stringify(r.body)).not.toContain('SECRET-KEY-VALUE');
   });
 
+  it('gives a slow model one more try, not two, so the learner is not kept waiting', async () => {
+    const slow = fakeFetch({ status: 504, body: {} });
+    const r = await run(slow);
+    expect(slow).toHaveBeenCalledTimes(2);
+    expect((r.body as { detail: string }).detail).toMatch(/^timeout 504/);
+  });
+
   it('pauses only briefly after a hiccup and for a minute after an out-of-quota error, and remembers which', async () => {
     let t = 1_000_000;
     const state = createServerState(undefined, () => t);

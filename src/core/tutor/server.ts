@@ -52,7 +52,7 @@ export function createServerState(limits: LimiterOptions = DEFAULT_LIMITS, now: 
 /** How long to wait before each retry, by kind of failure. A busy model often recovers within seconds; an exhausted quota does not. */
 const RETRY_DELAYS_MS: Partial<Record<GeminiFailure, number[]>> = {
   rate_limited: [1500],
-  timeout: [1000, 2500],
+  timeout: [1000],
   server: [1000, 2500],
   network: [1000, 2500],
   empty: [500],
