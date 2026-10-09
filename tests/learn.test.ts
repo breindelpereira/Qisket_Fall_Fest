@@ -48,20 +48,103 @@ describe('Learn content: structure', () => {
     }
   });
 
-  it('keeps the question counts and answer keys from the source document', () => {
-    const key = (id: string) => QUIZZES[id].questions.map((q) => q.correctIndex);
-    expect(key('quiz_module_0')).toEqual([1, 2, 1]);
-    expect(key('quiz_module_1')).toEqual([2, 0, 2, 1]);
-    expect(key('quiz_module_2')).toEqual([1, 1, 1, 0, 1]);
-    expect(key('quiz_module_3')).toEqual([2, 1, 2, 1]);
-    expect(key('quiz_module_4')).toEqual([2, 1, 1]);
-    expect(key('quiz_module_5a')).toEqual([1, 1, 1, 3]);
-    expect(key('quiz_module_5b')).toEqual([1, 1, 1]);
-    expect(key('quiz_module_6')).toEqual([1, 0, 1, 1]);
-    expect(key('quiz_module_7')).toEqual([0, 0, 2]);
-    expect(key('quiz_hardware')).toEqual([2, 1, 1, 2, 1, 1, 1, 1, 2]);
-    expect(key('quiz_math')).toEqual([1, 0, 2, 0, 1, 1, 0, 1]);
+  it('keeps every question\'s right answer from the source document (the options may be in any order)', () => {
+    // The text of the right option for each question, as written in the course document. Where an answer sits (A to D) is
+    // deliberately mixed up, so this pins the answer by what it says, not by its position.
+    const rightAnswers: Record<string, string[]> = {
+    quiz_module_0: [
+      "Simulating the behavior of a complex molecule",
+      "It uses interference to cancel out wrong answers and amplify the probability of the right answer.",
+      "Real machines exist, but they are still noisy; many promising applications need larger, error-corrected machines.",
+    ],
+    quiz_module_1: [
+      "It has equal amplitudes, meaning a 50% chance of being measured as 0 and a 50% chance of being measured as 1.",
+      "At the North and South poles (|0⟩ and |1⟩).",
+      "In the northern hemisphere, close to (but not at) the North Pole.",
+      "No. They sit at opposite points on the equator and differ in relative phase.",
+    ],
+    quiz_module_2: [
+      "You will get either a 0 or a 1, randomly determined by its probability weights.",
+      "False",
+      "About 640",
+      "1, with certainty",
+      "You get the \"+\" outcome every time.",
+    ],
+    quiz_module_3: [
+      "The South Pole (|1⟩)",
+      "Because it only changes the relative phase, moving the state to |−⟩, which still has a 50/50 probability.",
+      "|0⟩",
+      "|1⟩",
+    ],
+    quiz_module_4: [
+      "Amplitudes add together first (allowing for cancellation), and then the probability is calculated.",
+      "The dark detector starts clicking. Photons that get past the block reach either detector with 50/50 odds.",
+      "Case 1: 1 (100%); Case 2: 0",
+    ],
+    quiz_module_5a: [
+      "No, because of the no-signaling principle; the outcomes are correlated, but random, so no actual information is transmitted.",
+      "00 or 11, each about 50% of the time; the two qubits always match",
+      "75% vs about 85%",
+      "1,024",
+    ],
+    quiz_module_5b: [
+      "The No-Cloning Theorem states that unknown quantum states cannot be perfectly copied.",
+      "Two classical bits: the results of her measurements.",
+      "It was destroyed by her measurement; only Bob now has the state.",
+    ],
+    quiz_module_6: [
+      "It uses interference to incrementally amplify the amplitude of the correct answer while shrinking the wrong ones.",
+      "One",
+      "3",
+      "The success probability falls again (the algorithm overshoots).",
+    ],
+    quiz_module_7: [
+      "Measuring the data qubit collapses its superposition, destroying the calculation.",
+      "Flip qubit 1 back.",
+      "About 0.0003",
+    ],
+    quiz_hardware: [
+      "Superconducting",
+      "They can be manufactured using the same semiconductor facilities used for standard computer chips.",
+      "A logical qubit is made up of many physical qubits working together via error correction to act as one much more reliable qubit.",
+      "2,000",
+      "Long coherence times and all-to-all connectivity within a chain.",
+      "The Rydberg blockade",
+      "Photon loss",
+      "They are specialized for optimization problems and cannot run general gate-model algorithms like Shor's.",
+      "Experimental/Contested",
+    ],
+    quiz_math: [
+      "|α|² + |β|² = 1",
+      "(0, 1)",
+      "1/2",
+      "(1/√2)(1, 1), which is |+⟩",
+      "It is unitary: U†U = I.",
+      "(0, 1, 0, 0)",
+      "Port |0⟩, with certainty",
+      "8",
+    ],
+    };
+    expect(Object.keys(rightAnswers).sort()).toEqual(Object.keys(QUIZZES).sort());
+    for (const [id, expected] of Object.entries(rightAnswers)) {
+      expect(QUIZZES[id].questions.map((q) => q.options[q.correctIndex]), id).toEqual(expected);
+    }
     expect(quizList.reduce((n, q) => n + q.questions.length, 0)).toBe(50);
+  });
+
+  it('spreads the right answers across A to D, so always picking one option does not win', () => {
+    const all = quizList.flatMap((q) => q.questions);
+    const counts = [0, 1, 2, 3].map((p) => all.filter((q) => q.correctIndex === p).length);
+    for (const c of counts) {
+      expect(c, `answers at each position: ${counts.join(', ')}`).toBeGreaterThanOrEqual(10);
+      expect(c, `answers at each position: ${counts.join(', ')}`).toBeLessThanOrEqual(15);
+    }
+    // no run of three in a row, and no quiz of three or more questions with every answer in one place
+    const order = all.map((q) => q.correctIndex);
+    for (let i = 2; i < order.length; i += 1) expect(order[i] === order[i - 1] && order[i] === order[i - 2], `question ${i + 1}`).toBe(false);
+    for (const quiz of quizList) {
+      if (quiz.questions.length >= 3) expect(new Set(quiz.questions.map((q) => q.correctIndex)).size, quiz.id).toBeGreaterThan(1);
+    }
   });
 
   it('every question is well formed', () => {
@@ -265,8 +348,9 @@ describe('Learn content: quiz answers agree with the physics engines', () => {
     // overshoot: more iterations than optimal lowers the success rate again
     expect(success(16, 6)).toBeLessThan(success(16, 3));
     expect(iterations(100)).toBe(8);
-    expect(QUIZZES.quiz_module_6.questions[2].options[1]).toBe('3');
-    expect(QUIZZES.quiz_math.questions[7].options[1]).toBe('8');
+    const right = (quiz: string, i: number) => QUIZZES[quiz].questions[i].options[QUIZZES[quiz].questions[i].correctIndex];
+    expect(right('quiz_module_6', 2)).toBe('3');
+    expect(right('quiz_math', 7)).toBe('8');
   });
 
   it('Module 7: the 3-qubit code gives 3p² − 2p³, about 0.0003 at p = 0.01, and helps only below 50%', () => {
