@@ -1,5 +1,6 @@
 import { callGemini, DEFAULT_MAX_OUTPUT_TOKENS, DEFAULT_TIMEOUT_MS } from './gemini.ts';
 import type { GeminiFailure, GeminiResult } from './gemini.ts';
+import { withGameBasics } from './game.ts';
 import { createBreaker, createLimiter, parseRequest } from './guards.ts';
 import type { Breaker, Limiter, LimiterOptions } from './guards.ts';
 import { offlineAnswer } from './offline.ts';
@@ -79,7 +80,14 @@ export async function answerQuestion(
   if (!limit.ok) return { status: 429, body: { error: `limit_${limit.reason}`, retryAfterSec: limit.retryAfterSec } };
 
   const searcher = deps.searcher ?? createSearcher(index.chunks);
-  const hits = searcher.search(req.question, { maxOrder: req.order, focusLessonId: req.lessonId, allowPart3: req.level === 'math' });
+  // while a game is open its own passages are searched too, whatever the learner's position in the course
+  const found = searcher.search(req.question, {
+    maxOrder: req.order,
+    focusLessonId: req.lessonId,
+    allowPart3: req.level === 'math',
+    activityId: req.activity?.id,
+  });
+  const hits = withGameBasics(found, index, req.activity, req.question);
 
   // Nothing in the learner's part of the course matches: say so from the notes (or point to the later module that does),
   // without spending any quota. When something matches, even weakly, the model decides, because it can also see the

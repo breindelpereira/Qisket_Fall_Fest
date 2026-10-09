@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Undo2, RotateCcw, Lightbulb, Star, ChevronRight, Send, BookOpen } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, panelStyle, rowChip, stageStyle } from '../shared/arcadeTheme';
 import { BlochSphereVisualizer } from '../simulations/BlochSphereVisualizer';
@@ -97,6 +98,24 @@ export const TeleportRelay: React.FC = () => {
   };
 
   const restartAll = () => { setStars({}); setFinished(false); loadLevel(0); };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport(
+    finished
+      ? { id: 'teleport_relay', status: 'finished', step: `All ${RELAY_LEVELS.length} levels delivered`, state: `Stars earned: ${totalStars} of ${RELAY_LEVELS.length * 3}.` }
+      : {
+          id: 'teleport_relay',
+          status: 'playing',
+          step: `Level ${level.id} of ${RELAY_LEVELS.length}: ${level.title}${levelDone ? ' (message delivered)' : `, hop ${hop + 1} of ${hops}`}`,
+          mission: level.story,
+          state: levelDone
+            ? `Message delivered with ${mistakes} wrong ${mistakes === 1 ? 'try' : 'tries'}.`
+            : `The sender's two bits are ${bits[0]}${bits[1]}. Fix gates chosen so far: ${describeFix(fix)}. Gates on offer: ${level.allowed.join(', ')}. ` +
+              `${attempt ? (attempt.correct ? 'The last send matched the message.' : `The last send matched the message only ${Math.round(attempt.fidelity * 100)}% (50% is a coin flip).`) : 'Nothing sent yet on this hop.'} ` +
+              `Wrong tries on this level: ${mistakes}.`,
+          hint: level.hint,
+        },
+  );
 
   if (finished) {
     return (

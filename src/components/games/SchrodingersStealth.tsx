@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeHeader, ArcadeModal, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { THEMES, RETRO, frameStyle, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -268,6 +269,19 @@ export const SchrodingersStealth: React.FC = () => {
   };
 
   const currentStance = getAgentStance();
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport({
+    id: 'schrodingers_stealth',
+    status: gameState === 'victory' ? 'finished' : 'playing',
+    step: `Sector ${sector} of 3, checkpoint ${currentStep + 1} of ${currentSectorCheckpoints.length}: ${activeCheckpoint.name}`,
+    mission: `Get through ${activeCheckpoint.name} by matching the slot.`,
+    state:
+      `The slot is ${activeCheckpoint.slotName}, watched by the ${activeCheckpoint.laserTitle}. The agent's stance is ${currentStance.name}, ` +
+      `${isAligned ? 'a match (100% stealth)' : `a ${Math.round(stealthProb * 100)}% chance to match`}. Alarm ${alarmLevel}%.` +
+      `${gameState === 'game_over' ? ' The alarm reached 100%, so the run is over.' : gameState === 'sector_cleared' ? ' Sector cleared.' : gameState === 'alarm_alert' ? ' The laser just collapsed the agent and raised the alarm.' : gameState === 'victory' ? ' Mission accomplished.' : ''}`,
+    hint: activeCheckpoint.instruction,
+  });
 
   const theme = THEMES.mint;
   const pulseH = !isAligned && ((activeCheckpoint.basis === 'X' && currentStance.shape === '|') || (activeCheckpoint.basis === 'Z' && currentStance.shape === '/'));

@@ -18,8 +18,13 @@ export interface TutorChunk {
   kind: ChunkKind;
   tag?: HonestyTag;
   text: string;
-  /** `lesson` chunks are taken from the lesson page itself; `notes` are the richer hand-written ones. */
-  from: 'lesson' | 'notes';
+  /** `lesson` chunks are taken from the lesson page itself; `notes` are the richer hand-written ones; `game` are about one game. */
+  from: 'lesson' | 'notes' | 'game';
+  /**
+   * Set on passages about a game (from `content/gameHelp.ts`). They are used only while that game is open or was just left,
+   * and then they ignore the learner's position in the course, because they explain the game the learner is looking at.
+   */
+  activityId?: string;
 }
 
 export interface CourseMapEntry {
@@ -53,6 +58,28 @@ export interface TutorTurn {
   text: string;
 }
 
+/** `playing`: the game is open. `finished`: they just completed it. `left`: they were in it a few minutes ago. */
+export const ACTIVITY_STATUSES = ['playing', 'finished', 'left'] as const;
+export type ActivityStatus = (typeof ACTIVITY_STATUSES)[number];
+
+/**
+ * What the app tells the tutor about the game the learner is playing (or just played), so it can answer doubts about it.
+ * It describes the screen, never the solution. Every text is short, and the function treats all of it as data.
+ */
+export interface ActivityRef {
+  /** The game's id, for example "bloch_runner". */
+  id: string;
+  status: ActivityStatus;
+  /** Where they are: "Level 3 of 8: The Other Side". */
+  step?: string;
+  /** What the game is asking of them right now. */
+  mission?: string;
+  /** What is on the screen now: moves made, a result, a count. */
+  state?: string;
+  /** The hint the game itself offers for this step. */
+  hint?: string;
+}
+
 export interface TutorRequest {
   question: string;
   /** The lesson the learner has open (or is on). Its passages count for more. */
@@ -63,6 +90,8 @@ export interface TutorRequest {
   history: TutorTurn[];
   /** The learner has a quiz open: explain ideas, but never say which option is right. */
   inQuiz?: boolean;
+  /** The game the learner is playing or has just played. */
+  activity?: ActivityRef;
 }
 
 export interface TutorSource {
@@ -89,4 +118,6 @@ export const LIMITS = {
   questionChars: 500,
   historyTurns: 4,
   turnChars: 500,
+  /** Each of the game's text fields (step, mission, state, hint). */
+  activityChars: 400,
 } as const;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { HonestyTagBadge } from '../shared/HonestyTag';
 import { ArcadeHeader, ArcadeModal, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { THEMES, RETRO, frameStyle, panelStyle } from '../shared/arcadeTheme';
@@ -186,6 +187,34 @@ export const QuantumHeist: React.FC = () => {
 
   const ready = level === 1 ? isLevel1Ready : level === 2 ? isLevel2Ready : isLevel3Ready;
   const theme = THEMES.yellow;
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  const deg = (rad: number) => Math.round((rad * 180) / Math.PI);
+  const percent = (p: number) => Math.round(p * 100);
+  useActivityReport({
+    id: 'quantum_heist',
+    status: gameState === 'victory' ? 'finished' : 'playing',
+    step: `Stage ${level} of 3`,
+    mission:
+      level === 1
+        ? 'Split the agent 50/50 between Door 0 and Door 1 so the scanner has nothing to aim at, then breach the vault.'
+        : level === 2
+          ? 'Prepare the state |−> (a 50/50 split with a negative sign) so the trap wave cancels, then breach the vault.'
+          : 'Steer the crosshair on the Bloch sphere onto |+> on the equator, then lock and decrypt.',
+    state:
+      (level < 3
+        ? `Chance at Door 0: ${percent(prob0)}%, Door 1: ${percent(prob1)}%.${prob1 > 0.01 && prob0 > 0.01 ? ` The sign of the Door 1 part is ${beta.re < 0 ? 'negative' : 'positive'}.` : ''}`
+        : `The crosshair is tilted ${deg(theta)}° from the north pole and turned ${deg(phi)}° around; its distance from the target is ${level3Dist.toFixed(2)}.`) +
+      ` Shields left: ${shields} of 3. Score ${score}.` +
+      `${ready ? ' The state is ready for the breach.' : ''}` +
+      `${gameState === 'failed' ? ' The alarm just tripped.' : gameState === 'game_over' ? ' All shields are gone, the run is over.' : gameState === 'level_complete' ? ' Stage cleared.' : gameState === 'victory' ? ' The heist is complete.' : ''}`,
+    hint:
+      level === 1
+        ? 'Look at what the H key does to the door percentages.'
+        : level === 2
+          ? 'First get the 50/50 split, then change the sign of one part.'
+          : 'Tilt the crosshair down from the north pole towards the equator, then turn it until it sits on the ring.',
+  });
 
   return (
     <div style={{

@@ -1,17 +1,38 @@
-import { LIMITS, TUTOR_LEVELS } from './types.ts';
-import type { TutorIndex, TutorRequest, TutorTurn } from './types.ts';
+import { ACTIVITY_STATUSES, LIMITS, TUTOR_LEVELS } from './types.ts';
+import type { ActivityRef, ActivityStatus, TutorChunk, TutorIndex, TutorRequest, TutorTurn } from './types.ts';
 
 export type ParsedRequest = { ok: true; req: TutorRequest } | { ok: false; error: string };
 
 /** Control characters and runs of white space become one space, so nothing can hide in the prompt. */
-const tidy = (s: string): string =>
+export const tidy = (s: string): string =>
   Array.from(s, (ch) => (ch.charCodeAt(0) < 32 || ch.charCodeAt(0) === 127 ? ' ' : ch))
     .join('')
     .replace(/\s+/g, ' ')
     .trim();
 
+const ACTIVITY_ID = /^[a-z0-9_]{1,40}$/;
+
+/**
+ * The game the learner is playing. This is extra context, so a bad or unknown value is dropped and the question is
+ * still answered. When the index is known, the id must be a game the tutor has notes on.
+ */
+export function parseActivity(raw: unknown, chunks?: TutorChunk[]): ActivityRef | undefined {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return undefined;
+  const a = raw as Record<string, unknown>;
+  if (typeof a.id !== 'string' || !ACTIVITY_ID.test(a.id)) return undefined;
+  if (chunks && !chunks.some((c) => c.activityId === a.id)) return undefined;
+  if (!(ACTIVITY_STATUSES as readonly unknown[]).includes(a.status)) return undefined;
+  const field = (v: unknown): string | undefined => (typeof v === 'string' ? tidy(v).slice(0, LIMITS.activityChars).trim() || undefined : undefined);
+  const ref: ActivityRef = { id: a.id, status: a.status as ActivityStatus };
+  for (const key of ['step', 'mission', 'state', 'hint'] as const) {
+    const value = field(a[key]);
+    if (value) ref[key] = value;
+  }
+  return ref;
+}
+
 /** Checks what a client sent. Anything unexpected is refused, never repaired, except over-long chat history which is trimmed. */
-export function parseRequest(raw: unknown, index: Pick<TutorIndex, 'courseMap'>): ParsedRequest {
+export function parseRequest(raw: unknown, index: Pick<TutorIndex, 'courseMap'> & Partial<Pick<TutorIndex, 'chunks'>>): ParsedRequest {
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return { ok: false, error: 'bad_request' };
   const body = raw as Record<string, unknown>;
 
@@ -41,7 +62,11 @@ export function parseRequest(raw: unknown, index: Pick<TutorIndex, 'courseMap'>)
     }
   }
 
-  return { ok: true, req: { question, lessonId, order, level: level as TutorRequest['level'], history, inQuiz: body.inQuiz === true } };
+  const activity = parseActivity(body.activity, index.chunks);
+  return {
+    ok: true,
+    req: { question, lessonId, order, level: level as TutorRequest['level'], history, inQuiz: body.inQuiz === true, ...(activity ? { activity } : {}) },
+  };
 }
 
 /** The app running on the learner's own computer while the team develops it (any port). */

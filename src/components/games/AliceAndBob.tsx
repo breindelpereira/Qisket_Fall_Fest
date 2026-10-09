@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { RotateCcw, Play, ChevronRight, Minus, Plus, Check, X as XIcon } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { HonestyTagBadge } from '../shared/HonestyTag';
 import { Banner } from '../shared/Arcade';
 import { frameStyle, THEMES, PIXEL } from '../shared/arcadeTheme';
@@ -70,6 +71,35 @@ export const AliceAndBob: React.FC = () => {
 
   const winRate = runs.length ? runs.filter((r) => r.won).length / runs.length : null;
   const escaped = avgQ >= ESCAPE_TARGET;
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport(
+    stage === 'intro'
+      ? { id: 'alice_and_bob', status: 'playing', step: 'Introduction', mission: 'Read the rule, then start Part 1.' }
+      : stage === 'classical'
+        ? {
+            id: 'alice_and_bob',
+            status: 'playing',
+            step: 'Part 1: a classical plan',
+            mission: 'Find answers for Alice and Bob that win all four question pairs.',
+            state:
+              `Alice says ${classical.alice.join(' and ')} when asked 0 and 1; Bob says ${classical.bob.join(' and ')} when asked 0 and 1. ` +
+              `This plan wins ${perPairC.filter(Boolean).length} of 4 question pairs (${pct(avgC)}). The learner has flipped answers ${toggleCount} times.`,
+            hint: triedPerfect ? undefined : 'Flip at least four answers to find out whether a perfect plan exists.',
+          }
+        : stage === 'quantum'
+          ? {
+              id: 'alice_and_bob',
+              status: 'playing',
+              step: 'Part 2: an entangled pair',
+              mission: `Choose four measurement angles for a win chance of at least ${pct(ESCAPE_TARGET)}.`,
+              state:
+                `Alice measures at ${angles.a0}° when asked 0 and ${angles.a1}° when asked 1; Bob at ${angles.b0}° when asked 0 and ${angles.b1}° when asked 1. ` +
+                `Win chance ${pct(avgQ)} (classical limit ${pct(CLASSICAL_LIMIT)}, quantum limit ${pct(QUANTUM_LIMIT)}).${escaped ? ' The door can be opened.' : ''}`,
+              hint: `The win chance for each question pair depends on the gap between Alice's and Bob's angles. Alice's two angles should be ${STEP_DEG * 2}° apart and Bob's should sit halfway between them.`,
+            }
+          : { id: 'alice_and_bob', status: 'finished', step: 'Escaped together', state: `The learner escaped with a ${pct(avgQ)} win chance.` },
+  );
 
   const frame = frameStyle(THEMES.pink);
 

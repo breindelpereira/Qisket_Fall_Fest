@@ -141,6 +141,11 @@ export interface SearchOptions {
   focusLessonId?: string;
   /** Math Companion passages are left out unless this is set (or the learner has that lesson open). */
   allowPart3?: boolean;
+  /**
+   * The game the learner is playing or just played. Only that game's passages are searched (other games' passages never
+   * appear), they ignore `maxOrder` and `minOrder`, and they count for more.
+   */
+  activityId?: string;
   limit?: number;
   /** Stop adding passages once this many words are collected. */
   maxWords?: number;
@@ -165,6 +170,8 @@ const HEADING_WEIGHT = 3;
 const FOCUS_BOOST = 1.3;
 const BOOSTS = { misconception: 1.2, faq: 1.15 } as const;
 const NOTES_BOOST = 1.1;
+/** What the learner is playing right now is what a doubt is most likely about. */
+const ACTIVITY_BOOST = 1.5;
 /** A passage must score at least this share of the best one, or it is only noise. */
 const RELATIVE_FLOOR = 0.25;
 
@@ -197,14 +204,19 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
     search(query, options) {
       const terms = queryTerms(query);
       if (terms.size === 0) return [];
-      const { maxOrder, minOrder = 0, focusLessonId, allowPart3 = false, limit = 5, maxWords = 1800 } = options;
+      const { maxOrder, minOrder = 0, focusLessonId, allowPart3 = false, activityId, limit = 5, maxWords = 1800 } = options;
 
       const asked = [...terms].filter(([, weight]) => weight === 1).map(([term]) => term);
       const hits: SearchHit[] = [];
       for (const d of docs) {
         const c = d.chunk;
-        if (c.order > maxOrder || c.order < minOrder) continue;
-        if (c.part === 3 && !allowPart3 && c.lessonId !== focusLessonId) continue;
+        if (c.activityId) {
+          // a game's passages belong to that game only, and then the learner's position in the course does not matter
+          if (c.activityId !== activityId) continue;
+        } else {
+          if (c.order > maxOrder || c.order < minOrder) continue;
+          if (c.part === 3 && !allowPart3 && c.lessonId !== focusLessonId) continue;
+        }
         let score = 0;
         for (const [term, weight] of terms) {
           const f = d.tf.get(term);
@@ -212,7 +224,8 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
           score += weight * idf(term) * ((f * (K1 + 1)) / (f + K1 * (1 - B + (B * d.length) / avgLength)));
         }
         if (score <= 0) continue;
-        if (c.lessonId === focusLessonId) score *= FOCUS_BOOST;
+        if (c.activityId) score *= ACTIVITY_BOOST;
+        else if (c.lessonId === focusLessonId) score *= FOCUS_BOOST;
         if (c.kind === 'misconception') score *= BOOSTS.misconception;
         if (c.kind === 'faq') score *= BOOSTS.faq;
         if (c.from === 'notes') score *= NOTES_BOOST;

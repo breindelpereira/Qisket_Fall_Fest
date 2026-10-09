@@ -1,4 +1,5 @@
 import type { ConceptRecord, HonestyTag, LessonBlock, LessonRecord } from '../../content/types.ts';
+import type { GameHelp } from '../../content/gameHelp.ts';
 import { mathToText } from '../../content/lessonText.ts';
 import { wordCount } from './search.ts';
 import type { ParsedNotes } from './notes.ts';
@@ -7,7 +8,8 @@ import type { ChunkKind, CourseMapEntry, TutorChunk, TutorIndex } from './types.
 /**
  * Builds the tutor's knowledge (`tutor/index.json`) from two sources:
  *   - every lesson page, split into passages, so nothing in the course is missing; and
- *   - the richer hand-written notes in `tutor/notes/`, which add examples, FAQs and mix-ups.
+ *   - the richer hand-written notes in `tutor/notes/`, which add examples, FAQs and mix-ups; and
+ *   - what each game is and how it works (`content/gameHelp.ts`), kept apart so it is only used while that game is open.
  * Quizzes are never used, so the tutor cannot leak an answer.
  */
 
@@ -21,6 +23,8 @@ export interface BuildInput {
   concepts: Record<string, ConceptRecord>;
   activities: Record<string, { title: string; kind: 'game' | 'sim' }>;
   notes: ParsedNotes[];
+  /** What the tutor knows about each game, by game id. */
+  games?: Record<string, GameHelp>;
 }
 
 export interface BuildResult {
@@ -164,6 +168,46 @@ export function buildIndex(input: BuildInput): BuildResult {
       chunks.push({ ...base, id: `${lesson.id}#n${i + 1}`, heading: s.heading, kind: s.kind, text: s.text, from: 'notes' });
     });
   });
+
+  for (const [gameId, help] of Object.entries(input.games ?? {})) {
+    const where = `content/gameHelp.ts, "${gameId}"`;
+    const game = activities[gameId];
+    const home = lessons.findIndex((l) => l.activities.some((a) => a.id === gameId));
+    if (!game || game.kind !== 'game') {
+      errors.push(`${where}: no game has this id`);
+      continue;
+    }
+    if (home < 0) {
+      errors.push(`${where}: no lesson lists this game, so there is no module to point at`);
+      continue;
+    }
+    if (help.sections.length === 0) errors.push(`${where}: no sections`);
+    const lesson = lessons[home];
+    const seen = new Set<string>();
+    help.sections.forEach((s, i) => {
+      const at = `${where}, "${s.heading}"`;
+      if (!s.text.trim()) errors.push(`${at}: the section is empty`);
+      if (wordCount(s.text) > MAX_CHUNK_WORDS) errors.push(`${at}: ${wordCount(s.text)} words is over the ${MAX_CHUNK_WORDS} word limit`);
+      const key = `${s.kind}:${s.heading.toLowerCase()}`;
+      if (seen.has(key)) errors.push(`${at}: this heading is used twice`);
+      seen.add(key);
+      chunks.push({
+        id: `game:${gameId}#${i + 1}`,
+        lessonId: lesson.id,
+        lessonTitle: game.title,
+        // reads as "Game: Bloch Runner | How do I play..." in the prompt and as "Game: <heading>" on a source chip
+        where: 'Game',
+        order: home,
+        part: lesson.part,
+        heading: s.heading,
+        kind: s.kind,
+        tag: help.tag,
+        text: s.text,
+        from: 'game',
+        activityId: gameId,
+      });
+    });
+  }
 
   for (const c of chunks) if (!c.tag) errors.push(`${c.id}: no honesty tag (set "tag:" in the notes header or on the lesson)`);
   return { index: { version: 1, courseMap, chunks }, errors };

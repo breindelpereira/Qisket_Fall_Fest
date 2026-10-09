@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Check, ChevronRight, Eye, Lightbulb, RotateCcw, Scissors, Star, Stethoscope, Zap } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, panelStyle, rowChip } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -113,6 +114,37 @@ export const QubitSurgeon: React.FC = () => {
     setFinished(false);
     startLevel(0, false);
   };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never which qubit was hit
+  const wardSummary = levelDone ? summariseLevel(patients, results) : null;
+  useActivityReport(
+    finished
+      ? { id: 'qubit_surgeon', status: 'finished', step: `All ${LEVELS.length} wards cleared`, state: `Stars earned: ${totalStars} of ${LEVELS.length * 3}.` }
+      : wardSummary
+        ? {
+            id: 'qubit_surgeon',
+            status: 'playing',
+            step: `Level ${level.id} of ${LEVELS.length}: ${level.title}, ward finished`,
+            mission: level.story,
+            state:
+              `Ward ${wardSummary.cleared ? 'cleared' : 'not cleared'}: ${patients.length - wardSummary.lost} of ${patients.length} patients saved, ${wardSummary.wrong} wrong fixes, ` +
+              `${wardSummary.lucky} lucky guesses, ${wardSummary.stars} of 3 stars. The lesson of this level: ${level.lesson}`,
+          }
+        : {
+            id: 'qubit_surgeon',
+            status: 'playing',
+            step: `Level ${level.id} of ${LEVELS.length}: ${level.title}, patient ${patientIdx + 1} of ${patients.length}`,
+            mission: level.story,
+            state:
+              `Probes used: ${used.length ? used.map((id) => `${id} (${probeLabel(id)}: ${parityOf(patient.flips, id) === 1 ? 'differ' : 'agree'})`).join(', ') : 'none'}. ` +
+              `${diagnosis === 'unknown' ? 'Not enough evidence yet.' : diagnosis === null ? 'The evidence shows no single qubit flipped.' : `The evidence points at ${qubitName(diagnosis)}.`}` +
+              `${closed && result ? ` Operation done: ${peeked ? 'the learner looked at the data directly and lost the patient' : result.saved ? 'patient saved' : result.unavoidable && result.grade !== 'wrong' ? 'patient lost to a double fault (bad luck, nobody could save them)' : 'patient not saved (a wrong fix)'}.` : ''}`,
+            hint:
+              level.probes.length > 2
+                ? 'Two different probes always tell you the answer. The third just repeats what they say.'
+                : 'Think about which qubits each probe compares, and what pattern of agree and differ a single flipped qubit would cause.',
+          },
+  );
 
   if (finished) {
     return (

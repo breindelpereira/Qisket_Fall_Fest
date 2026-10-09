@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Undo2, RotateCcw, Lightbulb, Star, ChevronRight, Flag } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { HonestyTagBadge } from '../shared/HonestyTag';
 import { Banner } from '../shared/Arcade';
 import { frameStyle, THEMES, PIXEL, rowChip } from '../shared/arcadeTheme';
@@ -90,6 +91,23 @@ export const BlochRunner: React.FC = () => {
     setFinished(false);
     setShowHint(false);
   };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport(
+    finished
+      ? { id: 'bloch_runner', status: 'finished', step: `All ${LEVELS.length} levels cleared`, state: `Stars earned: ${totalStars} of ${LEVELS.length * 3}.` }
+      : {
+          id: 'bloch_runner',
+          status: 'playing',
+          step: `Level ${level.id} of ${LEVELS.length}: ${level.title}`,
+          mission: level.story,
+          state:
+            `Gates used so far: ${moves.length ? moves.map((g) => GATE_INFO[g].label).join(', ') : 'none'} (${moves.length} of ${limit} allowed; the shortest solution is ${par}). ` +
+            `Gates on offer: ${level.allowed.map((g) => GATE_INFO[g].label).join(', ')}. If measured now the qubit would read 0 ${Math.round(p0 * 100)}% of the time.` +
+            `${solved ? ` Level solved, ${earned} of 3 stars.` : outOfMoves ? ' Out of moves.' : ''}`,
+          hint: level.hint,
+        },
+  );
 
   const frame = frameStyle(THEMES.orange);
 

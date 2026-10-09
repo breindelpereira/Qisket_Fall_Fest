@@ -1,3 +1,4 @@
+import { formatGameContext } from './game.ts';
 import type { SearchHit } from './search.ts';
 import { LIMITS } from './types.ts';
 import type { CourseMapEntry, TutorIndex, TutorLevel, TutorRequest, TutorSource, TutorTurn } from './types.ts';
@@ -93,6 +94,7 @@ export function buildPrompt(index: TutorIndex, req: TutorRequest, hits: SearchHi
     LEVEL_GUIDE[req.level],
     req.inQuiz ? 'The learner has a quiz open right now. Help them understand the idea, but never say which option is correct.' : '',
     `The learner has reached ${reached ? `${reached.where} (${reached.title})` : 'the start of the course'}.`,
+    req.activity ? formatGameContext(index, req.activity) : '',
     `COURSE MAP\n${formatCourseMap(index.courseMap, req.order)}`,
     `PASSAGES\n${formatPassages(passages)}`,
   ].filter(Boolean);

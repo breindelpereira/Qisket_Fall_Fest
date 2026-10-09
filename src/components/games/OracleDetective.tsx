@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { RotateCcw, Lightbulb, Star, ChevronRight, Lock, Sun, Moon, Sparkles } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, panelStyle, rowChip } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -87,6 +88,27 @@ export const OracleDetective: React.FC = () => {
   };
 
   const restartAll = () => { clearCase(); setReplay(0); setStars({}); setCaseIdx(0); setFinished(false); };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never whether the file is constant or balanced
+  const lastReport = reports[reports.length - 1];
+  useActivityReport(
+    finished
+      ? { id: 'oracle_detective', status: 'finished', step: `All ${CASES.length} cases closed`, state: `Stars earned: ${totalStars} of ${CASES.length * 3}.` }
+      : {
+          id: 'oracle_detective',
+          status: 'playing',
+          step: `Case ${file.id} of ${CASES.length}: ${file.title}`,
+          mission: `${file.story} Decide whether the hidden function is constant or balanced.`,
+          state:
+            `Lockers opened: ${opened} of ${1 << n}${opened ? ` (${Object.entries(seen).map(([x, v]) => `${bitsOf(Number(x), n)} shows ${v}`).join(', ')})` : ''}. ` +
+            `${file.informant ? `Quantum questions asked: ${reports.length}${lastReport ? `, last readout ${bitsOf(lastReport.readout, n)}` : ''}.` : 'The quantum informant is out of town on this case.'} ` +
+            `${known ? `Proven so far: ${known}.` : 'Nothing proven yet.'}` +
+            `${outcome && accused ? ` Verdict given: ${accused}, which was ${outcome.correct ? 'right' : 'wrong'}${outcome.correct ? `, ${outcome.stars} of 3 stars` : ''}.` : ''}`,
+          hint: file.informant
+            ? 'Open lockers cost one question each, and so does the informant. Guessing without proof earns only one star.'
+            : `Two lockers that disagree prove "balanced". To prove "constant" you must open more than half of them.`,
+        },
+  );
 
   if (finished) {
     return (

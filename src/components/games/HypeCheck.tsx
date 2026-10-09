@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Ban, CheckCircle2, ChevronRight, Hourglass, RotateCcw, Star, XCircle } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, panelStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -58,6 +59,27 @@ export const HypeCheck: React.FC = () => {
     setChoice(null);
     setFinished(false);
   };
+
+  // what the AI tutor is told if the learner asks about this game: the claim on screen, and the right bin only after they answered
+  const roundSummary = finished ? summariseRound(answers) : null;
+  useActivityReport(
+    roundSummary
+      ? {
+          id: 'hype_check',
+          status: 'finished',
+          step: 'Round finished',
+          state: `Score ${roundSummary.correct} of ${roundSummary.total}, ${roundSummary.stars} of 3 stars. ${roundSummary.cleared ? 'Passed.' : `Not passed yet: ${PASS_MARK} right are needed.`}`,
+        }
+      : {
+          id: 'hype_check',
+          status: 'playing',
+          step: `Card ${index + 1} of ${ROUND_SIZE}`,
+          mission: 'Sort the claim into Real today, Maybe someday, or Hype or myth.',
+          state: verdict
+            ? `The claim: "${card.claim}" The learner chose ${labelOf(choice as Bin)}, which was ${verdict.correct ? 'right' : 'wrong'}. The right bin is ${labelOf(card.bin)}. The game's reason: ${card.why}`
+            : `The claim on screen: "${card.claim}" The learner has not answered yet. Right so far: ${score} of ${answers.length}.`,
+        },
+  );
 
   if (finished) {
     const summary = summariseRound(answers);

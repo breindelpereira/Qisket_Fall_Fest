@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeHeader, Eyebrow, GameTitle } from '../shared/Arcade';
 import { THEMES, PIXEL, RETRO, frameStyle, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -21,10 +22,12 @@ export const QuantumCoinFlip: React.FC = () => {
   const [playerScore, setPlayerScore] = useState(0);
 
   // Turn state:
-  // 'ready' -> 'ai_step1' (H) -> 'player_turn' (X / I / H) -> 'ai_step2' (H) -> 'measured'
+  // 'ready' -> 'ai_step1' (H) -> 'player_turn' (X / I / Z) -> 'ai_step2' (H) -> 'measured'
+  // Z is the winning quantum move: it turns |+> into |->, and the final H turns |-> into |1>. (H as the player's move would
+  // take |+> to |0>, and the final H would bring it back to |+>, a 50/50 coin.)
   const [turnState, setTurnState] = useState<'ready' | 'ai_step1' | 'player_turn' | 'ai_step2' | 'measured'>('ready');
   const [coinState, setCoinState] = useState<'HEADS' | 'TAILS' | 'SUPERPOSITION'>('HEADS');
-  const [playerChoice, setPlayerChoice] = useState<'FLIP' | 'KEEP' | 'HADAMARD' | null>(null);
+  const [playerChoice, setPlayerChoice] = useState<'FLIP' | 'KEEP' | 'PHASE' | null>(null);
   const [aiDialogue, setAiDialogue] = useState<string>("Welcome, human! The penny starts on HEADS (|0⟩). We take turns manipulating it. Click 'START ROUND' to test your luck!");
   const [showSecretGuide, setShowSecretGuide] = useState(false);
 
@@ -45,7 +48,7 @@ export const QuantumCoinFlip: React.FC = () => {
     }, 1100);
   };
 
-  const handlePlayerMove = (move: 'FLIP' | 'KEEP' | 'HADAMARD') => {
+  const handlePlayerMove = (move: 'FLIP' | 'KEEP' | 'PHASE') => {
     sound.playLaser();
     setPlayerChoice(move);
     setTurnState('ai_step2');
@@ -55,7 +58,7 @@ export const QuantumCoinFlip: React.FC = () => {
     } else if (move === 'KEEP') {
       setAiDialogue("Step 2 (You): You chose to KEEP (Identity). You left the coin untouched. Now watch my final Move 3...");
     } else {
-      setAiDialogue("Step 2 (You): A QUANTUM MOVE?! You applied Hadamard [H] yourself! Let's see what happens...");
+      setAiDialogue("Step 2 (You): A QUANTUM MOVE?! You applied a phase flip [Z] yourself! It changes the sign between the two halves, something no flip can do. Let's see what happens...");
     }
 
     // AI plays Move 3: Hadamard [H]
@@ -75,13 +78,13 @@ export const QuantumCoinFlip: React.FC = () => {
           setAiDialogue("MEASUREMENT: HEADS (|0⟩)! I WIN AGAIN! Notice that whether you flipped or kept, the outcome was guaranteed to be Heads. Want to know why your flip did nothing?");
         } else {
           // Quantum mode
-          if (move === 'HADAMARD') {
+          if (move === 'PHASE') {
             sound.playSuccess();
             setCoinState('TAILS');
             setPlayerScore((s) => s + 1);
             setTurnState('measured');
             setRound((r) => r + 1);
-            setAiDialogue("MEASUREMENT: TAILS (|1⟩)! INCREDIBLE! You used a quantum Hadamard gate to cancel out my superposition and forced Tails. YOU WIN! 🏆");
+            setAiDialogue("MEASUREMENT: TAILS (|1⟩)! INCREDIBLE! Your phase flip turned |+⟩ into |−⟩, so my last Hadamard sent the coin to Tails instead of back to Heads. YOU WIN! 🏆");
             completeGame('coin_flip', 'concept_qubits');
           } else {
             sound.playAlarm();
@@ -89,7 +92,7 @@ export const QuantumCoinFlip: React.FC = () => {
             setAiScore((s) => s + 1);
             setTurnState('measured');
             setRound((r) => r + 1);
-            setAiDialogue("MEASUREMENT: HEADS (|0⟩)! You are in Quantum Mode, but you played a classical move! Try using the cyan [H] HADAMARD button next time!");
+            setAiDialogue("MEASUREMENT: HEADS (|0⟩)! You are in Quantum Mode, but you played a classical move! Try the new [Z] PHASE FLIP button next time!");
           }
         }
       }, 1000);
@@ -106,6 +109,22 @@ export const QuantumCoinFlip: React.FC = () => {
     setTurnState('ready');
     setAiDialogue("Game reset! The penny starts on HEADS (|0⟩). Can you discover the quantum strategy?");
   };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the winning move
+  useActivityReport({
+    id: 'coin_flip',
+    status: playerScore > 0 ? 'finished' : 'playing',
+    step: `Round ${round}: ${turnState === 'ready' ? 'not started' : turnState === 'player_turn' ? "the learner's move" : turnState === 'measured' ? 'round over' : "Dr. Quantum's move"}`,
+    mission: 'Dr. Quantum wins if the coin lands on Heads and the learner wins on Tails.',
+    state:
+      `Mode: ${playerMode === 'quantum' ? 'quantum moves unlocked' : 'classical, only flip and keep'}. Score: Dr. Quantum ${aiScore}, the learner ${playerScore}. ` +
+      `The coin is ${coinState === 'SUPERPOSITION' ? 'in an equal superposition' : coinState.toLowerCase()}.${playerChoice ? ` The learner played ${playerChoice.toLowerCase()}.` : ''} ` +
+      `Dr. Quantum just said: "${aiDialogue}"`,
+    hint:
+      playerMode === 'classical'
+        ? 'No classical move can beat Dr. Quantum. Look at the Unlock button: quantum mode adds a move that classical mode lacks.'
+        : 'The extra quantum move does something to the superposition that a flip cannot do.',
+  });
 
   const theme = THEMES.violet;
 
@@ -350,8 +369,8 @@ export const QuantumCoinFlip: React.FC = () => {
                 </button>
 
                 {playerMode === 'quantum' && (
-                  <button className="btn" onClick={() => handlePlayerMove('HADAMARD')} style={{ flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px', animation: 'pulseGlow 2s infinite' }}>
-                    <span style={{ fontSize: '0.58rem' }}>[H] GATE</span>
+                  <button className="btn" onClick={() => handlePlayerMove('PHASE')} style={{ flexDirection: 'column', gap: 4, minHeight: 68, padding: '8px 2px', animation: 'pulseGlow 2s infinite' }}>
+                    <span style={{ fontSize: '0.58rem' }}>PHASE FLIP (Z)</span>
                     <span style={{ fontFamily: 'var(--font-family)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'none', letterSpacing: 0 }}>⚡ Quantum move!</span>
                   </button>
                 )}
@@ -495,8 +514,11 @@ export const QuantumCoinFlip: React.FC = () => {
             </div>
 
             <p style={{ color: '#f1eaff' }}>
-              💡 <b>How to Beat Dr. Quantum:</b> Click <b>'Unlock Quantum Mode'</b> above. When you play the <b>[H] Hadamard</b> gate on Move 2, you break his circuit and force the outcome to Tails (|1⟩)!
+              💡 <b>How to Beat Dr. Quantum:</b> Click <b>'Unlock'</b> above to switch on quantum moves. When you play the <b>[Z] phase flip</b> on Move 2, the coin goes from |+⟩ to |−⟩, a state that no flip can make. His last Hadamard then turns |−⟩ into Tails (|1⟩)!
             </p>
+            <div style={{ fontFamily: 'monospace', color: '#86efac', fontSize: '0.8rem' }}>
+              Z · (|0⟩ + |1⟩)/√2 = (|0⟩ − |1⟩)/√2 = |−⟩, then H · |−⟩ = |1⟩
+            </div>
           </div>
         )}
       </div>

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { BookOpen, Bookmark, BookmarkCheck, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
 import { DrQuantum } from '../shared/DrQuantum';
+import { ACTIVITIES } from '../../content/activities';
+import { activityStore } from '../../core/tutor/activityStore';
 import { askTutor } from '../../core/tutor/client';
 import { loadTutorKnowledge } from '../../core/tutor/loader';
 import type { TutorKnowledge } from '../../core/tutor/loader';
@@ -14,7 +16,7 @@ import {
 import type { SavedItem, SavedMessage } from '../../core/tutor/saved';
 import { starterQuestions } from '../../core/tutor/starters';
 import { LEVEL_LABELS, LIMITS, TUTOR_LEVELS } from '../../core/tutor/types';
-import type { TutorLevel, TutorResponse, TutorSource } from '../../core/tutor/types';
+import type { ActivityRef, TutorLevel, TutorResponse, TutorSource } from '../../core/tutor/types';
 import { safeStorage } from '../../utils/safeStorage';
 import { SavedList } from './SavedList';
 import type { KeptTab } from './SavedList';
@@ -43,6 +45,12 @@ interface Message {
 const TUTOR_URL = (import.meta.env.VITE_TUTOR_URL as string | undefined)?.trim() ?? '';
 
 const newChatId = (): string => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+
+const GAME_STATUS_WORDS: Record<ActivityRef['status'], string> = {
+  playing: 'playing now',
+  finished: 'just finished',
+  left: 'played a moment ago',
+};
 
 /** Chats and answers picked out of History get today's date in the saved list. */
 const fresh = (item: SavedItem): SavedItem => ({ ...item, savedAt: new Date().toISOString() });
@@ -79,6 +87,9 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
   // stays the same while a chat goes on, so saving the chat again updates the saved copy instead of adding another
   const [chatId, setChatId] = useState(newChatId);
   const [notice, setNotice] = useState<string | null>(null);
+  // the game the learner is playing or has just left, and whether the tutor may be told about it
+  const [activity, setActivity] = useState<ActivityRef | null>(null);
+  const [shareGame, setShareGame] = useState(true);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nextId = useRef(1);
   const listRef = useRef<HTMLDivElement>(null);
@@ -98,6 +109,14 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
       cancelled = true;
     };
   }, [open, knowledge]);
+
+  // Ask the games what they are showing, each time the drawer opens
+  useEffect(() => {
+    if (!open) return;
+    const refresh = () => setActivity(activityStore.read());
+    refresh();
+    return activityStore.subscribe(refresh);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -134,6 +153,10 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
     writeLevel(safeStorage(), value);
   };
 
+  // A quiz is no place for game help, and the learner can switch the sharing off
+  const gameTitle = activity ? ACTIVITIES[activity.id]?.title : undefined;
+  const gameForTutor = shareGame && !inQuiz && gameTitle ? activity : null;
+
   const send = useCallback(
     async (raw: string) => {
       const question = raw.trim();
@@ -144,7 +167,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
       setInput('');
       setBusy(true);
       const reply = await askTutor({
-        request: { question, lessonId: position.lessonId, order: position.order, level, history: recent, inQuiz },
+        request: { question, lessonId: position.lessonId, order: position.order, level, history: recent, inQuiz, ...(gameForTutor ? { activity: gameForTutor } : {}) },
         index: knowledge.index,
         searcher: knowledge.searcher,
         prepared: knowledge.prepared,
@@ -161,7 +184,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
       writeHistory(safeStorage(), list);
       setPastChats(list);
     },
-    [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats],
+    [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats, gameForTutor],
   );
 
   if (!open) return null;
@@ -173,7 +196,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
 
   const here = knowledge?.index.courseMap.find((e) => e.lessonId === position.lessonId);
   const reached = knowledge?.index.courseMap.find((e) => e.order === position.order);
-  const starters = knowledge ? starterQuestions(knowledge.index, position.lessonId, position.order) : [];
+  const starters = knowledge ? starterQuestions(knowledge.index, position.lessonId, position.order, gameForTutor ?? undefined) : [];
   const needsChoice = consent === null;
   const canAsk = !needsChoice && !busy && knowledge !== null;
 
@@ -336,11 +359,36 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
               ))}
             </div>
 
+            {activity && gameTitle && !inQuiz && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
+                <button
+                  role="switch"
+                  aria-checked={shareGame}
+                  className="chip"
+                  onClick={() => setShareGame((v) => !v)}
+                  style={{ ...textChip, ...(shareGame ? { background: 'var(--mint)', color: 'var(--ink)', borderColor: 'var(--mint-edge)' } : {}) }}
+                >
+                  <Gamepad2 size={16} style={{ flexShrink: 0 }} />
+                  <span>
+                    {gameTitle}: {GAME_STATUS_WORDS[activity.status]} · {shareGame ? 'sharing ON' : 'sharing OFF'}
+                  </span>
+                </button>
+                {messages.length === 0 && (
+                  <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.4 }}>
+                    {shareGame
+                      ? 'I can see which level you are on and what is on your game screen, so just ask your doubt. Tap to stop sharing it.'
+                      : 'Not sharing your game screen. Tap to share it again.'}
+                  </div>
+                )}
+              </div>
+            )}
+
             {needsChoice && (
               <div className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div className="pixel" style={{ fontSize: '0.64rem' }}>Before you ask</div>
                 <p style={{ fontSize: '0.84rem', lineHeight: 1.45, fontWeight: 600 }}>
-                  The online tutor sends your question to Google's free Gemini service, which may use it to improve Google products. Please do not type
+                  The online tutor sends your question to Google's free Gemini service, which may use it to improve Google products. If you are in a game,
+                  it also sends a short note about your game screen (the level and your moves), which you can switch off. Please do not type
                   personal information. Or stay offline: you will get answers straight from the course notes on this device.
                 </p>
                 <button className="btn btn-mint" onClick={() => choose('online')}>Use online tutor</button>

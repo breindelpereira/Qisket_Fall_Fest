@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { RotateCcw, Lightbulb, ChevronRight, Zap, Check, X as XIcon } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { HonestyTagBadge } from '../shared/HonestyTag';
 import { Banner } from '../shared/Arcade';
 import { frameStyle, THEMES, PIXEL, rowChip } from '../shared/arcadeTheme';
@@ -92,6 +93,23 @@ export const PhotonEscapeRoom: React.FC = () => {
     resetLevel(0);
     setFinished(false);
   };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport(
+    finished
+      ? { id: 'photon_escape_room', status: 'finished', step: `All ${LEVELS.length} rooms escaped` }
+      : {
+          id: 'photon_escape_room',
+          status: 'playing',
+          step: `Room ${level.id} of ${LEVELS.length}: ${level.title}`,
+          mission: level.story,
+          state:
+            `Slots from left to right: ${picks.map(describeChoice).join(', ')}. Top door ${pct(result.out[0])}, bottom door ${pct(result.out[1])}. ` +
+            `Goals: ${level.goals.map((g) => `${g.label} (${goalMet(picks, g) ? 'met' : 'not met'})`).join('; ')}.` +
+            `${level.minBeamSplitters ? ` Needs at least ${level.minBeamSplitters} beam splitters.` : ''}${solved ? ' Room solved.' : ''}`,
+          hint: level.hint,
+        },
+  );
 
   const frame = frameStyle(THEMES.sky);
 

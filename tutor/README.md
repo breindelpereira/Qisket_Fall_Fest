@@ -15,6 +15,10 @@ Every lesson is searchable even without a notes file, because the lesson's own t
 
 Written so far: `module_0` to `module_7` (all of Part 1). Part 2 (`hw_module_0` to `hw_module_8_9`) and Part 3 (`math_week_0`, `math_lesson_1` to `math_lesson_5`) still use their lesson text only. Writing those is a good job for teammates.
 
+## Game help
+
+What the tutor knows about each game is in `src/content/gameHelp.ts` (not in `notes/`). Each game has sections written like notes: the first is "How do I play ...?", then its common doubts, an "I'm stuck" nudge, and "What does finishing ... show?". These passages are used only while that game is open or was just left, and they never contain the solution to a level or the text of the game's Hint button. When you add a game, add its help there and make its component call `useActivityReport`. Then run `npm run tutor:index`.
+
 ## Writing a notes file
 
 Create `tutor/notes/<lessonId>.md`, where the id is the lesson's id in `src/content/lessonsPart*.ts` (for example `hw_module_2.md`).

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Undo2, RotateCcw, Lightbulb, Star, ChevronRight, Check, X as XIcon } from 'lucide-react';
 import { useProgress } from '../../hooks/useProgress';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, panelStyle, rowChip, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
@@ -81,6 +82,23 @@ export const GateDeck: React.FC = () => {
   };
 
   const restartAll = () => { setLevelIdx(0); setPicks([]); setStars({}); setFinished(false); setShowHint(false); };
+
+  // what the AI tutor is told if the learner asks about this game: the screen, never the solution
+  useActivityReport(
+    finished
+      ? { id: 'gate_deck', status: 'finished', step: `All ${LEVELS.length} levels built`, state: `Stars earned: ${totalStars} of ${LEVELS.length * 3}.` }
+      : {
+          id: 'gate_deck',
+          status: 'playing',
+          step: `Level ${level.id} of ${LEVELS.length}: ${level.title}`,
+          mission: `${level.story} The gate to build: ${level.targetName}.`,
+          state:
+            `Hand: ${level.hand.map(cardLabel).join(', ')}. Played so far, in order: ${items.length ? items.map(cardLabel).join(', then ') : 'nothing'}. ` +
+            `${checks.length ? `Test inputs matching the target: ${checks.filter((c) => c.ok).length} of ${checks.length}.` : ''}` +
+            `${solved ? ` Gate built with ${picks.length} cards, ${earned} of 3 stars (the shortest recipe uses ${par}).` : ''}`,
+          hint: level.hint,
+        },
+  );
 
   if (finished) {
     return (

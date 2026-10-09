@@ -1,3 +1,4 @@
+import { asksForHint, isGameQuestion, withGameBasics } from './game.ts';
 import { tokenize } from './search.ts';
 import type { Searcher, SearchHit } from './search.ts';
 import { starterQuestions } from './starters.ts';
@@ -16,7 +17,7 @@ export function trimWords(text: string, max: number): string {
 /** Passage text on one line, so line breaks from the notes do not show up in a chat bubble. */
 const body = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
-export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' | 'level'>;
+export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' | 'level'> & Partial<Pick<TutorRequest, 'activity'>>;
 
 /** A later passage must contain at least this share of the question's words before we say the question is about it. */
 const LATER_MIN_COVERAGE = 0.6;
@@ -64,17 +65,26 @@ export function smallTalkAnswer(input: Pick<OfflineInput, 'order' | 'lessonId'>,
  * function itself when nothing in the learner's part of the course matches the question.
  */
 export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: TutorIndex): TutorResponse {
-  if (isSmallTalk(input.question)) return smallTalkAnswer(input, index);
+  if (isSmallTalk(input.question) && !isGameQuestion(input.activity, input.question)) return smallTalkAnswer(input, index);
   const allowPart3 = input.level === 'math';
-  const [top] = searcher.search(input.question, { maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, limit: 1 });
+  const { activity } = input;
+  // while a game is open its own notes are searched too, and a plain "I'm stuck" still finds the game
+  const [top] = withGameBasics(
+    searcher.search(input.question, { maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, activityId: activity?.id, limit: 1 }),
+    index,
+    activity,
+    input.question,
+  );
   const later = laterTopic(searcher, input, top);
   if (later) return laterAnswer(later, index);
   if (top) {
     const c = top.chunk;
     const source: TutorSource = { lessonId: c.lessonId, heading: c.heading, where: c.where };
     const tagNote = c.tag === 'Analogy' || c.tag === 'Simplified model' ? ` (This is ${c.tag === 'Analogy' ? 'an analogy' : 'a simplified model'}.)` : '';
+    // the game's own hint is on the device, so a learner who is stuck can have it even when no tutor can be reached
+    const hint = activity && activity.status === 'playing' && activity.hint && asksForHint(input.question) ? `\n\nThe game's hint for this step: ${activity.hint}` : '';
     return {
-      answer: `From ${c.where}: ${c.heading}\n\n${trimWords(body(c.text), 80)}${tagNote}`,
+      answer: `From ${c.where}: ${c.heading}\n\n${trimWords(body(c.text), 80)}${tagNote}${hint}`,
       sources: [source],
       provider: 'offline',
     };
