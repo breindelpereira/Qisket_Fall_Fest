@@ -250,6 +250,17 @@ Qisket/
 - [ ] Airplane mode shows the fallback
 - [ ] API key is not in the built app files
 
+### Extra, only if time is left: "Ask about the video"
+Not part of the Phase 3 gate. Do it after the tutor works, and cut it first if behind.
+
+- **Video notes, made once ahead of time.** A script (run on one dev machine, key in an environment variable) sends each lesson video, or just the clip we use, to Gemini as a public YouTube link with a start and end time. It asks for timestamped notes: what is said, which diagram appears at which `MM:SS` and what it shows, and the key terms.
+- **Human review.** A teammate reads and corrects the notes, because AI descriptions of diagrams can be wrong. Reviewed notes join the tutor's module document as chunks tagged with module, video id and time range, so the tutor still answers only from approved content.
+- **"Ask about this moment" button** on the video card. The player already reports the current time, so the tutor opens with the video and timestamp filled in and searches the notes within about a minute of it ("At 3:12 the diagram shows ...").
+- **Optional screenshot.** A button to attach the learner's own phone screenshot of a diagram, sent to Gemini as an image. The app cannot capture the YouTube player itself. Add a line to the consent note that images go to Google.
+- **Why not the live video per question:** a clip costs roughly 100 to 300 tokens per second of video, so one question could use tens of thousands of tokens; the free tier also caps YouTube video at 8 hours per day, and the feature is in preview. Notes made once are cheap, reviewable and work in the offline fallback.
+- **Keep it respectful:** short notes, credit the channel, link the original, never copy the videos.
+- **Test gate (if built):** 5 questions about specific video moments get a correct, timestamp-grounded answer; notes for every video have been reviewed.
+
 ---
 
 ## Phase 4: Thin Parts 2 + 3 (6%) — Submit Point C
@@ -525,6 +536,7 @@ flowchart LR
 ## ⚠️ Critical Rules & Guardrails
 
 ### If You Fall Behind — Cut in This Order:
+0. "Ask about the video" tutor extra (video notes, Ask-about-this-moment button, screenshot attach)
 1. Expansion games
 2. Part 2 labs beyond the first
 3. Part 3 problem sets beyond Lessons 1–2
