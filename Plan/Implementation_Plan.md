@@ -266,6 +266,7 @@ This is the working design for Phase 3. It was chosen for a competition: free, s
 
 #### 2. Hosting
 - A small serverless function on a free plan: Cloudflare Workers (built: `worker/index.ts`, settings in `worker/wrangler.toml`), or Vercel or Netlify if the team prefers (the logic in `src/core/tutor/server.ts` has no hosting details).
+- **Found when testing for real:** Google refuses Gemini calls that leave from some Cloudflare data centres ("User location is not supported for the API use"), and by default the function runs in the data centre nearest the learner. The Worker is therefore pinned near Google's US region (`[placement] region` in `wrangler.toml`). If this ever moves to another host, check where its calls to Google leave from.
 - Endpoint: `POST /api/tutor`.
 - **CORS:** allow the website origin and the Android app origin. `capacitor.config.ts` sets `androidScheme: 'https'`, so the Android origin is `https://localhost`. Allow nothing else.
 - The app reads the function address from `VITE_TUTOR_URL` at build time. The Android build needs the full web address, not a relative path.

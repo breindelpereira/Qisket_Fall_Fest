@@ -15,6 +15,8 @@ const STOP_WORDS = new Set(
     'just about into from there their they them he she his her also very really some any not no yes tell explain ' +
     'please mean means meant like get gets make makes thing things one ones dont doesnt isnt cant wont hi hello thanks thank ' +
     'much many more most than too whats thats theres hows whys lets im ive youre ' +
+    // greetings and small talk, so "hey" or "ok thanks" is recognised as having nothing to look up
+    'hey hii yo ok okay cool nice great wow thx bye goodbye sure good morning afternoon evening ' +
     // everyday verbs and nouns that would otherwise match a passage by accident ("write me a poem")
     'write writes written wrote look looks looked see seen say says said use used uses using work works working ' +
     'give gives show shows need needs want wants find finds help helps happen happens happened example examples ' +

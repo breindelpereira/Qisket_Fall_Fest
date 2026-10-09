@@ -1,4 +1,4 @@
-import { matchPrepared, offlineAnswer } from './offline.ts';
+import { isSmallTalk, matchPrepared, offlineAnswer, smallTalkAnswer } from './offline.ts';
 import type { PreparedAnswer } from './offline.ts';
 import type { Searcher } from './search.ts';
 import type { TutorIndex, TutorRequest, TutorResponse, TutorSource } from './types.ts';
@@ -43,6 +43,7 @@ export async function askTutor(ctx: AskContext): Promise<TutorResponse> {
   const { request, index, searcher } = ctx;
   const prepared = matchPrepared(ctx.prepared, request.question, request.order, index);
   if (prepared) return prepared;
+  if (isSmallTalk(request.question)) return smallTalkAnswer(request, index);
 
   const fallback = (reason: TutorResponse['reason']): TutorResponse => ({ ...offlineAnswer(searcher, request, index), reason });
   if (!ctx.online) return fallback('off');

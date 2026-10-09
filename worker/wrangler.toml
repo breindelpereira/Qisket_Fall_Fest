@@ -4,9 +4,16 @@ name = "qisket-tutor"
 main = "index.ts"
 compatibility_date = "2025-09-01"
 
+# Google refuses Gemini calls that leave from some Cloudflare data centres ("User location is not supported for the API use"),
+# and Cloudflare normally runs the function in the data centre nearest the learner. This asks for a data centre near
+# Google's US region instead, which Google accepts. It adds a little delay (a few hundred milliseconds) for learners far away.
+[placement]
+region = "gcp:us-east4"
+
 [vars]
 # Model code from Google AI Studio. Change it here if Google renames or retires it, then deploy again.
 TUTOR_MODEL = "gemini-3.5-flash-lite"
 # Web addresses allowed to call the function from a browser. https://localhost is the Android app
-# (capacitor.config.ts uses androidScheme "https"). Add your website's address, with no trailing slash.
-ALLOWED_ORIGINS = "https://localhost,http://localhost:5173"
+# (capacitor.config.ts uses androidScheme "https"); http://localhost on any port (npm run dev) is always allowed.
+# Add your website's address, with no trailing slash.
+ALLOWED_ORIGINS = "https://localhost"

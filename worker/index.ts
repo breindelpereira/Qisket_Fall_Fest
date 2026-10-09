@@ -1,4 +1,5 @@
 import index from '../tutor/index.json';
+import { isOriginAllowed } from '../src/core/tutor/guards.ts';
 import { answerQuestion, createServerState, DEFAULT_LIMITS } from '../src/core/tutor/server.ts';
 import type { TutorServerState } from '../src/core/tutor/server.ts';
 import { createSearcher } from '../src/core/tutor/search.ts';
@@ -47,7 +48,7 @@ export default {
     const allowed = (env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean);
     const origin = request.headers.get('origin');
     // Browsers always send an Origin; tools like curl do not. A browser from any other website is refused.
-    const originOk = origin === null || allowed.includes(origin);
+    const originOk = origin === null || isOriginAllowed(origin, allowed);
     const cors: Record<string, string> = origin && originOk ? { 'access-control-allow-origin': origin, vary: 'Origin' } : { vary: 'Origin' };
 
     const url = new URL(request.url);
@@ -61,7 +62,9 @@ export default {
     if (!originOk) return json({ error: 'origin_not_allowed' }, 403, cors);
 
     if (request.method === 'GET' && url.pathname === '/api/health') {
-      return json({ ok: true, configured: Boolean(env.GEMINI_API_KEY), model: env.TUTOR_MODEL ?? DEFAULT_MODEL, passages: tutorIndex.chunks.length }, 200, cors);
+      // `colo` is the Cloudflare data centre that ran this request: it shows whether the placement setting took effect
+      const colo = (request as unknown as { cf?: { colo?: string } }).cf?.colo;
+      return json({ ok: true, configured: Boolean(env.GEMINI_API_KEY), model: env.TUTOR_MODEL ?? DEFAULT_MODEL, passages: tutorIndex.chunks.length, colo }, 200, cors);
     }
     if (request.method !== 'POST' || (url.pathname !== '/api/tutor' && url.pathname !== '/')) return json({ error: 'not_found' }, 404, cors);
 

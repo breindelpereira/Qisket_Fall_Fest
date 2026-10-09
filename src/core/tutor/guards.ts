@@ -44,6 +44,14 @@ export function parseRequest(raw: unknown, index: Pick<TutorIndex, 'courseMap'>)
   return { ok: true, req: { question, lessonId, order, level: level as TutorRequest['level'], history, inQuiz: body.inQuiz === true } };
 }
 
+/** The app running on the learner's own computer while the team develops it (any port). */
+const LOCAL_DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$/;
+
+/** May a browser page from this address call the function? The listed addresses, plus local development on any port. */
+export function isOriginAllowed(origin: string, allowed: string[]): boolean {
+  return allowed.includes(origin) || LOCAL_DEV_ORIGIN.test(origin);
+}
+
 export interface LimiterOptions {
   perMinute: number;
   perDay: number;

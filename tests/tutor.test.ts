@@ -9,10 +9,10 @@ import { parseNotes } from '../src/core/tutor/notes';
 import { buildFromDisk, INDEX_PATH, ROOT, serialise } from '../scripts/tutorFiles';
 import { buildPrompt, chatTurns, extractCitations, formatCourseMap, plainText } from '../src/core/tutor/prompt';
 import { buildGeminiBody, callGemini, isSafeModelName, parseGeminiResponse } from '../src/core/tutor/gemini';
-import { createBreaker, createLimiter, parseRequest } from '../src/core/tutor/guards';
+import { createBreaker, createLimiter, isOriginAllowed, parseRequest } from '../src/core/tutor/guards';
 import { answerQuestion, createServerState } from '../src/core/tutor/server';
 import type { TutorServerConfig } from '../src/core/tutor/server';
-import { laterTopic, matchPrepared, offlineAnswer, trimWords } from '../src/core/tutor/offline';
+import { isSmallTalk, laterTopic, matchPrepared, offlineAnswer, smallTalkAnswer, trimWords } from '../src/core/tutor/offline';
 import type { PreparedAnswer } from '../src/core/tutor/offline';
 import { askTutor, readReply } from '../src/core/tutor/client';
 import { starterQuestions } from '../src/core/tutor/starters';
@@ -857,5 +857,51 @@ describe('The worker (web part of the function)', () => {
     expect(await res.json()).toMatchObject({ ok: true, configured: true, model: 'gemini-3.5-flash-lite' });
     const bare = await worker.fetch(new Request('https://tutor.example/api/health'), {});
     expect(await bare.json()).toMatchObject({ configured: false });
+  });
+
+  it('accepts the app on any local port while it is being developed, and nobody pretending to be local', async () => {
+    for (const origin of ['http://localhost:5174', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://localhost']) {
+      expect((await call({ method: 'OPTIONS', headers: { origin } })).status, origin).toBe(204);
+    }
+    for (const origin of ['http://localhost.evil.com', 'http://evil.com:5173', 'https://localhost:5173', 'http://localhost:abc', 'http://notlocalhost:5173']) {
+      expect((await call({ method: 'OPTIONS', headers: { origin } })).status, origin).toBe(403);
+    }
+  });
+});
+
+describe('Small talk and who may call the function', () => {
+  it('knows which addresses may call it', () => {
+    const allowed = ['https://localhost', 'https://qisket.example'];
+    expect(isOriginAllowed('https://qisket.example', allowed)).toBe(true);
+    expect(isOriginAllowed('https://localhost', allowed)).toBe(true);
+    expect(isOriginAllowed('http://localhost:5174', allowed)).toBe(true);
+    expect(isOriginAllowed('https://evil.example', allowed)).toBe(false);
+    expect(isOriginAllowed('http://localhost.evil.com', allowed)).toBe(false);
+    expect(isOriginAllowed('', allowed)).toBe(false);
+  });
+
+  it('answers "Hi" and "thanks" warmly, with something to try, and never asks the network', async () => {
+    for (const hello of ['Hi', 'hello!', 'Thanks', 'ok']) expect(isSmallTalk(hello), hello).toBe(true);
+    expect(isSmallTalk('What is a qubit?')).toBe(false);
+    const reply = smallTalkAnswer({ order: 2, lessonId: 'module_2' }, INDEX);
+    expect(reply.provider).toBe('prepared');
+    expect(reply.answer).toMatch(/^Hi! I'm Dr Quantum/);
+    expect(reply.answer).toContain(starterQuestions(INDEX, 'module_2', 2)[0]);
+
+    const f = vi.fn();
+    const r = await askTutor({
+      request: { question: 'Hi', lessonId: 'module_2', order: 2, level: 'beginner', history: [] },
+      index: INDEX, searcher: SEARCHER, prepared: PREPARED, online: true, url: 'https://tutor.example/api/tutor', fetchImpl: f as unknown as typeof fetch,
+    });
+    expect(r.answer).toMatch(/Dr Quantum/);
+    expect(f).not.toHaveBeenCalled();
+    expect(offlineAnswer(SEARCHER, { question: 'hey', order: 0, lessonId: 'module_0', level: 'beginner' }, INDEX).answer).toMatch(/Dr Quantum/);
+  });
+
+  it('tells the model to start with the answer and not to talk about its own instructions', () => {
+    const req: TutorRequest = { question: 'What is a qubit?', lessonId: 'module_1', order: 1, level: 'beginner', history: [] };
+    const { system } = buildPrompt(INDEX, req, SEARCHER.search(req.question, { maxOrder: 1 }));
+    expect(system).toContain('Start with the answer itself');
+    expect(system).toContain('Never mention the course map');
   });
 });

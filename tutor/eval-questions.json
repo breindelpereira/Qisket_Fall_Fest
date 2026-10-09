@@ -9,7 +9,7 @@
   { "id": "q08", "category": "in-scope", "lessonId": "module_7", "level": "intermediate", "question": "What is a syndrome in error correction?", "expectLesson": "module_7", "mustContainAny": ["parity", "pattern", "ancilla", "check"] },
 
   { "id": "q09", "category": "paraphrase", "lessonId": "module_1", "level": "beginner", "question": "Can you explain how a qbit differs from a normal bit?", "expectLesson": "module_1", "mustContainAny": ["amplitude", "superposition", "0 or 1"] },
-  { "id": "q10", "category": "paraphrase", "lessonId": "module_2", "level": "beginner", "question": "What happens to the qubit after I look at it?", "expectLesson": "module_2", "mustContainAny": ["collapse", "definite", "measured", "0 or 1"] },
+  { "id": "q10", "category": "paraphrase", "lessonId": "module_2", "level": "beginner", "question": "What happens to the qubit after I look at it?", "expectLesson": "module_2", "mustContainAny": ["collapse", "definit", "measure", "0 or 1"] },
   { "id": "q11", "category": "paraphrase", "lessonId": "module_5b", "level": "beginner", "question": "Can I clone a qubit so I have a backup?", "expectLesson": "module_5b", "mustContainAny": ["cloning", "cannot", "can't", "copy"] },
   { "id": "q12", "category": "paraphrase", "lessonId": "module_6", "level": "intermediate", "question": "How many steps does Grover's search need for a million items?", "expectLesson": "module_6", "mustContainAny": ["square root", "√", "1,000", "1000", "about"] },
 

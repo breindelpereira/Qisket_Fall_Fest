@@ -1,5 +1,6 @@
 import { tokenize } from './search.ts';
 import type { Searcher, SearchHit } from './search.ts';
+import { starterQuestions } from './starters.ts';
 import type { TutorIndex, TutorRequest, TutorResponse, TutorSource } from './types.ts';
 
 /** Shortens text to about `max` words, ending at a sentence if one is close enough. */
@@ -45,11 +46,25 @@ export function laterAnswer(later: SearchHit, index: Pick<TutorIndex, 'courseMap
   };
 }
 
+/** "Hi", "thanks", "ok": nothing to look up. */
+export const isSmallTalk = (question: string): boolean => tokenize(question).length === 0;
+
+/** A friendly reply to small talk that points at something to ask. Needs no model and no network. */
+export function smallTalkAnswer(input: Pick<OfflineInput, 'order' | 'lessonId'>, index: TutorIndex): TutorResponse {
+  const [example] = starterQuestions(index, input.lessonId, input.order);
+  return {
+    answer: `Hi! I'm Dr Quantum. Ask me anything about the lessons you have reached${example ? `, for example: "${example}"` : ''}.`,
+    sources: [],
+    provider: 'prepared',
+  };
+}
+
 /**
  * An answer built straight from the notes, with no model. Used when the online tutor is off or cannot be reached, and by the
  * function itself when nothing in the learner's part of the course matches the question.
  */
 export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: TutorIndex): TutorResponse {
+  if (isSmallTalk(input.question)) return smallTalkAnswer(input, index);
   const allowPart3 = input.level === 'math';
   const [top] = searcher.search(input.question, { maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, limit: 1 });
   const later = laterTopic(searcher, input, top);

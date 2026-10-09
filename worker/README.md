@@ -83,6 +83,15 @@ $env:TUTOR_URL = "https://qisket-tutor.your-name.workers.dev/api/tutor"; npm run
 
 It asks all 20 questions (it waits between them because the function allows 10 a minute, so it takes about two and a half minutes) and prints each answer with `ok` or `FAIL`. Read the answers yourself too: a pass on the written checks is a good sign, not a proof.
 
+## If something goes wrong
+
+| What you see | What it means and what to do |
+| --- | --- |
+| Answers say "(could not reach the online tutor)" | Open `.../api/health` in a browser: if it does not load, the function is down or the address in `.env.local` is wrong. If it loads, look at the cause the function reports: run `npx wrangler tail --config worker/wrangler.toml` in a second terminal and ask a question. |
+| The log says `bad_request 400: User location is not supported for the API use` | Google refuses calls that leave from some Cloudflare data centres. `worker/wrangler.toml` already has a `[placement]` setting that runs the function near Google's US region to avoid this. Check that it is there and that you deployed again after adding it. The health page shows `colo`, the data centre that answered (US ones look like `IAD`, `EWR`, `ORD`, `DFW`, `ATL`). If the error still appears, try another region (for example `aws:us-east-1`). |
+| `429` or "busy" | The free quota is used up for now (see below). |
+| The site on your own computer cannot reach it | The address of your site (for example `http://localhost:5173`) must be allowed. Any `http://localhost` port is allowed automatically; for a real website add it to `ALLOWED_ORIGINS`. |
+
 ## Settings you can change later
 
 Edit `worker/wrangler.toml`, then deploy again.
@@ -90,7 +99,8 @@ Edit `worker/wrangler.toml`, then deploy again.
 | Setting | What it does |
 | --- | --- |
 | `TUTOR_MODEL` | The Gemini model code. Change it if Google renames or retires the model. |
-| `ALLOWED_ORIGINS` | Which websites and apps may call the function. |
+| `ALLOWED_ORIGINS` | Which websites and apps may call the function. `http://localhost` on any port is always allowed, so you only list `https://localhost` (the Android app) and your real website. |
+| `[placement]` `region` | Where the function runs. Keep it near the US (see above). |
 | `RATE_PER_MINUTE`, `RATE_PER_DAY`, `GLOBAL_PER_DAY` | Optional. Per person per minute (default 10), per person per day (60), and everyone per day (800). Add them under `[vars]` as text, for example `RATE_PER_DAY = "100"`. |
 | `TUTOR_TEMPERATURE` | Optional. Left unset on purpose: Google recommends the default for Gemini 3 models. |
 
