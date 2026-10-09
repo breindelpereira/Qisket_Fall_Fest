@@ -409,6 +409,8 @@ Not part of the Phase 3 gate. Do it after the tutor works, and cut it first if b
 
 ## Phase 7: Error Fix (7%) — Submit Point F
 
+**Status: built.** Qubit Surgeon (4 wards) and the Noise Lab are in the app, tested in `tests/errorCorrection.test.ts` and `tests/games3.test.ts`. They use the state-vector engine on a 4-qubit register instead of a separate stabilizer engine, which keeps the simulation exact and small. Both are tagged Simplified model: bit-flip errors only, perfect probes. The Noise Lab shows the break-even point of the toy model (50%) and says plainly that real codes need far lower error rates (around 1%).
+
 **What gets built:**
 - Qubit Surgeon game (noise, parity checks, error correction)
 - Noise lab simulation (3-qubit repetition code)
@@ -421,6 +423,8 @@ Not part of the Phase 3 gate. Do it after the tutor works, and cut it first if b
 ---
 
 ## Phase 8: Part 1 Remainder (5%) — Submit Point G
+
+**Status: built.** Hype Check (Module 0 card sort), the Mach–Zehnder lab, Deutsch–Jozsa and Grover explorers and the optical engine are all in the app.
 
 **What gets built:**
 - Module 0 orientation (Hype Check card sort)

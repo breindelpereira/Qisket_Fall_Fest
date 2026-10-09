@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 import { LESSONS, LESSON_BY_ID } from '../src/content/lessons';
 import { ACTIVITIES } from '../src/content/activities';
@@ -6,19 +8,28 @@ import type { ActivityLink } from '../src/content/types';
 
 /** Everything built today (mirrors App.tsx), so these tests describe what a learner really sees. */
 const GAMES = [
-  'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
-  'teleport_relay', 'gate_deck', 'oracle_detective',
+  'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
+  'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
 ];
 const SIMS = [
   'single_qubit_lab', 'shots_histogram_lab', 'circuit_lab', 'mach_zehnder_lab', 'two_qubit_lab', 'bell_chsh_explorer',
-  'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer',
+  'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer', 'noise_lab',
 ];
+/** The same lists from before Module 0 and Module 7 had their games and labs, to test a module whose activities are not built yet. */
+const GAMES_BEFORE = GAMES.filter((g) => g !== 'hype_check' && g !== 'qubit_surgeon');
+const SIMS_BEFORE = SIMS.filter((s) => s !== 'noise_lab');
 
 const flow = (id: string, games = GAMES, sims = SIMS) => lessonFlow(LESSON_BY_ID[id], games, sims);
 const steps = (id: string) => flow(id).stages.map((s) => s.step);
 const ids = (id: string, step: string) => flow(id).stages.find((s) => s.step === step)?.activities.map((a) => a.id);
 
 describe('Lesson flow: game, then video, then lab, then practice', () => {
+  it('the lists of built games and labs above are what the app really offers (App.tsx)', () => {
+    const app = readFileSync(fileURLToPath(new URL('../src/App.tsx', import.meta.url)), 'utf8');
+    const inApp = [...app.matchAll(/^    id: '([a-z_]+)',\s*$/gm)].map((m) => m[1]);
+    expect([...GAMES, ...SIMS].sort()).toEqual(inApp.sort());
+  });
+
   it('games default to discover (before the video) and labs to explore (after it)', () => {
     expect(roleOf({ kind: 'game', id: 'x' })).toBe('discover');
     expect(roleOf({ kind: 'sim', id: 'x' })).toBe('explore');
@@ -54,11 +65,21 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
     expect(ids('module_6', 'apply')).toEqual(['gate_deck']);
   });
 
+  it('Orientation opens with Hype Check, and Noise & Error Correction with Qubit Surgeon, then the video, then the Noise Lab', () => {
+    expect(steps('module_0')).toEqual(['discover', 'watch']);
+    expect(ids('module_0', 'discover')).toEqual(['hype_check']);
+    expect(flow('module_0').soon).toEqual([]);
+    expect(steps('module_7')).toEqual(['discover', 'watch', 'explore']);
+    expect(ids('module_7', 'discover')).toEqual(['qubit_surgeon']);
+    expect(ids('module_7', 'explore')).toEqual(['noise_lab']);
+    expect(flow('module_7').soon).toEqual([]);
+  });
+
   it('a module whose game is not built yet starts with its video and lists the game as coming soon', () => {
-    expect(steps('module_0')).toEqual(['watch']);
-    expect(flow('module_0').soon.map((a) => a.id)).toEqual(['hype_check']);
-    expect(steps('module_7')).toEqual(['watch']);
-    expect(flow('module_7').soon.map((a) => a.id)).toEqual(['qubit_surgeon', 'noise_lab']);
+    expect(flow('module_0', GAMES_BEFORE, SIMS_BEFORE).stages.map((s) => s.step)).toEqual(['watch']);
+    expect(flow('module_0', GAMES_BEFORE, SIMS_BEFORE).soon.map((a) => a.id)).toEqual(['hype_check']);
+    expect(flow('module_7', GAMES_BEFORE, SIMS_BEFORE).stages.map((s) => s.step)).toEqual(['watch']);
+    expect(flow('module_7', GAMES_BEFORE, SIMS_BEFORE).soon.map((a) => a.id)).toEqual(['qubit_surgeon', 'noise_lab']);
   });
 
   it('Part 2 and Part 3 lessons start with their video, and the unbuilt games and labs wait under "coming soon"', () => {

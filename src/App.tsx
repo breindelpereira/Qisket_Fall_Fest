@@ -16,6 +16,7 @@ import { useProgress } from './hooks/useProgress';
 import { HonestyTagBadge } from './components/shared/HonestyTag';
 import { DrQuantum } from './components/shared/DrQuantum';
 import type { HonestyTag } from './content/types';
+import { HypeCheck } from './components/games/HypeCheck';
 import { QuantumHeist } from './components/games/QuantumHeist';
 import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
 import { SchrodingersStealth } from './components/games/SchrodingersStealth';
@@ -25,6 +26,7 @@ import { AliceAndBob } from './components/games/AliceAndBob';
 import { TeleportRelay } from './components/games/TeleportRelay';
 import { GateDeck } from './components/games/GateDeck';
 import { OracleDetective } from './components/games/OracleDetective';
+import { QubitSurgeon } from './components/games/QubitSurgeon';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 import { ShotsHistogramLab } from './components/simulations/ShotsHistogramLab';
 import { CircuitLab } from './components/simulations/CircuitLab';
@@ -34,6 +36,7 @@ import { BellChshExplorer } from './components/simulations/BellChshExplorer';
 import { TeleportationLab } from './components/simulations/TeleportationLab';
 import { DeutschJozsaExplorer } from './components/simulations/DeutschJozsaExplorer';
 import { GroverExplorer } from './components/simulations/GroverExplorer';
+import { NoiseLab } from './components/simulations/NoiseLab';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { AfterGameSheet } from './components/learn/AfterGameSheet';
@@ -59,6 +62,17 @@ interface GameEntry {
 }
 
 const GAMES: GameEntry[] = [
+  {
+    id: 'hype_check',
+    title: 'Hype Check',
+    emoji: '🧐',
+    kicker: 'Card sort · 10 claims',
+    blurb: 'Quantum computing comes wrapped in big claims. Sort each one into real today, maybe someday, or hype, and find out why. No timer.',
+    tag: 'Simplified model',
+    btn: '',
+    accent: 'var(--yellow)',
+    Component: HypeCheck,
+  },
   {
     id: 'quantum_heist',
     title: 'Quantum Heist',
@@ -158,10 +172,17 @@ const GAMES: GameEntry[] = [
     accent: 'var(--mint)',
     Component: OracleDetective,
   },
-];
-
-const UPCOMING: { title: string; concept: string; tag: HonestyTag; phase: string }[] = [
-  { title: 'Qubit Surgeon', concept: 'Noise & Error Correction', tag: 'Simplified model', phase: 'Phase 7' },
+  {
+    id: 'qubit_surgeon',
+    title: 'Qubit Surgeon',
+    emoji: '🩺',
+    kicker: 'Error correction · 4 wards',
+    blurb: 'Find the flipped qubit by comparing qubits, never by looking at them, then flip it back. And see why two flips at once fool the code.',
+    tag: 'Simplified model',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: QubitSurgeon,
+  },
 ];
 
 const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
@@ -283,10 +304,17 @@ const SIMS: SimEntry[] = [
     accent: '#ff9f1c',
     Component: GroverExplorer,
   },
-];
-
-const UPCOMING_SIMS: { title: string; concept: string; tag: HonestyTag }[] = [
-  { title: 'Noise Lab', concept: 'Noise & Error Correction', tag: 'Simplified model' },
+  {
+    id: 'noise_lab',
+    title: 'Noise Lab',
+    emoji: '📉',
+    kicker: 'Noise · repetition code',
+    blurb: 'Turn up the noise and watch a group of qubits beat a single one, until the noise gets too high. Then find an error without reading the data.',
+    tag: 'Simplified model',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: NoiseLab,
+  },
 ];
 
 /** Labs that can be opened today. Games come from GAMES above; everything else in a lesson shows as "coming soon". */
@@ -543,21 +571,6 @@ export default function App() {
                   </article>
                 ))}
 
-                <div className="eyebrow" style={{ color: 'var(--text-tertiary)', marginTop: 6 }}>Coming soon</div>
-                {UPCOMING.map(g => (
-                  <div key={g.title} className="card" style={{
-                    padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.85,
-                  }}>
-                    <div>
-                      <div className="pixel" style={{ fontSize: '0.68rem', marginBottom: 6 }}>🔒 {g.title}</div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{g.concept}</div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-                      <HonestyTagBadge tag={g.tag} />
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-tertiary)' }}>{g.phase}</span>
-                    </div>
-                  </div>
-                ))}
               </>
             )}
           </div>
@@ -601,18 +614,6 @@ export default function App() {
                   </article>
                 ))}
 
-                <div className="eyebrow" style={{ color: 'var(--text-tertiary)', marginTop: 6 }}>Coming soon</div>
-                {UPCOMING_SIMS.map(x => (
-                  <div key={x.title} className="card" style={{
-                    padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.85,
-                  }}>
-                    <div>
-                      <div className="pixel" style={{ fontSize: '0.68rem', marginBottom: 6 }}>🔒 {x.title}</div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{x.concept}</div>
-                    </div>
-                    <HonestyTagBadge tag={x.tag} />
-                  </div>
-                ))}
               </>
             )}
           </div>

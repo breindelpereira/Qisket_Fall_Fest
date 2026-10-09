@@ -6,12 +6,12 @@ import {
 } from '../src/core/learn/start';
 
 const GAMES = [
-  'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
-  'teleport_relay', 'gate_deck', 'oracle_detective',
+  'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
+  'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
 ];
 const SIMS = [
   'single_qubit_lab', 'shots_histogram_lab', 'circuit_lab', 'mach_zehnder_lab', 'two_qubit_lab', 'bell_chsh_explorer',
-  'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer',
+  'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer', 'noise_lab',
 ];
 const offer = (id: string, games = GAMES, sims = SIMS) => startOffer(LESSON_BY_ID[id], games, sims);
 
@@ -23,6 +23,8 @@ describe('Starting a module: play first, or choose the video', () => {
     expect(offer('module_4')?.activity.id).toBe('photon_escape_room');
     expect(offer('module_5a')?.activity.id).toBe('alice_and_bob');
     expect(offer('module_6')?.activity.id).toBe('oracle_detective');
+    expect(offer('module_0')?.activity).toEqual({ kind: 'game', id: 'hype_check' });
+    expect(offer('module_7')?.activity).toEqual({ kind: 'game', id: 'qubit_surgeon' });
     expect(offer('module_1')?.canWatch).toBe(true);
   });
 
@@ -31,8 +33,9 @@ describe('Starting a module: play first, or choose the video', () => {
   });
 
   it('modules that already start with their video have nothing to choose', () => {
-    expect(offer('module_0')).toBeNull();
-    expect(offer('module_7')).toBeNull();
+    const before = (id: string) => offer(id, GAMES.filter((g) => g !== 'hype_check' && g !== 'qubit_surgeon'), SIMS.filter((s) => s !== 'noise_lab'));
+    expect(before('module_0')).toBeNull(); // until its game exists
+    expect(before('module_7')).toBeNull();
     for (const l of LESSONS.filter((x) => x.part !== 1)) expect(startOffer(l, GAMES, SIMS), l.id).toBeNull();
     expect(offer('module_1', [], [])).toBeNull(); // nothing built, so the video is the start
   });
@@ -97,6 +100,12 @@ describe('After a game: what to offer next', () => {
     expect(next('module_4', 'photon_escape_room')).toEqual({ kind: 'watch' });
     expect(next('module_5a', 'alice_and_bob')).toEqual({ kind: 'watch' });
     expect(next('module_6', 'oracle_detective')).toEqual({ kind: 'watch' });
+    expect(next('module_0', 'hype_check')).toEqual({ kind: 'watch' });
+    expect(next('module_7', 'qubit_surgeon')).toEqual({ kind: 'watch' });
+  });
+
+  it('after the Noise Lab, the last stage of Module 7, the quiz comes next', () => {
+    expect(next('module_7', 'noise_lab')).toEqual({ kind: 'quiz' });
   });
 
   it('after the practice game the quiz comes next', () => {
