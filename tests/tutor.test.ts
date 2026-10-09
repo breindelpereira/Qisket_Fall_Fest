@@ -309,6 +309,20 @@ describe('Tutor prompt', () => {
     expect(extractCitations('**Bold** idea [P1].', p.passages).answer).toBe('Bold idea.');
   });
 
+  it('removes tags the model made up, and keeps the real ones working', () => {
+    const p = buildPrompt(INDEX, req, hits);
+    const r = extractCitations('A qubit is a blend [Course Map Module 1] of states [P1]. It is later [LATER]. See [passages 1, 2].', p.passages);
+    expect(r.answer).toBe('A qubit is a blend of states. It is later. See.');
+    expect(r.sources).toHaveLength(1);
+  });
+
+  it('asks the model to mention an analogy once and to stop when the answer is complete', () => {
+    const { system } = buildPrompt(INDEX, req, hits);
+    expect(system).toContain('say so once, in a short phrase');
+    expect(system).toContain('Do not end with a question');
+    expect(system).toContain('never cite the COURSE MAP');
+  });
+
   it('keeps the course map small enough to send with every question', () => {
     const words = formatCourseMap(INDEX.courseMap, 0).split(/\s+/).length;
     expect(words).toBeLessThan(900);
