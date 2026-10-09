@@ -634,10 +634,27 @@ describe('The app side: asking, falling back, and remembering choices', () => {
     expect(await askTutor({ ...base, fetchImpl: json(200, reply) })).toMatchObject({ answer: 'From the model', provider: 'gemini' });
   });
 
-  it('answers from a prepared answer first, even with no network', async () => {
-    const f = vi.fn(() => Promise.reject(new Error('offline')));
-    const r = await askTutor({ ...base, request: { ...request, question: 'What is a qubit?', order: 3 }, fetchImpl: f as unknown as typeof fetch });
-    expect(r.provider).toBe('prepared');
+  it('lets the online tutor answer even a question that has a pre-written answer', async () => {
+    const reply = { answer: 'From the model', sources: [], provider: 'gemini' };
+    const f = json(200, reply);
+    const r = await askTutor({ ...base, request: { ...request, question: 'What is a qubit?', order: 3 }, fetchImpl: f });
+    expect(r).toMatchObject({ provider: 'gemini', answer: 'From the model' });
+    expect(f).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the pre-written answer when the online tutor cannot be reached, so a demo works without a network', async () => {
+    const down = vi.fn(() => Promise.reject(new Error('offline')));
+    const r = await askTutor({ ...base, request: { ...request, question: 'What is a qubit?', order: 3 }, fetchImpl: down as unknown as typeof fetch });
+    expect(r).toMatchObject({ provider: 'prepared', reason: 'unavailable' });
+    expect(r.answer).toMatch(/quantum version of a bit/);
+    const busy = await askTutor({ ...base, request: { ...request, question: 'What is a qubit?', order: 3 }, fetchImpl: json(429, {}) });
+    expect(busy).toMatchObject({ provider: 'prepared', reason: 'busy' });
+  });
+
+  it('uses the pre-written answer, without the network, when the learner chose offline', async () => {
+    const f = vi.fn();
+    const r = await askTutor({ ...base, online: false, request: { ...request, question: 'What is a qubit?', order: 3 }, fetchImpl: f as unknown as typeof fetch });
+    expect(r).toMatchObject({ provider: 'prepared', reason: 'off' });
     expect(f).not.toHaveBeenCalled();
   });
 

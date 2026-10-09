@@ -44,7 +44,11 @@ const bubble = { borderRadius: 18, padding: '10px 14px', fontSize: '0.92rem', li
 function provenance(m: Message): string | null {
   if (m.role !== 'tutor') return null;
   if (m.provider === 'gemini') return 'AI answer from the course notes. If it seems off, check the lesson.';
-  if (m.provider === 'prepared') return 'Prepared answer from the course notes.';
+  if (m.provider === 'prepared') {
+    if (m.reason === 'rate_limited' || m.reason === 'busy') return 'The online tutor is busy right now, so this is a prepared answer from the course notes.';
+    if (m.reason === 'unavailable') return 'Could not reach the online tutor, so this is a prepared answer from the course notes.';
+    return 'Prepared answer from the course notes.';
+  }
   if (m.reason === 'off') return 'From the notes on your device (online tutor is off).';
   if (m.reason === 'rate_limited' || m.reason === 'busy') return 'The online tutor is busy right now, so this comes straight from the notes.';
   return 'From the notes on your device (could not reach the online tutor).';

@@ -36,16 +36,18 @@ export function readReply(raw: unknown): TutorResponse | null {
 }
 
 /**
- * Gets an answer for one question. Order: a pre-written answer if the question is one we expect, then the online tutor
- * (only if the learner allowed it), then the notes on the device. This never throws and always returns something useful.
+ * Gets an answer for one question. Greetings are answered on the spot. Otherwise the online tutor answers when the learner
+ * allowed it; if it is off or cannot be reached, a pre-written answer is used for the questions we expect (so a demo still
+ * works without a network), and for anything else the best passage from the notes on the device.
+ * This never throws and always returns something useful.
  */
 export async function askTutor(ctx: AskContext): Promise<TutorResponse> {
   const { request, index, searcher } = ctx;
-  const prepared = matchPrepared(ctx.prepared, request.question, request.order, index);
-  if (prepared) return prepared;
   if (isSmallTalk(request.question)) return smallTalkAnswer(request, index);
 
-  const fallback = (reason: TutorResponse['reason']): TutorResponse => ({ ...offlineAnswer(searcher, request, index), reason });
+  const prepared = matchPrepared(ctx.prepared, request.question, request.order, index);
+  const fallback = (reason: TutorResponse['reason']): TutorResponse =>
+    prepared ? { ...prepared, reason } : { ...offlineAnswer(searcher, request, index), reason };
   if (!ctx.online) return fallback('off');
   if (!ctx.url) return fallback('unavailable');
 

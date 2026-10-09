@@ -7,7 +7,7 @@ Dr Quantum answers only from the files in this folder (the AI tutor never makes 
 | File | What it is | Edit by hand? |
 | --- | --- | --- |
 | `notes/<lessonId>.md` | Richer notes for one lesson: worked examples, FAQs, mix-ups, key words. | Yes |
-| `demo-answers.json` | Pre-written answers for questions we expect in a demo. Shown instantly, with no network. | Yes |
+| `demo-answers.json` | Pre-written answers for questions we expect in a demo. Used when the online tutor is off or cannot be reached, so a demo still works without a network. | Yes |
 | `eval-questions.json` | The 20-question test set. | Yes |
 | `index.json` | Everything above plus the lesson text, split into passages. | **No**: run `npm run tutor:index` |
 
