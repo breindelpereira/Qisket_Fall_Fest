@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Qisket: a mobile-first quantum computing learning app (React 19 + TypeScript + Vite, wrapped for Android with Capacitor 7). Games and simulations run on custom in-repo TypeScript physics engines (no quantum library). `RULES.md` (mirrored in `.gemini/rules.md`) is the project rulebook; `Plan/Implementation_Plan.md` holds the roadmap.
+Qisket: a mobile-first quantum computing learning app (React 19 + TypeScript + Vite, wrapped for Android with Capacitor 7). Games and simulations run on custom in-repo TypeScript physics engines (no quantum library). `RULES.md` (mirrored in `.gemini/rules.md`) is the project rulebook; `Plan/Implementation_Plan.md` holds the roadmap, and `Plan/Parts_2_and_3_Build_Plan.md` is the detailed plan for the unbuilt Part 2 games and labs, the Part 3 practice and the tutor notes for both.
 
 ## Commands
 
