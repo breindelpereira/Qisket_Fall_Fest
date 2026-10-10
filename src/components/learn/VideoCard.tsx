@@ -338,7 +338,7 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
                 <span className="retro-num" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>{formatClock(position.total)}</span>
               </div>
             )}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               <button
                 className="btn"
                 onClick={toggle}

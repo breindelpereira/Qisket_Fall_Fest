@@ -1,7 +1,10 @@
 package com.qisket.app;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.view.Window;
+import android.view.WindowManager;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -29,6 +32,15 @@ public class ImmersivePlugin extends Plugin {
         activity.runOnUiThread(() -> {
             Window window = activity.getWindow();
             WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+            // landscape while a video is full screen (like any video app); back to the phone's own setting afterwards
+            activity.setRequestedOrientation(on ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams attributes = window.getAttributes();
+                attributes.layoutInDisplayCutoutMode = on
+                    ? WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    : WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+                window.setAttributes(attributes);
+            }
             if (on) {
                 controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 controller.hide(WindowInsetsCompat.Type.systemBars());

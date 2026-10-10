@@ -21,7 +21,11 @@ public class MainActivity extends BridgeActivity {
         // (including the tutor's question box). This does the same job and also lifts the page above the keyboard.
         View webView = getBridge().getWebView();
         ViewCompat.setOnApplyWindowInsetsListener(webView, (v, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            // While the bars are hidden for full-screen video the page may use the whole screen, notch included
+            boolean barsShown = windowInsets.isVisible(WindowInsetsCompat.Type.statusBars());
+            Insets bars = barsShown
+                ? windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout())
+                : Insets.NONE;
             Insets keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
             ViewGroup.MarginLayoutParams margins = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             margins.leftMargin = bars.left;
