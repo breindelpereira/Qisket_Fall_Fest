@@ -172,6 +172,11 @@ const BOOSTS = { misconception: 1.2, faq: 1.15 } as const;
 const NOTES_BOOST = 1.1;
 /** What the learner is playing right now is what a doubt is most likely about. */
 const ACTIVITY_BOOST = 1.5;
+/**
+ * Passages from earlier modules win near-ties: a word like "qubit" is in nearly every passage, and the basics should come
+ * before a specialist module that merely mentions it. A small share of the score per lesson, so it never beats a real match.
+ */
+const EARLIER_FIRST = 0.004;
 /** A passage must score at least this share of the best one, or it is only noise. */
 const RELATIVE_FLOOR = 0.25;
 
@@ -224,6 +229,7 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
           score += weight * idf(term) * ((f * (K1 + 1)) / (f + K1 * (1 - B + (B * d.length) / avgLength)));
         }
         if (score <= 0) continue;
+        if (!c.activityId) score *= 1 - EARLIER_FIRST * c.order;
         if (c.activityId) score *= ACTIVITY_BOOST;
         else if (c.lessonId === focusLessonId) score *= FOCUS_BOOST;
         if (c.kind === 'misconception') score *= BOOSTS.misconception;

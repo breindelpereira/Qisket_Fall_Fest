@@ -31,7 +31,10 @@ const EARLY_GOOD_ENOUGH = 2;
  * must contain clearly less of it (a single shared word like "algorithm" does not count). `best` is the best early match, if any.
  */
 export function laterTopic(searcher: Searcher, input: OfflineInput, best?: SearchHit): SearchHit | undefined {
-  const [later] = searcher.search(input.question, { maxOrder: Number.MAX_SAFE_INTEGER, minOrder: input.order + 1, allowPart3: true, limit: 1 });
+  const where = { maxOrder: Number.MAX_SAFE_INTEGER, minOrder: input.order + 1, limit: 1 };
+  // point at the main course first: the Math Companion only when nothing else later matches
+  const [main] = searcher.search(input.question, { ...where, allowPart3: false });
+  const [later] = main && main.coverage >= LATER_MIN_COVERAGE ? [main] : searcher.search(input.question, { ...where, allowPart3: true });
   if (!later || later.coverage < LATER_MIN_COVERAGE) return undefined;
   if (!best) return later;
   // pointing a beginner at the Math Companion is only worth it when nothing in the course so far matches
@@ -78,7 +81,8 @@ export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: Tu
     activity,
     input.question,
   );
-  const later = laterTopic(searcher, input, top);
+  // a question about the game on screen is never "covered later"
+  const later = top?.chunk.activityId ? undefined : laterTopic(searcher, input, top);
   if (later) return laterAnswer(later, index);
   if (top) {
     const c = top.chunk;
