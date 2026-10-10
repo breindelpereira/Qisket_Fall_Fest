@@ -208,6 +208,8 @@ export const SingleQubitLab: React.FC = () => {
           <button
             onClick={() => setShowFieldGuide(!showFieldGuide)}
             style={{
+              minHeight: 44,
+              padding: '0 4px',
               background: 'transparent',
               color: 'var(--accent-cyan)',
               fontSize: '0.72rem',
@@ -368,7 +370,8 @@ export const SingleQubitLab: React.FC = () => {
                 background: '#fff',
                 color: '#15803d',
                 borderRadius: 8,
-                padding: '4px 10px',
+                padding: '4px 12px',
+                minHeight: 44,
                 fontSize: '0.72rem',
                 fontWeight: 700
               }}
@@ -487,6 +490,7 @@ export const SingleQubitLab: React.FC = () => {
                 background: 'linear-gradient(135deg, #00d2ff 0%, #8a3ffc 100%)',
                 color: '#2a0f5c',
                 padding: '6px 12px',
+                minHeight: 44,
                 borderRadius: 8,
                 fontSize: '0.72rem',
                 fontWeight: 800,
@@ -552,6 +556,7 @@ export const SingleQubitLab: React.FC = () => {
             }}
             style={{
               padding: '8px 6px',
+              minHeight: 44,
               borderRadius: 10,
               background: activeExperiment === 'superposition' ? 'rgba(0, 210, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'superposition' ? 'var(--accent-cyan)' : 'transparent'}`,
@@ -570,6 +575,7 @@ export const SingleQubitLab: React.FC = () => {
             }}
             style={{
               padding: '8px 6px',
+              minHeight: 44,
               borderRadius: 10,
               background: activeExperiment === 'phase' ? 'rgba(138, 63, 252, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'phase' ? '#c084fc' : 'transparent'}`,
@@ -588,6 +594,7 @@ export const SingleQubitLab: React.FC = () => {
             }}
             style={{
               padding: '8px 6px',
+              minHeight: 44,
               borderRadius: 10,
               background: activeExperiment === 'bitflip' ? 'rgba(255, 64, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
               border: `1px solid ${activeExperiment === 'bitflip' ? 'var(--accent-pink)' : 'transparent'}`,
@@ -684,6 +691,7 @@ export const SingleQubitLab: React.FC = () => {
                 border: '1px solid var(--border-subtle)',
                 color: '#fff',
                 padding: '8px 0',
+                minHeight: 44,
                 borderRadius: 10,
                 fontSize: '0.8rem',
                 fontWeight: 700,
@@ -720,6 +728,7 @@ export const SingleQubitLab: React.FC = () => {
                 background: 'linear-gradient(135deg, rgba(0, 210, 255, 0.12), rgba(138, 63, 252, 0.12))',
                 border: '1px solid var(--border-subtle)',
                 padding: '8px 4px',
+                minHeight: 44,
                 borderRadius: 12,
                 display: 'flex',
                 flexDirection: 'column',
@@ -766,7 +775,8 @@ export const SingleQubitLab: React.FC = () => {
               setShotsResult(null);
               setTheta(parseFloat(e.target.value));
             }}
-            style={{ width: '100%', accentColor: 'var(--accent-cyan)' }}
+            aria-label="Latitude, theta, in radians"
+            style={{ width: '100%', height: 44, accentColor: 'var(--accent-cyan)' }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#b9a6e8', marginTop: 2 }}>
             <span>0° = North |0⟩</span>
@@ -791,7 +801,8 @@ export const SingleQubitLab: React.FC = () => {
               setShotsResult(null);
               setPhi(parseFloat(e.target.value));
             }}
-            style={{ width: '100%', accentColor: 'var(--accent-pink)' }}
+            aria-label="Longitude, phi, in radians"
+            style={{ width: '100%', height: 44, accentColor: 'var(--accent-pink)' }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#b9a6e8', marginTop: 2 }}>
             <span>-180° = |−⟩</span>
@@ -809,6 +820,7 @@ export const SingleQubitLab: React.FC = () => {
           style={{
             flex: 1,
             padding: '12px',
+            minHeight: 44,
             borderRadius: 12,
             background: challengeMode ? 'rgba(251, 191, 36, 0.15)' : 'var(--bg-surface)',
             border: `1px solid ${challengeMode ? '#fbbf24' : 'var(--border-subtle)'}`,
@@ -829,6 +841,8 @@ export const SingleQubitLab: React.FC = () => {
           onClick={() => { setTheta(0); setPhi(0); setShotsResult(null); }}
           style={{
             padding: '12px',
+            minWidth: 48,
+            minHeight: 44,
             borderRadius: 12,
             background: 'var(--bg-surface)',
             border: '1px solid var(--border-subtle)',
@@ -838,6 +852,7 @@ export const SingleQubitLab: React.FC = () => {
             justifyContent: 'center'
           }}
           title="Reset to |0>"
+          aria-label="Reset to |0>"
         >
           <RotateCcw size={16} />
         </button>

@@ -1,3 +1,5 @@
+import { QUIZ_PASS_SCORE } from '../content/quizzes';
+
 export type MasteryTier = 'locked' | 'familiar' | 'explored' | 'mastered';
 
 export interface ProgressState {
@@ -84,12 +86,12 @@ export function bestConceptQuizScore(conceptId: string, state: ProgressState): n
  * Evaluates mastery tier for a concept based on user evidence:
  * - Familiar: completed relevant game
  * - Explored: completed simulation task
- * - Mastered: quiz score >= 80% AND simulation task run
+ * - Mastered: quiz passed (the course pass mark, 70%) AND simulation task run
  */
 export function deriveConceptMastery(
   conceptId: string,
   state: ProgressState,
-  quizThreshold = 0.8
+  quizThreshold = QUIZ_PASS_SCORE
 ): MasteryTier {
   const hasGame = (state.conceptGames[conceptId]?.length ?? 0) > 0;
   const hasSim = (state.conceptSims[conceptId]?.length ?? 0) > 0;

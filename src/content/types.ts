@@ -32,7 +32,7 @@ export interface QuizQuestion {
 export interface QuizRecord {
   id: string;
   lessonId: string;
-  passingScore: number; // e.g. 0.8 (80%)
+  passingScore: number; // e.g. 0.7 (70%)
   questions: QuizQuestion[];
 }
 

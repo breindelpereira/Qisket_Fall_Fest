@@ -2,9 +2,10 @@ import type { QuizRecord } from './types';
 
 /**
  * Quizzes from the course content in /Questions (the cleaned PDF), one per module plus the Part 2 and Part 3 quizzes.
- * Every quiz uses the plan's 80% mastery threshold as its passing score.
+ * Every quiz uses the same passing score: 70% (the team's decision; it was 80% at first). In practice a 3-question quiz
+ * needs every answer right, a 4- or 5-question quiz allows one miss for 4 and 5 questions respectively, and so on.
  */
-export const QUIZ_PASS_SCORE = 0.8;
+export const QUIZ_PASS_SCORE = 0.7;
 
 export const QUIZZES: Record<string, QuizRecord> = {
   quiz_module_0: {

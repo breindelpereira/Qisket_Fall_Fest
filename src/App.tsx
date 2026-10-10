@@ -45,7 +45,8 @@ import { tutorPosition } from './core/tutor/position';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
 import { ProgressStore } from './utils/progressStore';
 import { startOffer } from './core/learn/start';
-import { courseProgressPercent, moduleEyebrow, nextUpLesson } from './core/learn/curriculum';
+import { courseProgressPercent, moduleEyebrow, nextUpLesson, partProgress } from './core/learn/curriculum';
+import { passes } from './core/learn/quiz';
 
 type Tab = 'home' | 'learn' | 'games' | 'sims';
 
@@ -337,14 +338,14 @@ export default function App() {
 
   const { progress } = useProgress();
 
-  const masteryValues = Object.values(progress.conceptMastery);
-  const familiarCount = masteryValues.filter(m => m === 'familiar').length;
-  const exploredCount = masteryValues.filter(m => m === 'explored').length;
-  const masteredCount = masteryValues.filter(m => m === 'mastered').length;
+  // Progress counts quizzes: a module is done when its quiz is passed
+  const quizzesPassed = Object.entries(QUIZZES).filter(([id, quiz]) => progress.quizScores[id] !== undefined && passes(quiz, progress.quizScores[id])).length;
+  const modulesDone = partProgress(LESSONS, QUIZZES, progress).done;
+  const activitiesTried = new Set([...progress.completedGames, ...progress.exploredSims]).size;
 
   const progressPercent = courseProgressPercent(LESSONS, QUIZZES, progress);
   const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
-  const started = progressPercent > 0 || familiarCount > 0 || Object.keys(progress.quizScores).length > 0;
+  const started = progressPercent > 0 || activitiesTried > 0 || Object.keys(progress.quizScores).length > 0;
 
   // The lesson the tutor should treat as current: the lesson or quiz that is open, or the one a game was opened from
   const openLessonId =
@@ -394,9 +395,9 @@ export default function App() {
   const activeSim = SIMS.find(x => x.id === selectedSim);
 
   const stats = [
-    { label: 'Familiar', value: familiarCount, icon: Star, color: 'var(--yellow)' },
-    { label: 'Explored', value: exploredCount, icon: Compass, color: 'var(--sky)' },
-    { label: 'Mastered', value: masteredCount, icon: Trophy, color: 'var(--mint)' },
+    { label: 'Quizzes passed', value: quizzesPassed, icon: Star, color: 'var(--yellow)' },
+    { label: 'Modules done', value: modulesDone, icon: Trophy, color: 'var(--mint)' },
+    { label: 'Games & labs', value: activitiesTried, icon: Compass, color: 'var(--sky)' },
   ];
 
   return (
@@ -439,7 +440,7 @@ export default function App() {
                     position: 'absolute', left: -8, top: 28, width: 16, height: 16,
                     background: '#fff', transform: 'rotate(45deg)', borderRadius: 3,
                   }} />
-                  {familiarCount > 0
+                  {activitiesTried > 0
                     ? "Nice work, agent! Let's keep bending reality."
                     : "Hi, I'm Dr Quantum! Ready to bend reality?"}
                 </div>
@@ -478,7 +479,7 @@ export default function App() {
                   <div key={label} style={{
                     background: 'rgba(0, 0, 0, 0.22)', borderRadius: 16, padding: '10px 6px', textAlign: 'center',
                   }}>
-                    <Icon size={22} color={color} fill={label === 'Familiar' ? color : 'none'} />
+                    <Icon size={22} color={color} fill={label === 'Quizzes passed' ? color : 'none'} />
                     <div className="retro-num" style={{ fontSize: '2rem' }}>{value}</div>
                     <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>{label}</div>
                   </div>

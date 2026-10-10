@@ -29,12 +29,12 @@ describe('Phase 1 Progress & Persistence Test Gate', () => {
     state = ProgressStore.recordSimulationRun('single_qubit_lab', concept);
     expect(state.conceptMastery[concept]).toBe('explored');
 
-    // 4. Pass quiz with score < 80% -> remains Explored
-    state = ProgressStore.recordQuizScore('quiz_module_1', concept, 0.7);
+    // 4. Quiz score below the 70% pass mark -> remains Explored
+    state = ProgressStore.recordQuizScore('quiz_module_1', concept, 0.6);
     expect(state.conceptMastery[concept]).toBe('explored');
 
-    // 5. Pass quiz with score >= 80% (0.85) -> Mastered!
-    state = ProgressStore.recordQuizScore('quiz_module_1', concept, 0.85);
+    // 5. Quiz score at or above the pass mark (0.75) -> Mastered!
+    state = ProgressStore.recordQuizScore('quiz_module_1', concept, 0.75);
     expect(state.conceptMastery[concept]).toBe('mastered');
   });
 

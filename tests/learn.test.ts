@@ -397,12 +397,12 @@ describe('Learn content: quiz answers agree with the physics engines', () => {
 });
 
 describe('Quiz grading', () => {
-  it('needs every answer for 3- and 4-question quizzes at the 80% pass mark, and 4 of 5 for 5', () => {
+  it('needs every answer for a 3-question quiz at the 70% pass mark, 3 of 4, and 4 of 5', () => {
     expect(neededToPass(QUIZZES.quiz_module_0)).toBe(3);
-    expect(neededToPass(QUIZZES.quiz_module_1)).toBe(4);
+    expect(neededToPass(QUIZZES.quiz_module_1)).toBe(3);
     expect(neededToPass(QUIZZES.quiz_module_2)).toBe(4);
-    expect(neededToPass(QUIZZES.quiz_hardware)).toBe(8);
-    expect(neededToPass(QUIZZES.quiz_math)).toBe(7);
+    expect(neededToPass(QUIZZES.quiz_hardware)).toBe(7);
+    expect(neededToPass(QUIZZES.quiz_math)).toBe(6);
   });
 
   it('grades a perfect attempt, a partial attempt and unanswered questions', () => {
@@ -426,14 +426,25 @@ describe('Quiz grading', () => {
     expect(blank).toMatchObject({ correct: 0, score: 0, passed: false });
   });
 
-  it('one miss fails a 4-question quiz at 80%', () => {
+  it('one miss still passes a 4-question quiz at 70%, and two do not', () => {
     const quiz = QUIZZES.quiz_module_1;
     const answers = quiz.questions.map((q) => q.correctIndex);
-    answers[3] = 3;
+    answers[3] = (answers[3] + 1) % 4;
+    expect(gradeQuiz(quiz, answers)).toMatchObject({ correct: 3, passed: true });
+    answers[2] = (answers[2] + 1) % 4;
     expect(gradeQuiz(quiz, answers).passed).toBe(false);
   });
 
-  it('passes() treats exactly 80% as a pass, despite floating point', () => {
+  it('one miss fails a 3-question quiz, because 2 of 3 is below 70%', () => {
+    const quiz = QUIZZES.quiz_module_0;
+    const answers = quiz.questions.map((q) => q.correctIndex);
+    answers[0] = (answers[0] + 1) % 4;
+    expect(gradeQuiz(quiz, answers).passed).toBe(false);
+  });
+
+  it('passes() treats exactly 70% as a pass, despite floating point', () => {
+    expect(passes(QUIZZES.quiz_module_2, 0.7)).toBe(true);
+    expect(passes(QUIZZES.quiz_module_2, 0.69)).toBe(false);
     expect(passes(QUIZZES.quiz_module_2, 4 / 5)).toBe(true);
     expect(passes(QUIZZES.quiz_module_2, 3 / 5)).toBe(false);
   });
@@ -534,9 +545,9 @@ describe('Curriculum progress', () => {
 describe('Quiz pass rule wording', () => {
   it('says "all N" when every answer is needed and "X of N" otherwise', () => {
     expect(passRule(QUIZZES.quiz_module_0)).toBe('all 3');
-    expect(passRule(QUIZZES.quiz_module_1)).toBe('all 4');
+    expect(passRule(QUIZZES.quiz_module_1)).toBe('3 of 4');
     expect(passRule(QUIZZES.quiz_module_2)).toBe('4 of 5');
-    expect(passRule(QUIZZES.quiz_hardware)).toBe('8 of 9');
-    expect(passRule(QUIZZES.quiz_math)).toBe('7 of 8');
+    expect(passRule(QUIZZES.quiz_hardware)).toBe('7 of 9');
+    expect(passRule(QUIZZES.quiz_math)).toBe('6 of 8');
   });
 });
