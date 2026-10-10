@@ -46,7 +46,7 @@ Open the address it prints (usually http://localhost:5173). The app works fully 
 
 ### Optional: the online AI tutor
 
-Copy `.env.example` to `.env.local` and set `VITE_TUTOR_URL` to the team's tutor function address (ask a maintainer; it is not stored in the repo). The Gemini key never goes in this repo or in the app: it lives only in the Cloudflare Worker (see `worker/README.md`).
+It works out of the box: the app already points at the team's tutor function. To use your own, or to run offline only, put `VITE_TUTOR_URL=<address>` (or an empty value) in `.env.local`. The Gemini key never goes in this repo or in the app: it lives only in the Cloudflare Worker (see `worker/README.md`). The Worker limits requests per person and per day, and the app falls back to answers from the notes on the device if the limit is reached.
 
 ## Everyday commands
 

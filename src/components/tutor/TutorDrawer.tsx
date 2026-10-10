@@ -44,8 +44,15 @@ interface Message {
   reason?: TutorResponse['reason'];
 }
 
-/** Address of the deployed tutor function. Empty when this build has none, and then the tutor answers from the notes on the device. */
-const TUTOR_URL = (import.meta.env.VITE_TUTOR_URL as string | undefined)?.trim() ?? '';
+/**
+ * The team's deployed tutor function, used when the build does not set VITE_TUTOR_URL, so a fresh clone and a hosted build
+ * both get the online tutor. The address is not a secret: the Gemini key lives only in the Worker, which also limits
+ * requests per person and per day. Set VITE_TUTOR_URL to something else to point at another function, or to an empty
+ * value to run offline only.
+ */
+const DEFAULT_TUTOR_URL = 'https://qisket-tutor.qisket-fallfest.workers.dev/api/tutor';
+const configured = import.meta.env.VITE_TUTOR_URL as string | undefined;
+const TUTOR_URL = configured === undefined ? DEFAULT_TUTOR_URL : configured.trim();
 
 const newChatId = (): string => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
