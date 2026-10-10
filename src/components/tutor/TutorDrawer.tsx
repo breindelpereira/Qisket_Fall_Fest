@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, SlidersHorizontal, X } from 'lucide-react';
 import { DrQuantum } from '../shared/DrQuantum';
 import { ACTIVITIES } from '../../content/activities';
 import { activityStore } from '../../core/tutor/activityStore';
@@ -109,6 +109,8 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
   // the game the learner is playing or has just left, and whether the tutor may be told about it
   const [activity, setActivity] = useState<ActivityRef | null>(null);
   const [shareGame, setShareGame] = useState(true);
+  // level, online switch, saved, history and chat tools live behind one button, so the conversation gets the room
+  const [menuOpen, setMenuOpen] = useState(false);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nextId = useRef(1);
   const listRef = useRef<HTMLDivElement>(null);
@@ -325,13 +327,25 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
               </div>
             </div>
           </div>
-          <button
-            aria-label="Close tutor"
-            onClick={onClose}
-            style={{ background: 'rgba(255, 255, 255, 0.14)', borderRadius: '50%', width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
-          >
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            {!inSaved && (
+              <button
+                aria-label="Tutor settings and tools"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((v) => !v)}
+                style={{ background: menuOpen ? 'var(--yellow)' : 'rgba(255, 255, 255, 0.14)', color: menuOpen ? 'var(--ink)' : '#fff', borderRadius: '50%', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <SlidersHorizontal size={20} />
+              </button>
+            )}
+            <button
+              aria-label="Close tutor"
+              onClick={onClose}
+              style={{ background: 'rgba(255, 255, 255, 0.14)', borderRadius: '50%', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {inSaved ? (
@@ -358,67 +372,86 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
           </>
         ) : (
           <>
-            {messages.length === 0 && (
-              <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.4 }}>
-                I only use the course notes up to {reached ? reached.where : 'where you are'}, so later modules stay a surprise.
-              </div>
-            )}
-
-            <div role="radiogroup" aria-label="How much detail" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {TUTOR_LEVELS.map((l) => (
-                <button
-                  key={l}
-                  role="radio"
-                  aria-checked={level === l}
-                  className="chip"
-                  onClick={() => pickLevel(l)}
-                  style={{
-                    flex: '1 1 auto', justifyContent: 'center', padding: '8px 6px', fontSize: '0.54rem',
-                    background: level === l ? 'var(--yellow)' : undefined, color: level === l ? 'var(--ink)' : undefined,
-                    borderColor: level === l ? 'var(--yellow-edge)' : undefined,
-                  }}
-                >
-                  {level === l ? '✓ ' : ''}{LEVEL_LABELS[l]}
-                </button>
-              ))}
-            </div>
-
-            {focus && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255, 210, 63, 0.12)', border: '2px solid var(--yellow)', borderRadius: 14, padding: '6px 6px 6px 12px' }}>
-                <FileText size={16} color="var(--yellow)" style={{ flexShrink: 0 }} />
-                <span style={{ flex: 1, minWidth: 0, fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.35, overflowWrap: 'anywhere' }}>
-                  Asking about: {focus.label}
-                </span>
-                <button
-                  aria-label="Stop asking about this part"
-                  onClick={onClearFocus}
-                  style={{ background: 'rgba(255, 255, 255, 0.14)', borderRadius: '50%', width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-            )}
-
-            {activity && gameTitle && !inQuiz && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
-                <button
-                  role="switch"
-                  aria-checked={shareGame}
-                  className="chip"
-                  onClick={() => setShareGame((v) => !v)}
-                  style={{ ...textChip, ...(shareGame ? { background: 'var(--mint)', color: 'var(--ink)', borderColor: 'var(--mint-edge)' } : {}) }}
-                >
-                  <Gamepad2 size={16} style={{ flexShrink: 0 }} />
-                  <span>
-                    {gameTitle}: {(isLab ? LAB_STATUS_WORDS : GAME_STATUS_WORDS)[activity.status]} · {shareGame ? 'sharing ON' : 'sharing OFF'}
+            {menuOpen && !needsChoice && (
+              <div className="card" style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div className="eyebrow">How much detail</div>
+                <div role="radiogroup" aria-label="How much detail" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {TUTOR_LEVELS.map((l) => (
+                    <button
+                      key={l}
+                      role="radio"
+                      aria-checked={level === l}
+                      className="chip"
+                      onClick={() => pickLevel(l)}
+                      style={{
+                        flex: '1 1 auto', justifyContent: 'center', padding: '8px 6px', fontSize: '0.54rem',
+                        background: level === l ? 'var(--yellow)' : undefined, color: level === l ? 'var(--ink)' : undefined,
+                        borderColor: level === l ? 'var(--yellow-edge)' : undefined,
+                      }}
+                    >
+                      {level === l ? '✓ ' : ''}{LEVEL_LABELS[l]}
+                    </button>
+                  ))}
+                </div>
+                {TUTOR_URL ? (
+                  <button role="switch" aria-checked={consent === 'online'} className="chip" onClick={() => choose(consent === 'online' ? 'offline' : 'online')} style={{ ...toolChip, alignSelf: 'flex-start' }}>
+                    Online tutor: {consent === 'online' ? 'ON' : 'OFF'}
+                  </button>
+                ) : (
+                  <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', fontWeight: 600, lineHeight: 1.35 }}>
+                    No online tutor in this build, so answers come from the notes on your device.
                   </span>
-                </button>
-                {messages.length === 0 && (
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.4 }}>
-                    {shareGame
-                      ? `I can see what is on your ${isLab ? 'lab' : 'game'} screen (the level or the settings), so just ask your doubt. Tap to stop sharing it.`
-                      : `Not sharing your ${isLab ? 'lab' : 'game'} screen. Tap to share it again.`}
+                )}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  <button className="chip" onClick={() => { setMenuOpen(false); openKept('saved'); }} style={toolChip}>
+                    <Library size={14} /><span>Saved ({saved.length})</span>
+                  </button>
+                  <button className="chip" onClick={() => { setMenuOpen(false); openKept('history'); }} style={toolChip}>
+                    <HistoryIcon size={14} /><span>History ({pastChats.length})</span>
+                  </button>
+                  {messages.length >= 2 && (
+                    <button className="chip" onClick={() => { saveChat(); setMenuOpen(false); }} style={toolChip}>
+                      <Save size={14} /><span>Save chat</span>
+                    </button>
+                  )}
+                  {messages.length > 0 && (
+                    <button className="chip" onClick={() => { newChat(); setMenuOpen(false); }} style={toolChip}>
+                      <Plus size={14} /><span>New chat</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {(focus || (activity && gameTitle && !inQuiz)) && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {focus && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255, 210, 63, 0.12)', border: '2px solid var(--yellow)', borderRadius: 14, padding: '0 0 0 10px', maxWidth: '100%', minWidth: 0 }}>
+                    <FileText size={14} color="var(--yellow)" style={{ flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>
+                      {focus.label}
+                    </span>
+                    <button
+                      aria-label="Stop asking about this part"
+                      onClick={onClearFocus}
+                      style={{ width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', background: 'transparent' }}
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
+                )}
+                {activity && gameTitle && !inQuiz && (
+                  <button
+                    role="switch"
+                    aria-checked={shareGame}
+                    aria-label={`${shareGame ? 'Sharing' : 'Not sharing'} your ${isLab ? 'lab' : 'game'} screen with the tutor. Tap to change.`}
+                    className="chip"
+                    onClick={() => setShareGame((v) => !v)}
+                    style={{ ...textChip, fontSize: '0.72rem', maxWidth: '100%', ...(shareGame ? { background: 'var(--mint)', color: 'var(--ink)', borderColor: 'var(--mint-edge)' } : {}) }}
+                  >
+                    <Gamepad2 size={14} style={{ flexShrink: 0 }} />
+                    <span>{gameTitle} · {(isLab ? LAB_STATUS_WORDS : GAME_STATUS_WORDS)[activity.status]}{shareGame ? '' : ' · not shared'}</span>
+                  </button>
                 )}
               </div>
             )}
@@ -439,7 +472,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
             <div ref={listRef} role="log" aria-live="polite" aria-label="Conversation" style={{ flex: 1, minHeight: 0, overflowY: 'auto', position: 'relative', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {messages.length === 0 && (
                 <div style={{ ...bubble, background: '#fff', color: 'var(--ink)', alignSelf: 'flex-start', maxWidth: '92%' }}>
-                  Hi! Ask me anything about the lessons you have reached. I answer from the course notes, and I tell you where each answer comes from.
+                  Hi! Ask me anything about the lessons up to {reached ? reached.where : 'where you are'}. I answer from the course notes and tell you where each answer comes from. Later modules stay a surprise.
                 </div>
               )}
               {messages.map((m, index) => {
@@ -449,9 +482,9 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
                   <div key={m.id} data-msg={m.id} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '92%', display: 'flex', flexDirection: 'column', gap: 6 }}>
                     <div style={{ ...bubble, background: m.role === 'user' ? 'var(--yellow)' : '#fff', color: 'var(--ink)' }}>{m.text}</div>
                     {provenance(m) && <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.35 }}>{provenance(m)}</div>}
-                    {m.sources && m.sources.length > 0 && (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {m.sources.map((s) => (
+                    {((m.sources && m.sources.length > 0) || asked) && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
+                        {m.sources?.map((s) => (
                           <button
                             key={`${s.lessonId}:${s.heading}`}
                             className="chip"
@@ -462,19 +495,18 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
                             <span>{s.where ? `${s.where}: ` : ''}{s.heading}</span>
                           </button>
                         ))}
+                        {asked && (
+                          <button
+                            className="chip"
+                            aria-pressed={answerSaved}
+                            aria-label={answerSaved ? 'Saved. Tap to remove this answer from saved' : 'Save this answer with its question'}
+                            onClick={() => toggleAnswer(index)}
+                            style={{ minWidth: 44, justifyContent: 'center', ...(answerSaved ? { background: 'var(--mint)', color: 'var(--ink)', borderColor: 'var(--mint-edge)' } : {}) }}
+                          >
+                            {answerSaved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+                          </button>
+                        )}
                       </div>
-                    )}
-                    {asked && (
-                      <button
-                        className="chip"
-                        aria-pressed={answerSaved}
-                        aria-label={answerSaved ? 'Saved. Tap to remove this answer from saved' : 'Save this answer with its question'}
-                        onClick={() => toggleAnswer(index)}
-                        style={{ ...toolChip, alignSelf: 'flex-start', ...(answerSaved ? { background: 'var(--mint)', color: 'var(--ink)', borderColor: 'var(--mint-edge)' } : {}) }}
-                      >
-                        {answerSaved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-                        <span>{answerSaved ? 'Saved' : 'Save answer'}</span>
-                      </button>
                     )}
                   </div>
                 );
@@ -496,40 +528,6 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
             {notice && (
               <div role="status" style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--mint)', lineHeight: 1.35 }}>
                 {notice}
-              </div>
-            )}
-
-            {!needsChoice && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
-                {TUTOR_URL ? (
-                  <button role="switch" aria-checked={consent === 'online'} className="chip" onClick={() => choose(consent === 'online' ? 'offline' : 'online')} style={toolChip}>
-                    Online tutor: {consent === 'online' ? 'ON' : 'OFF'}
-                  </button>
-                ) : (
-                  <span style={{ fontSize: '0.74rem', color: 'var(--text-tertiary)', fontWeight: 600, lineHeight: 1.35 }}>
-                    No online tutor in this build, so answers come from the notes on your device.
-                  </span>
-                )}
-                <button className="chip" onClick={() => openKept('saved')} style={toolChip}>
-                  <Library size={14} />
-                  <span>Saved ({saved.length})</span>
-                </button>
-                <button className="chip" onClick={() => openKept('history')} style={toolChip}>
-                  <HistoryIcon size={14} />
-                  <span>History ({pastChats.length})</span>
-                </button>
-                {messages.length >= 2 && (
-                  <button className="chip" onClick={saveChat} style={toolChip}>
-                    <Save size={14} />
-                    <span>Save chat</span>
-                  </button>
-                )}
-                {messages.length > 0 && (
-                  <button className="chip" onClick={newChat} style={toolChip}>
-                    <Plus size={14} />
-                    <span>New chat</span>
-                  </button>
-                )}
               </div>
             )}
 
