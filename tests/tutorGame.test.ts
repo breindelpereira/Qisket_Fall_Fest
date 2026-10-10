@@ -352,6 +352,18 @@ describe('Asking from the app with a game open', () => {
     expect(JSON.parse(String(f.mock.calls[0][1]!.body)).activity).toEqual(playing());
   });
 
+  it('uses the notes on the device when an older function has never heard of the game', async () => {
+    const notFound = { answer: 'I could not find that in my notes.', sources: [], provider: 'prepared' };
+    const f = vi.fn(() => Promise.resolve(new Response(JSON.stringify(notFound), { status: 200 })));
+    const reply = await askTutor(ctx(f as unknown as typeof fetch, { ...base, question: 'What does par mean?', activity: playing() }));
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(reply.provider).toBe('offline');
+    expect(reply.answer).toMatch(/^From Game:/);
+    // with no game open, the function's own "not found" stands
+    const plain = await askTutor(ctx(f as unknown as typeof fetch, { ...base, question: 'What does par mean?' }));
+    expect(plain.provider).toBe('prepared');
+  });
+
   it('falls back to the game\'s notes when the tutor cannot be reached', async () => {
     const f = vi.fn(() => Promise.reject(new Error('offline')));
     const reply = await askTutor(ctx(f as unknown as typeof fetch, { ...base, question: "I'm stuck", activity: playing() }));

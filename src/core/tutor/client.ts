@@ -68,6 +68,12 @@ export async function askTutor(ctx: AskContext): Promise<TutorResponse> {
     if (reply.provider === 'offline' || (reply.provider === 'gemini' && reply.answer.trim() === '')) {
       return fallback(reply.reason === 'rate_limited' || reply.reason === 'busy' ? reply.reason : 'unavailable');
     }
+    // A function deployed before a game or lab existed has nothing about it and says "not found". The notes on this
+    // device are newer, so a question about the open game or the part of the page gets a second look here.
+    if (reply.provider === 'prepared' && reply.sources.length === 0 && (request.activity || request.focus)) {
+      const local = offlineAnswer(searcher, request, index);
+      if (local.sources.length > 0) return local;
+    }
     return reply;
   } catch {
     return fallback('unavailable');
