@@ -28,7 +28,7 @@ if (process.argv.includes('--check')) {
   const games = index.chunks.filter((c) => c.from === 'game');
   const words = index.chunks.reduce((n, c) => n + wordCount(c.text), 0);
   console.log(
-    `Wrote tutor/index.json: ${index.chunks.length} passages (${notes.length} from the tutor notes, ${games.length} about games, ${index.chunks.length - notes.length - games.length} from the lessons), ${words} words.`,
+    `Wrote tutor/index.json: ${index.chunks.length} passages (${notes.length} from the tutor notes, ${games.length} about games and labs, ${index.chunks.length - notes.length - games.length} from the lessons), ${words} words.`,
   );
   const without = index.courseMap.filter((e) => !notes.some((c) => c.lessonId === e.lessonId));
   if (without.length > 0) console.log(`No tutor notes yet for: ${without.map((e) => e.lessonId).join(', ')} (the lesson text is still searchable).`);

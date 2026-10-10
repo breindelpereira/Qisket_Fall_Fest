@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Eye, Play } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle } from '../shared/arcadeTheme';
@@ -94,6 +95,20 @@ export const NoiseLab: React.FC = () => {
   const path = curve.map((pt, i) => `${i === 0 ? 'M' : 'L'}${x(pt.p).toFixed(1)} ${y(pt.logical).toFixed(1)}`).join(' ');
 
   const better = p > 0 && logical > 0 ? p / logical : null;
+
+
+  // what the AI tutor is told if the learner asks about this lab: the settings and readouts, nothing hidden
+  useActivityReport({
+    id: 'noise_lab',
+    status: 'playing',
+    step: n === 1 ? 'No code, one bare qubit' : `${n} qubits hold one`,
+    state:
+      `Each qubit flips with a ${pPct}% chance. Predicted chance the information is lost: ${fmtRate(logical)} (a bare qubit: ${fmtRate(p)}). ` +
+      `${observed ? `After ${observed.code.trials.toLocaleString()} trials the code failed ${observed.code.failures.toLocaleString()} times and a bare qubit ${observed.bare.failures.toLocaleString()} times. ` : ''}` +
+      `Find-the-error demo: ${CASES.find((c) => c.id === caseId)!.label}; probe A says ${demo.a ? 'differ' : 'agree'} and probe B says ${demo.b ? 'differ' : 'agree'}; ` +
+      `${flips.filter(Boolean).length <= 1 ? 'repaired' : 'fooled, because two qubits flipped'}.` +
+      `${directShown ? ' The learner measured the data directly and destroyed the superposition.' : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

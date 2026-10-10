@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Play, Trash2 } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle, stageStyle } from '../shared/arcadeTheme';
@@ -86,6 +87,24 @@ export const CircuitLab: React.FC = () => {
     if (item.kind === 'gate') return { text: item.gate, label: `${item.gate} gate` };
     return item.control === qubit ? { text: '●', label: 'CNOT control' } : { text: '⊕', label: 'CNOT target' };
   };
+
+
+  // what the AI tutor is told if the learner asks about this lab: the circuit and the exact result, nothing hidden
+  const circuitText = circuit.columns
+    .map((col, i) =>
+      col.length ? `step ${i + 1}: ${col.map((p) => (p.kind === 'gate' ? `${p.gate} on q${p.qubit}` : `CNOT q${p.control} to q${p.target}`)).join(', ')}` : '',
+    )
+    .filter(Boolean)
+    .join('; ');
+  useActivityReport({
+    id: 'circuit_lab',
+    status: 'playing',
+    step: `${n} qubit${n === 1 ? '' : 's'}, tool selected: ${tool}`,
+    state:
+      `Circuit: ${circuitText || 'empty'}. Exact result: ` +
+      `${probs.map((p, i) => ({ p, key: i.toString(2).padStart(n, '0') })).filter((x) => x.p > 0.0005).map((x) => `${x.key} ${Math.round(x.p * 100)}%`).join(', ')}.` +
+      `${counts ? ' 1000 shots were run.' : ''}${presetNote ? ` A famous circuit was loaded: ${presetNote}` : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { RotateCcw } from 'lucide-react';
 import { QuantumStateVector } from '../../core/circuit';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
@@ -89,6 +90,20 @@ export const TwoQubitLab: React.FC = () => {
       <span style={{ fontFamily: RETRO, fontSize: '1.05rem', color: 'var(--text-secondary)' }}>P(0) {pct(r.p0)} · P(1) {pct(r.p1)}</span>
     </div>
   );
+
+
+  // what the AI tutor is told if the learner asks about this lab: the steps and readouts, nothing hidden
+  const aloneWord = (r: typeof alice) => (r.length < 0.02 ? 'no state of its own' : r.length > 0.98 ? 'a definite state' : 'a blurry state');
+  useActivityReport({
+    id: 'two_qubit_lab',
+    status: 'playing',
+    step: bellMade ? 'A Bell pair is made' : 'Building a pair',
+    mission: 'Make a Bell pair: H on Alice, then a CNOT with Alice as the control.',
+    state:
+      `Steps so far: ${steps.length ? steps.map((s) => s.text).join(', then ') : 'none'}. Entanglement (concurrence) ${c.toFixed(2)}. ` +
+      `Alice alone has ${aloneWord(alice)}, Bob alone has ${aloneWord(bob)}. Chances of 00, 01, 10, 11 (Bob's digit first): ${probs.map((p) => `${Math.round(p * 100)}%`).join(', ')}.` +
+      `${pairs ? ` Twenty measurements: ${agreed} of 20 agreed.` : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { RotateCcw, Zap } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle } from '../shared/arcadeTheme';
@@ -46,6 +47,17 @@ export const GroverExplorer: React.FC = () => {
   const maxAmp = 1;
   const bw = (AW - 20) / N;
   const ay = (v: number) => mid - (v / maxAmp) * (mid - 14);
+
+
+  // what the AI tutor is told if the learner asks about this lab: the settings and readouts, nothing hidden
+  useActivityReport({
+    id: 'grover_explorer',
+    status: 'playing',
+    step: `${N} items, ${k} round${k === 1 ? '' : 's'} done`,
+    state:
+      `Marked: ${marked.map((x) => bitsOf(x, n)).join(', ')}. Chance a measurement finds a marked item: ${pct(p, 1)}. The best number of rounds here is ${best}.` +
+      `${overshoot ? ' The learner has gone past the best round, so the chance is falling.' : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

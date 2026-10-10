@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { ACTIVITIES } from '../src/content/activities';
 import { CONCEPTS } from '../src/content/concepts';
 import { GAME_HELP } from '../src/content/gameHelp';
+import { LAB_HELP } from '../src/content/labHelp';
 import { LESSONS } from '../src/content/lessons';
 import { buildIndex } from '../src/core/tutor/buildIndex.ts';
 import type { BuildResult } from '../src/core/tutor/buildIndex.ts';
@@ -32,7 +33,7 @@ export function loadNotes(dir = NOTES_DIR): { notes: ParsedNotes[]; errors: stri
 /** The index as it should be right now, built from the lessons and the notes folder. */
 export function buildFromDisk(): BuildResult {
   const { notes, errors } = loadNotes();
-  const built = buildIndex({ lessons: LESSONS, concepts: CONCEPTS, activities: ACTIVITIES, notes, games: GAME_HELP });
+  const built = buildIndex({ lessons: LESSONS, concepts: CONCEPTS, activities: ACTIVITIES, notes, games: { ...GAME_HELP, ...LAB_HELP } });
   return { index: built.index, errors: [...errors, ...built.errors] };
 }
 

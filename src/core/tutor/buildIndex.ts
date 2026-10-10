@@ -23,7 +23,7 @@ export interface BuildInput {
   concepts: Record<string, ConceptRecord>;
   activities: Record<string, { title: string; kind: 'game' | 'sim' }>;
   notes: ParsedNotes[];
-  /** What the tutor knows about each game, by game id. */
+  /** What the tutor knows about each game and lab, by activity id (see content/gameHelp.ts and content/labHelp.ts). */
   games?: Record<string, GameHelp>;
 }
 
@@ -173,12 +173,12 @@ export function buildIndex(input: BuildInput): BuildResult {
     const where = `content/gameHelp.ts, "${gameId}"`;
     const game = activities[gameId];
     const home = lessons.findIndex((l) => l.activities.some((a) => a.id === gameId));
-    if (!game || game.kind !== 'game') {
-      errors.push(`${where}: no game has this id`);
+    if (!game) {
+      errors.push(`${where}: no game or lab has this id`);
       continue;
     }
     if (home < 0) {
-      errors.push(`${where}: no lesson lists this game, so there is no module to point at`);
+      errors.push(`${where}: no lesson lists this activity, so there is no module to point at`);
       continue;
     }
     if (help.sections.length === 0) errors.push(`${where}: no sections`);
@@ -196,7 +196,7 @@ export function buildIndex(input: BuildInput): BuildResult {
         lessonId: lesson.id,
         lessonTitle: game.title,
         // reads as "Game: Bloch Runner | How do I play..." in the prompt and as "Game: <heading>" on a source chip
-        where: 'Game',
+        where: game.kind === 'sim' ? 'Lab' : 'Game',
         order: home,
         part: lesson.part,
         heading: s.heading,

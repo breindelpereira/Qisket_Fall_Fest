@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { QuantumStateVector, Complex } from '../../core/circuit';
 import type { BlochCoordinates } from '../../core/circuit/bloch';
 import { BlochSphereVisualizer } from './BlochSphereVisualizer';
@@ -171,6 +172,22 @@ export const SingleQubitLab: React.FC = () => {
       setIsSampling(false);
     }, 250);
   };
+
+
+  // what the AI tutor is told if the learner asks about this lab: the settings and readouts, nothing hidden
+  useActivityReport({
+    id: 'single_qubit_lab',
+    status: 'playing',
+    step: challengeMode ? 'Match the target state challenge' : activeExperiment !== 'none' ? `Guided experiment: ${activeExperiment}` : 'Free exploration',
+    mission:
+      challengeMode && targetCoords
+        ? `Steer the arrow onto the target ${targetCoords.x === 1 ? '|+⟩' : targetCoords.x === -1 ? '|−⟩' : targetCoords.y === 1 ? '|+i⟩' : '|1⟩'}.${challengeSolved ? ' It is solved.' : ''}`
+        : undefined,
+    state:
+      `Latitude θ = ${Math.round((theta * 180) / Math.PI)}°, longitude φ = ${Math.round((phi * 180) / Math.PI)}°: ${namedState.symbol} (${namedState.name}). ` +
+      `Chance of 0: ${Math.round(prob0 * 100)}%, of 1: ${Math.round(prob1 * 100)}%.` +
+      `${shotsResult ? ` Last sample of ${shotsResult.shots} shots: ${shotsResult.count0} zeros and ${shotsResult.count1} ones.` : ''}`,
+  });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

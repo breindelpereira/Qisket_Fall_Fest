@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it, expect, vi } from 'vitest';
 import { GAME_HELP, GAME_HELP_IDS } from '../src/content/gameHelp';
+import { LAB_HELP, LAB_HELP_IDS } from '../src/content/labHelp';
 import { ACTIVITIES } from '../src/content/activities';
 import { LESSONS } from '../src/content/lessons';
 import { createSearcher } from '../src/core/tutor/search';
@@ -30,6 +31,8 @@ const SEARCHER = createSearcher(INDEX.chunks);
 const APP = read('src', 'App.tsx');
 const gamesBlock = APP.slice(APP.indexOf('const GAMES: GameEntry[]'), APP.indexOf('const TABS'));
 const APP_GAMES = [...gamesBlock.matchAll(/id: '([a-z_]+)',[\s\S]*?tag: '([^']+)'/g)].map((m) => ({ id: m[1], tag: m[2] }));
+const simsBlock = APP.slice(APP.indexOf('const SIMS: SimEntry[]'), APP.indexOf('/** Labs that can be opened today.'));
+const APP_LABS = [...simsBlock.matchAll(/id: '([a-z_]+)',[\s\S]*?tag: '([^']+)'/g)].map((m) => ({ id: m[1], tag: m[2] }));
 
 const playing = (extra: Partial<ActivityRef> = {}): ActivityRef => ({
   id: 'bloch_runner',
@@ -48,6 +51,26 @@ describe('Game help: what the tutor knows about each game', () => {
     expect(APP_GAMES.length).toBeGreaterThan(5);
     expect([...GAME_HELP_IDS].sort()).toEqual(APP_GAMES.map((g) => g.id).sort());
     for (const g of APP_GAMES) expect(GAME_HELP[g.id].tag, g.id).toBe(g.tag);
+  });
+
+  it('covers every lab in the app, with the same honesty tag as its card', () => {
+    expect(APP_LABS.length).toBeGreaterThan(5);
+    expect([...LAB_HELP_IDS].sort()).toEqual(APP_LABS.map((g) => g.id).sort());
+    for (const g of APP_LABS) expect(LAB_HELP[g.id].tag, g.id).toBe(g.tag);
+  });
+
+  it('starts every lab with how to use it and ends with what to notice, in short sections', () => {
+    for (const [id, help] of Object.entries(LAB_HELP)) {
+      expect(help.sections[0].heading, id).toMatch(/^How do I use/);
+      expect(help.sections[help.sections.length - 1].heading, id).toMatch(/^What should I notice in/);
+      expect(help.sections.length, id).toBeGreaterThanOrEqual(5);
+      expect(new Set(help.sections.map((s) => s.heading.toLowerCase())).size, id).toBe(help.sections.length);
+      for (const s of help.sections) {
+        const words = s.text.split(/\s+/).length;
+        expect(words, `${id}: ${s.heading}`).toBeLessThanOrEqual(130);
+        expect(words, `${id}: ${s.heading}`).toBeGreaterThan(15);
+      }
+    }
   });
 
   it('starts with how to play, and has a nudge for a learner who is stuck', () => {
@@ -86,12 +109,13 @@ describe('Game help: what the tutor knows about each game', () => {
 });
 
 describe('Game help in the tutor index', () => {
-  it('has a passage for every section, tied to its game and to a real lesson', () => {
-    for (const [id, help] of Object.entries(GAME_HELP)) {
+  it('has a passage for every section, tied to its game or lab and to a real lesson', () => {
+    for (const [id, help] of Object.entries({ ...GAME_HELP, ...LAB_HELP })) {
       const chunks = INDEX.chunks.filter((c) => c.activityId === id);
       expect(chunks.length, id).toBe(help.sections.length);
       for (const c of chunks) {
         expect(c.from).toBe('game');
+        expect(c.where).toBe(id in LAB_HELP ? 'Lab' : 'Game');
         expect(c.tag).toBe(help.tag);
         expect(INDEX.courseMap.some((e) => e.lessonId === c.lessonId), c.id).toBe(true);
         expect(LESSONS.find((l) => l.id === c.lessonId)!.activities.some((a) => a.id === id), c.id).toBe(true);
@@ -110,10 +134,8 @@ describe('Game help in the tutor index', () => {
     const input = { lessons: LESSONS, concepts: {}, activities: { ...ACTIVITIES, ghost_game: { id: 'ghost_game', kind: 'game' as const, title: 'Ghost Game' } }, notes: [] };
     const section = (heading: string, text: string) => ({ kind: 'explain' as const, heading, text });
     const errors = (games: Record<string, { tag: 'Accurate'; sections: ReturnType<typeof section>[] }>) => buildIndex({ ...input, games }).errors.join('\n');
-    expect(errors({ not_a_game: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no game has this id/);
-    expect(errors({ bloch_lab: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no game has this id/);
-    expect(errors({ single_qubit_lab: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no game has this id/);
-    expect(errors({ ghost_game: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no lesson lists this game/);
+    expect(errors({ not_a_game: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no game or lab has this id/);
+    expect(errors({ ghost_game: { tag: 'Accurate', sections: [section('A', 'x')] } })).toMatch(/no lesson lists this activity/);
     expect(errors({ bloch_runner: { tag: 'Accurate', sections: [section('A', '')] } })).toMatch(/section is empty/);
     expect(errors({ bloch_runner: { tag: 'Accurate', sections: [section('A', 'x'), section('a', 'y')] } })).toMatch(/used twice/);
     expect(errors({ bloch_runner: { tag: 'Accurate', sections: [section('A', 'word '.repeat(450))] } })).toMatch(/over the 400 word limit/);
@@ -449,5 +471,58 @@ describe('Quantum Penny Paradox: the move that really beats Dr. Quantum', () => 
     const [heads, tails] = outcome('H');
     expect(heads).toBeCloseTo(0.5, 10);
     expect(tails).toBeCloseTo(0.5, 10);
+  });
+});
+
+describe('The tutor while a lab is open', () => {
+  const lab = (extra: Partial<ActivityRef> = {}): ActivityRef => ({
+    id: 'mach_zehnder_lab',
+    status: 'playing',
+    step: 'The bottom arm is blocked',
+    state: 'Phase 90°. Chances: top detector 25%, bottom detector 25%, absorbed 50%.',
+    ...extra,
+  });
+  const system = (activity: ActivityRef, question = 'I do not understand this screen') =>
+    buildPrompt(INDEX, { ...base, question, activity }, withGameBasics([], INDEX, activity, question)).system;
+
+  it('knows which of its passages are about a lab', () => {
+    const chunks = INDEX.chunks.filter((c) => c.activityId === 'mach_zehnder_lab');
+    expect(chunks.length).toBe(LAB_HELP.mach_zehnder_lab.sections.length);
+    expect(chunks.every((c) => c.where === 'Lab')).toBe(true);
+    expect(gameTitle(INDEX, 'mach_zehnder_lab')).toBe('Mach–Zehnder Lab');
+  });
+
+  it('describes the lab as something to explore, with no hint to hold back', () => {
+    const s = system(lab());
+    expect(s).toContain('LAB CONTEXT');
+    expect(s).toContain('HOW TO HELP WITH THE LAB');
+    expect(s).toContain('has the lab "Mach–Zehnder Lab" open right now, experimenting');
+    expect(s).toContain('What is on their screen: Phase 90°');
+    expect(s).toContain('explain directly what the numbers and pictures on their screen mean');
+    expect(s).not.toMatch(/give a nudge and not the finished answer/);
+    expect(s.split('PASSAGES\n')[1]).toContain('Lab: Mach–Zehnder Lab | How do I use the Mach-Zehnder Lab?');
+  });
+
+  it('uses lab wording for a lab that was left a while ago', () => {
+    expect(system(lab({ status: 'left' }))).toContain('left the lab "Mach–Zehnder Lab" a few minutes ago');
+  });
+
+  it('suggests what to look for first, then the lab\'s own doubts', () => {
+    const q = starterQuestions(INDEX, 'module_4', 4, { id: 'mach_zehnder_lab', status: 'playing' });
+    expect(q[0]).toMatch(/^What should I notice in the Mach-Zehnder Lab/);
+    const doubts = INDEX.chunks.filter((c) => c.activityId === 'mach_zehnder_lab' && c.kind === 'faq').map((c) => c.heading);
+    expect(doubts).toContain(q[1]);
+  });
+
+  it('answers a doubt about the lab from its notes, with no model and no game hint', () => {
+    const r = offlineAnswer(SEARCHER, { question: 'why does blocking an arm remove the fringes', order: 0, lessonId: 'module_0', level: 'beginner', activity: lab() }, INDEX);
+    expect(r.provider).toBe('offline');
+    expect(r.answer).toMatch(/^From Lab:/);
+    expect(r.answer).not.toContain('hint for this step');
+  });
+
+  it('never offers one lab\'s passages while another is open', () => {
+    const hits = SEARCHER.search('how does the bomb test work', { maxOrder: 40, activityId: 'grover_explorer' });
+    expect(hits.some((h) => h.chunk.activityId === 'mach_zehnder_lab')).toBe(false);
   });
 });

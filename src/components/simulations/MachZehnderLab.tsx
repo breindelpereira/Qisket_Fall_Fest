@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Zap, RotateCcw } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle, stageStyle } from '../shared/arcadeTheme';
@@ -83,6 +84,18 @@ export const MachZehnderLab: React.FC = () => {
   const px = (angle: number) => 10 + (angle / (2 * Math.PI)) * (PW - 20);
   const py = (p: number) => PH - 12 - p * (PH - 28);
   const path = (key: 'top' | 'bottom') => curve.map((c, i) => `${i === 0 ? 'M' : 'L'}${px(c.phi).toFixed(1)},${py(c[key]).toFixed(1)}`).join(' ');
+
+
+  // what the AI tutor is told if the learner asks about this lab: the settings and readouts, nothing hidden
+  useActivityReport({
+    id: 'mach_zehnder_lab',
+    status: 'playing',
+    step: blocker === null ? 'Both arms open' : `The ${blocker === 0 ? 'top' : 'bottom'} arm is blocked`,
+    state:
+      `Phase ${deg(phi)}°. Chances: top detector ${pct(result.out[0])}, bottom detector ${pct(result.out[1])}${result.absorbed > 0 ? `, absorbed ${pct(result.absorbed)}` : ''}. ` +
+      `${total ? `Photons fired: ${total} (top ${tally.top}, bottom ${tally.bottom}${tally.lost ? `, lost ${tally.lost}` : ''}).` : 'No photons fired yet.'}` +
+      `${bombLog.last ? ` Bomb test so far: found safely ${bombLog.found}, exploded ${bombLog.boom}, inconclusive ${bombLog.silent}.` : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

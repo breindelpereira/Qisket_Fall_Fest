@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Play, Sparkles } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, panelStyle } from '../shared/arcadeTheme';
@@ -69,6 +70,18 @@ export const BellChshExplorer: React.FC = () => {
       <LabSlider key={k} label={label} accent={THEME.accent} value={exactDeg(value)} min={-90} max={90} step={2.5}
         display={`${exactDeg(value)}°`} onChange={(d) => set(who, idx, d)} />
     );
+  });
+
+
+  // what the AI tutor is told if the learner asks about this lab: the angles and readouts, nothing hidden
+  useActivityReport({
+    id: 'bell_chsh_explorer',
+    status: 'playing',
+    step: v === 'beyond' ? 'Beyond the classical limit' : 'Within the classical limit',
+    state:
+      `Angles: Alice ${exactDeg(angles.alice[0])}° and ${exactDeg(angles.alice[1])}°, Bob ${exactDeg(angles.bob[0])}° and ${exactDeg(angles.bob[1])}°. ` +
+      `S = ${signed(s)} (${v === 'beyond' ? 'above the classical limit of 2' : 'within what a shared script can reach'}). Predicted CHSH win rate ${pct(winFromS(s), 1)}.` +
+      `${rounds ? ` Played ${rounds.played} rounds and won ${rounds.won}.` : ''}`,
   });
 
   return (

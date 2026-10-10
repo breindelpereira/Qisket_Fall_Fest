@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Play } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle } from '../shared/arcadeTheme';
@@ -51,6 +52,17 @@ export const DeutschJozsaExplorer: React.FC = () => {
 
   const last = runs[0];
   const verdict = last === undefined ? null : last === allZero ? 'constant' : 'balanced';
+
+
+  // what the AI tutor is told if the learner asks about this lab: the function and readouts, nothing hidden
+  useActivityReport({
+    id: 'deutsch_jozsa_explorer',
+    status: 'playing',
+    step: `${n} input bit${n > 1 ? 's' : ''}`,
+    state:
+      `Function: ${f.map((value, x) => `f(${bitsOf(x, n)}) = ${value}`).join(', ')}. It is ${kind === 'neither' ? 'neither constant nor balanced' : kind}. ` +
+      `${last !== undefined ? `Last readout ${last}${verdict ? `, so the circuit says ${verdict}` : ''}.` : 'The circuit has not been run yet.'}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

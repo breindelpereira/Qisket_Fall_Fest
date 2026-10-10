@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { Play, RotateCcw } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle } from '../shared/arcadeTheme';
@@ -39,6 +40,17 @@ export const ShotsHistogramLab: React.FC = () => {
     markExplored();
     setCounts((c) => addCounts(c, state.sampleCounts(shots)));
   };
+
+
+  // what the AI tutor is told if the learner asks about this lab: the settings and readouts, nothing hidden
+  useActivityReport({
+    id: 'shots_histogram_lab',
+    status: 'playing',
+    step: PRESETS.find((p) => p.id === preset)!.label,
+    state:
+      `${preset === 'tilted' ? `Tilt ${deg(theta)}°, so the chance of 1 is ${pct(Math.sin(theta / 2) ** 2)}. ` : ''}Shots per run: ${shots.toLocaleString()}. Total shots so far: ${n.toLocaleString()}. ` +
+      `${n ? `Largest gap between measured and predicted: outcome ${worst.outcome} measured ${pct(worst.observed, 1)}, predicted ${pct(worst.expected, 1)}.` : 'Nothing has been run yet.'}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

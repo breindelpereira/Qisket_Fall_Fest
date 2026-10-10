@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useActivityReport } from '../../hooks/useActivityReport';
 import { ChevronRight, RotateCcw, Play } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle } from '../shared/arcadeTheme';
@@ -73,6 +74,18 @@ export const TeleportationLab: React.FC = () => {
     }
     setBatch({ runs, counts, withFix: withFix / runs, withoutFix: withoutFix / runs });
   };
+
+
+  // what the AI tutor is told if the learner asks about this lab: the step and readouts, nothing hidden
+  useActivityReport({
+    id: 'teleportation_lab',
+    status: 'playing',
+    step: `Step ${step} of ${STEP_COUNT}${step > 0 ? `: ${STEP_LABELS[step - 1]}` : ''}`,
+    state:
+      `Message: tilt ${deg(message.theta)}°, turn ${deg(message.phi)}°. Bob's qubit matches the message ${pct(fidelity, 0)}.` +
+      `${step >= 4 ? ` Alice's bits are ${bits[0]}${bits[1]}${bitsArrive ? '' : ' and they have NOT reached Bob'}.` : ''}` +
+      `${batch ? ` 200 runs: Bob matched ${pct(batch.withFix, 0)} with the fix and ${pct(batch.withoutFix, 0)} without it.` : ''}`,
+  });
 
   return (
     <ArcadeFrame theme={THEME}>

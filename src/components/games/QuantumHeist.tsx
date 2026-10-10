@@ -139,7 +139,7 @@ export const QuantumHeist: React.FC = () => {
       if (isLevel1Ready) {
         if (soundEnabled) sound.playSuccess();
         setScore((s) => s + 500);
-        setFeedback('VAULT BYPASSED! Superposition allowed Agent Q to walk through both doors simultaneously. Security scanner reading was indeterminate!');
+        setFeedback('VAULT BYPASSED! A 50/50 superposition has no single door, so the scanner had nothing definite to read.');
         setGameState('level_complete');
       } else {
         triggerAlarm('ALARM TRIPPED! Scanner detected 100% mass at a single door. Tap the cyan [H] KEY to split into 50/50 superposition!');

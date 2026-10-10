@@ -1,3 +1,4 @@
+import { activityKind } from './game.ts';
 import type { ActivityRef, TutorIndex } from './types.ts';
 
 const MAX_STARTERS = 3;
@@ -19,8 +20,9 @@ export function starterQuestions(index: TutorIndex, lessonId: string | undefined
 
   if (activity) {
     const game = index.chunks.filter((c) => c.activityId === activity.id);
-    const closing = game.find((c) => /^what does finishing/i.test(c.heading));
-    if (activity.status === 'playing') add(STUCK);
+    const closing = game.find((c) => /^(what does finishing|what should i notice)/i.test(c.heading));
+    // a game is played, so a hint request comes first; a lab is for exploring, so what to look for comes first
+    if (activityKind(index, activity.id) === 'game' && activity.status === 'playing') add(STUCK);
     else if (closing) add(closing.heading);
     for (const c of game.filter((x) => x.kind === 'faq' && !/stuck/i.test(x.heading))) add(c.heading);
   }

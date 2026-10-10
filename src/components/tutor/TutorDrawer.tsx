@@ -52,6 +52,12 @@ const GAME_STATUS_WORDS: Record<ActivityRef['status'], string> = {
   left: 'played a moment ago',
 };
 
+const LAB_STATUS_WORDS: Record<ActivityRef['status'], string> = {
+  playing: 'open now',
+  finished: 'just finished',
+  left: 'used a moment ago',
+};
+
 /** Chats and answers picked out of History get today's date in the saved list. */
 const fresh = (item: SavedItem): SavedItem => ({ ...item, savedAt: new Date().toISOString() });
 
@@ -156,6 +162,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
   // A quiz is no place for game help, and the learner can switch the sharing off
   const gameTitle = activity ? ACTIVITIES[activity.id]?.title : undefined;
   const gameForTutor = shareGame && !inQuiz && gameTitle ? activity : null;
+  const isLab = activity ? ACTIVITIES[activity.id]?.kind === 'sim' : false;
 
   const send = useCallback(
     async (raw: string) => {
@@ -370,14 +377,14 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
                 >
                   <Gamepad2 size={16} style={{ flexShrink: 0 }} />
                   <span>
-                    {gameTitle}: {GAME_STATUS_WORDS[activity.status]} · {shareGame ? 'sharing ON' : 'sharing OFF'}
+                    {gameTitle}: {(isLab ? LAB_STATUS_WORDS : GAME_STATUS_WORDS)[activity.status]} · {shareGame ? 'sharing ON' : 'sharing OFF'}
                   </span>
                 </button>
                 {messages.length === 0 && (
                   <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.4 }}>
                     {shareGame
-                      ? 'I can see which level you are on and what is on your game screen, so just ask your doubt. Tap to stop sharing it.'
-                      : 'Not sharing your game screen. Tap to share it again.'}
+                      ? `I can see what is on your ${isLab ? 'lab' : 'game'} screen (the level or the settings), so just ask your doubt. Tap to stop sharing it.`
+                      : `Not sharing your ${isLab ? 'lab' : 'game'} screen. Tap to share it again.`}
                   </div>
                 )}
               </div>
@@ -388,7 +395,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
                 <div className="pixel" style={{ fontSize: '0.64rem' }}>Before you ask</div>
                 <p style={{ fontSize: '0.84rem', lineHeight: 1.45, fontWeight: 600 }}>
                   The online tutor sends your question to Google's free Gemini service, which may use it to improve Google products. If you are in a game,
-                  it also sends a short note about your game screen (the level and your moves), which you can switch off. Please do not type
+                  it also sends a short note about your game or lab screen (the level or settings and what you did), which you can switch off. Please do not type
                   personal information. Or stay offline: you will get answers straight from the course notes on this device.
                 </p>
                 <button className="btn btn-mint" onClick={() => choose('online')}>Use online tutor</button>
