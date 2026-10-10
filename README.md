@@ -4,6 +4,33 @@ A mobile-first app that teaches quantum computing through games, labs, lessons a
 
 Everything quantum runs on small physics engines written in this repo (no quantum library), and every game and lab shows an honesty tag (Analogy, Simplified model, Accurate, Experimental/Contested).
 
+## For judges: what to look at (3 minutes)
+
+**Try it:** `LIVE_APP_LINK` (opens in any browser, best on a phone) or install the Android app from the latest GitHub Release (`app-debug.apk`). No account, no sign-in.
+
+**What it is:** a complete beginner course in quantum computing that you learn by playing. 11 games, 10 hands-on labs, lessons with short videos, quizzes, and an AI tutor that knows what you are looking at.
+
+**A good path:**
+
+1. **Home → Start.** Each module opens with a game (for example *Quantum Heist* or *Bloch Runner*), then a short video, then a lab, then a quiz.
+2. **Open a game, then tap "Ask Tutor".** Dr Quantum sees which level you are on and gives a hint, not the answer. Try "I'm stuck".
+3. **Labs tab → Mach-Zehnder Lab.** Change the phase and fire photons: the interference pattern appears.
+4. **Learn → any lesson → "Ask about this".** The tutor explains that exact paragraph.
+5. **Games → Hype Check.** Sort real, maybe-someday and hype claims about quantum computers.
+
+**What we are proud of**
+
+- **Honest.** Every game and lab carries a tag (Analogy, Simplified model, Accurate, Experimental/Contested) and says what it leaves out. We audited the games for physics mistakes and fixed the ones we found.
+- **Real physics, not animations.** Our own state-vector and optical engines run every game and lab, with 400+ automated tests that check textbook results (Bell states, teleportation, Grover, error correction).
+- **A tutor that does not spoil.** It answers only from the course notes, never reveals quiz answers, hides later modules, works offline, and the API key never reaches the app.
+- **Mobile-first and accessible.** 44px touch targets, no timers without an untimed mode, nothing relies on colour alone.
+
+**Honest status:** Part 1 (concepts) is complete. Parts 2 (hardware) and 3 (maths) have lessons and quizzes; their games, labs and practice are planned in `Plan/Parts_2_and_3_Build_Plan.md`.
+
+**Team and contact:** `TEAM_NAMES`
+
+---
+
 ## Get it running (about 5 minutes)
 
 You need: **Git** and **Node.js 20 or newer** (https://nodejs.org). Nothing else.
