@@ -8,6 +8,7 @@ import {
 import type { PlayerPrefs, Speed } from '../../core/learn/video';
 import { Banner } from '../shared/Arcade';
 import { safeStorage } from '../../utils/safeStorage';
+import { setImmersive } from '../../utils/immersive';
 import { useYouTubePlayer } from './useYouTubePlayer';
 
 const linkStyle: React.CSSProperties = { textDecoration: 'none', color: 'inherit' };
@@ -135,6 +136,16 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [coversPage]);
+
+  // Full screen on a phone also hides the status bar and the navigation buttons (the Android app only), and brings them
+  // back when the video leaves full screen or the card goes away
+  useEffect(() => {
+    if (!fullscreen) return;
+    void setImmersive(true);
+    return () => {
+      void setImmersive(false);
+    };
+  }, [fullscreen]);
 
   // Once the player is up, apply the remembered speed and captions (and again after a retry or a change)
   const live = showPlayer && (player.status === 'ready' || player.status === 'playing');

@@ -12,6 +12,8 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // plugins written for this app are registered before the bridge starts
+        registerPlugin(ImmersivePlugin.class);
         super.onCreate(savedInstanceState);
 
         // Android 15 and later draw apps under the status bar and the navigation buttons. Capacitor's own margin setting
