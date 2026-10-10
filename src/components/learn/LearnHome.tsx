@@ -5,7 +5,7 @@ import { COURSE_INTRO, LESSONS, PARTS, QUIZZES } from '../../content/lessons';
 import { courseProgressPercent, moduleEyebrow, nextUpLesson, partProgress } from '../../core/learn/curriculum';
 import { Eyebrow } from '../shared/Arcade';
 import { THEMES } from '../shared/arcadeTheme';
-import { DrQuantum } from '../shared/DrQuantum';
+import { Milton } from '../shared/Milton';
 
 const PART_STYLE = {
   1: { icon: Atom, color: 'var(--mint)', edge: 'var(--mint-edge)' },
@@ -35,7 +35,7 @@ export const LearnHome: React.FC<Props> = ({ onOpenPart, onOpenLesson }) => {
 
       <section className="card" style={{ padding: 16, background: 'var(--bg-surface-elevated)', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <DrQuantum size={72} mood={next ? 'happy' : 'wow'} />
+          <Milton size={72} mood={next ? 'happy' : 'wow'} />
           <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px', fontWeight: 800, fontSize: '0.9rem', lineHeight: 1.4 }}>
             {!next ? 'You finished every module. Amazing!' : started ? 'Nice work! Ready for the next one?' : "Let's start with the big picture."}
           </div>

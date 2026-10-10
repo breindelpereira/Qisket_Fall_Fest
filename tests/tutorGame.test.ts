@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it, expect, vi } from 'vitest';
 import { GAME_HELP, GAME_HELP_IDS } from '../src/content/gameHelp';
+import { LEVELS as MILTON_LEVELS } from '../src/core/games/miltonsBox';
 import { LAB_HELP, LAB_HELP_IDS } from '../src/content/labHelp';
 import { ACTIVITIES } from '../src/content/activities';
 import { LESSONS } from '../src/content/lessons';
@@ -98,11 +99,14 @@ describe('Game help: what the tutor knows about each game', () => {
       ...ESCAPE_LEVELS.map((l) => l.hint),
       ...DECK_LEVELS.map((l) => l.hint),
       ...RELAY_LEVELS.map((l) => l.hint),
+      ...MILTON_LEVELS.flatMap((l) => ('hint' in l ? [l.hint] : [])),
     ];
     const all = Object.values(GAME_HELP).flatMap((h) => h.sections.map((s) => s.text)).join('\n');
     for (const hint of hints) expect(all.includes(hint), hint).toBe(false);
     // the answer tables the games hide
     expect(GAME_HELP.teleport_relay.sections.map((s) => s.text).join(' ')).not.toMatch(/01\s*(→|->|means)\s*X|11\s*(→|->)\s*X/);
+    // Milton's Box: the sandwich that clears the jammed-flip box is the answer, so it must not be spelled out
+    expect(GAME_HELP.miltons_box.sections.map((s) => s.text).join(' ')).not.toMatch(/H\s*(,|→|->|then)\s*Z\s*(,|→|->|then)\s*(then\s*)?H|twice|sandwich/i);
     expect(SURGEON_LEVELS.length).toBe(4);
     expect(GAME_HELP.qubit_surgeon.sections.map((s) => s.text).join(' ')).not.toMatch(/A says|Both "differ"/);
   });
@@ -330,7 +334,7 @@ describe('Answers about a game without the model', () => {
 
   it('does not take "what do I do now" for small talk while a game is open', () => {
     expect(ask('what do I do now', playing()).answer).toMatch(/From Game:/);
-    expect(ask('what do I do now').answer).toMatch(/^Hi! I'm Dr Quantum/);
+    expect(ask('what do I do now').answer).toMatch(/^Hi! I'm Dr. Milton Schrody/);
   });
 });
 

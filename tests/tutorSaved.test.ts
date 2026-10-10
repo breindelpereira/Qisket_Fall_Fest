@@ -33,7 +33,7 @@ describe('Saved tutor answers and chats', () => {
     expect(chat).toMatchObject({ id: 'c:abc123', kind: 'chat', title: 'Question 0' });
     expect(chat.messages).toHaveLength(MAX_CHAT_MESSAGES);
     expect(chat.messages[0].text).toBe('Question 20');
-    expect(makeChatItem('x', [a('only an answer')], ctx, NOW).title).toBe('Chat with Dr Quantum');
+    expect(makeChatItem('x', [a('only an answer')], ctx, NOW).title).toBe('Chat with Dr. Milton Schrody');
   });
 
   it('shortens long titles at a word and cuts very long text', () => {

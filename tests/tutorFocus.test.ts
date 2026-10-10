@@ -87,7 +87,7 @@ describe('"Ask about this": what the tutor does with it', () => {
     // the same words with nothing selected are only small talk
     const none = offlineAnswer(SEARCHER, { question: 'Explain this', order: ORDER, lessonId: 'module_2', level: 'beginner' }, INDEX);
     expect(none.provider).toBe('prepared');
-    expect(none.answer).toMatch(/^Hi! I'm Dr Quantum/);
+    expect(none.answer).toMatch(/^Hi! I'm Dr. Milton Schrody/);
   });
 });
 

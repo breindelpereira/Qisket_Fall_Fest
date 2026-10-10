@@ -13,7 +13,7 @@ Everything quantum runs on small physics engines written in this repo (no quantu
 **A good path:**
 
 1. **Home → Start.** Each module opens with a game (for example *Quantum Heist* or *Bloch Runner*), then a short video, then a lab, then a quiz.
-2. **Open a game, then tap "Ask Tutor".** Dr Quantum sees which level you are on and gives a hint, not the answer. Try "I'm stuck".
+2. **Open a game, then tap "Ask Tutor".** Dr. Milton Schrody sees which level you are on and gives a hint, not the answer. Try "I'm stuck".
 3. **Labs tab → Mach-Zehnder Lab.** Change the phase and fire photons: the interference pattern appears.
 4. **Learn → any lesson → "Ask about this".** The tutor explains that exact paragraph.
 5. **Games → Hype Check.** Sort real, maybe-someday and hype claims about quantum computers.

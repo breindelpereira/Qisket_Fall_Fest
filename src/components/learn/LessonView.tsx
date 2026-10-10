@@ -12,7 +12,7 @@ import { safeStorage } from '../../utils/safeStorage';
 import { passRule, percent } from '../../core/learn/quiz';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { THEMES } from '../shared/arcadeTheme';
-import { DrQuantum } from '../shared/DrQuantum';
+import { Milton } from '../shared/Milton';
 import { HonestyTagBadge } from '../shared/HonestyTag';
 import { mathToText } from '../../content/lessonText';
 import type { TutorFocus } from '../../core/tutor/types';
@@ -214,7 +214,7 @@ export const LessonView: React.FC<Props> = ({
         {top}
         <section className="card" aria-label="How do you want to start?" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 14, background: 'var(--bg-surface-elevated)' }}>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <DrQuantum size={72} />
+            <Milton size={72} />
             <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px', fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.4 }}>
               {isGame ? "Let's start with a game!" : "Let's start in the lab!"}
             </div>
@@ -294,7 +294,7 @@ export const LessonView: React.FC<Props> = ({
       {/* The punchline and the common mix-up come after the learner has met the idea, so they do not spoil the game */}
       {lesson.ahaMoment && (
         <div className="card" style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center', background: 'var(--bg-surface-elevated)' }}>
-          <DrQuantum size={64} />
+          <Milton size={64} />
           <div style={{ flex: 1, background: '#fff', color: 'var(--ink)', borderRadius: 16, padding: '10px 12px' }}>
             <div className="pixel" style={{ fontSize: '0.5rem', color: '#8b5cf6', marginBottom: 6 }}>THE "AHA!" MOMENT</div>
             <div style={{ fontWeight: 800, fontSize: '0.95rem', lineHeight: 1.4 }}>{lesson.ahaMoment}</div>

@@ -81,7 +81,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     misconceptionToFix: 'The value is not pre-determined. The act of measurement forces the qubit to choose.',
     linkedConceptId: 'concept_measurement',
     quizId: 'quiz_module_2',
-    activities: [game('schrodingers_stealth'), sim('shots_histogram_lab')],
+    activities: [game('schrodingers_stealth'), game('miltons_box'), sim('shots_histogram_lab')],
     blocks: [
       {
         type: 'paragraph',

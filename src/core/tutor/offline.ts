@@ -58,7 +58,7 @@ export const isSmallTalk = (question: string): boolean => tokenize(question).len
 export function smallTalkAnswer(input: Pick<OfflineInput, 'order' | 'lessonId'>, index: TutorIndex): TutorResponse {
   const [example] = starterQuestions(index, input.lessonId, input.order);
   return {
-    answer: `Hi! I'm Dr Quantum. Ask me anything about the lessons you have reached${example ? `, for example: "${example}"` : ''}.`,
+    answer: `Hi! I'm Dr. Milton Schrody. Ask me anything about the lessons you have reached${example ? `, for example: "${example}"` : ''}.`,
     sources: [],
     provider: 'prepared',
   };

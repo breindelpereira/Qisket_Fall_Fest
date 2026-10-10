@@ -6,7 +6,7 @@ import {
 } from '../src/core/learn/start';
 
 const GAMES = [
-  'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
+  'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'miltons_box', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
   'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
 ];
 const SIMS = [

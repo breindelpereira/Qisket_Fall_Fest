@@ -14,12 +14,13 @@ import {
 } from 'lucide-react';
 import { useProgress } from './hooks/useProgress';
 import { HonestyTagBadge } from './components/shared/HonestyTag';
-import { DrQuantum } from './components/shared/DrQuantum';
+import { Milton } from './components/shared/Milton';
 import type { HonestyTag } from './content/types';
 import { HypeCheck } from './components/games/HypeCheck';
 import { QuantumHeist } from './components/games/QuantumHeist';
 import { QuantumCoinFlip } from './components/games/QuantumCoinFlip';
 import { SchrodingersStealth } from './components/games/SchrodingersStealth';
+import { MiltonsBox } from './components/games/MiltonsBox';
 import { BlochRunner } from './components/games/BlochRunner';
 import { PhotonEscapeRoom } from './components/games/PhotonEscapeRoom';
 import { AliceAndBob } from './components/games/AliceAndBob';
@@ -107,6 +108,17 @@ const GAMES: GameEntry[] = [
     btn: 'btn-mint',
     accent: 'var(--mint)',
     Component: SchrodingersStealth,
+  },
+  {
+    id: 'miltons_box',
+    title: "Milton's Box",
+    emoji: '😺',
+    kicker: 'Born rule · 5 boxes',
+    blurb: "Schrödinger's cat, as one qubit. Read the odds off the amplitudes, build a 50/50 box, steer it with a sign flip, and see why a second look never changes the answer. No timer.",
+    tag: 'Analogy',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
+    Component: MiltonsBox,
   },
   {
     id: 'bloch_runner',
@@ -411,13 +423,13 @@ export default function App() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
       <header className="app-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '14px 20px 8px', zIndex: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 40, height: 40, borderRadius: 14, background: 'var(--yellow)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 0 var(--yellow-edge)',
-          }}>
-            <span className="pixel" style={{ fontSize: '1.1rem', color: 'var(--ink)' }}>Q</span>
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}favicon.svg`}
+            alt=""
+            width={40}
+            height={40}
+            style={{ display: 'block', borderRadius: 14, boxShadow: '0 4px 0 var(--yellow-edge)' }}
+          />
           <div>
             <div className="pixel" style={{ fontSize: '0.9rem' }}>Qisket</div>
             <div className="brand-sub" style={{ fontFamily: 'var(--font-pixel)', fontSize: '0.5rem', color: 'var(--pink)', marginTop: 4, whiteSpace: 'nowrap' }}>
@@ -438,7 +450,7 @@ export default function App() {
             {/* Mascot + primary action */}
             <section className="card" style={{ padding: '18px 18px 22px', background: 'var(--bg-surface-elevated)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-                <DrQuantum size={92} />
+                <Milton size={92} />
                 <div style={{
                   position: 'relative', flex: 1, background: '#fff', color: 'var(--ink)',
                   borderRadius: 18, padding: '12px 14px', fontWeight: 800, fontSize: '0.92rem', lineHeight: 1.35,
@@ -449,7 +461,7 @@ export default function App() {
                   }} />
                   {activitiesTried > 0
                     ? "Nice work, agent! Let's keep bending reality."
-                    : "Hi, I'm Dr Quantum! Ready to bend reality?"}
+                    : "Hi, I'm Dr. Milton Schrody! Ready to bend reality?"}
                 </div>
               </div>
 

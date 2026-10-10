@@ -193,6 +193,56 @@ export const GAME_HELP: Record<string, GameHelp> = {
     ],
   },
 
+  miltons_box: {
+    tag: 'Analogy',
+    sections: [
+      {
+        kind: 'explain',
+        heading: `How do I play Milton's Box?`,
+        text: `There are five boxes, one after another, with no timer. A box holds Milton, the app's tutor, in a state of one qubit: he is Awake when the qubit reads 0 and Asleep when it reads 1. Some boxes give you a recipe and ask for the chance of finding him Awake: set the slider and tap Open the box. Some give you gate buttons and a goal. The last one lets you open a box and look again. Tap Hint on any box for a nudge. Stars reward a first try.`,
+      },
+      {
+        kind: 'explain',
+        heading: 'How do I get the chance from the recipe?',
+        text: `The recipe lists an amplitude for Awake and one for Asleep. The chance of an outcome is its amplitude squared, which is the Born rule. For example, an amplitude of 0.5 gives a chance of 0.25, which is 25%. The two chances always add up to 100%, so once you know one you know the other. Squaring is the step people forget: the amplitude is not the chance.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'Does a minus sign in the recipe change the chance?',
+        text: `No. Squaring removes the sign, so an amplitude of minus 0.5 and one of plus 0.5 give the same 25%. The sign does matter when amplitudes meet, because they can cancel or add. That is interference. Opening the box straight away cannot see the sign, which is why two boxes can look identical until a gate brings the signs into play.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'What do the H, X and Z buttons do?',
+        text: `H, the Hadamard gate, spreads a certain Awake or certain Asleep into an equal mix of both, and spreads an equal mix back into a certain one. X flips Awake and Asleep over. Z leaves Awake and Asleep as they are but flips the sign on the Asleep part, so it changes no chances on its own. Each gate acts on whatever state the box is in at that moment, so the order matters.`,
+      },
+      {
+        kind: 'faq',
+        heading: `I'm stuck in Milton's Box. What should I do?`,
+        text: `Read what the box is asking: a chance from a recipe, a goal chance reached with gates, or a repeated look. For a recipe, square the amplitude. For gates, watch the two chance bars after every press and use Undo freely, because pressing a gate costs nothing but a slot. If a gate seems to do nothing, it may be changing a sign that the bars cannot show yet.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'Why does looking again always give the same answer?',
+        text: `Opening the box is a measurement, and a measurement changes the state. After the first look Milton is Awake for certain or Asleep for certain, whichever was found. A second look then has only one possible answer. The first look of a 50/50 box is a fair coin, and every later look repeats it. To get a new random answer you need a fresh, identical box.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'What do the 20 identical boxes show?',
+        text: `Each opening in the batch is a fresh box prepared the same way, so each is a new fair draw with the same chances. The share of Awake comes out near the chance but is rarely exact, and it is different every time you run it. A small chance is not zero: with an 8% chance you will sometimes see several Awake in a batch of 20.`,
+      },
+      {
+        kind: 'misconception',
+        heading: 'Is the cat really alive and dead at once?',
+        text: `The cat is an analogy, and that is why this game carries the Analogy tag. Schrödinger described it in 1935 to show how strange it would be for something big to sit in a superposition. The maths of a single qubit is real and is what the game runs. A real cat is never in a clean superposition, because the air, the light and the box itself keep interacting with it, which is called decoherence.`,
+      },
+      {
+        kind: 'explain',
+        heading: `What does finishing Milton's Box show?`,
+        text: `You have seen that the chance of an outcome is its amplitude squared, that a superposition is built with the Hadamard gate, that a sign you cannot see can still steer a result once amplitudes interfere, and that opening a box changes it. Finishing counts the game as completed for Module 2.`,
+      },
+    ],
+  },
   bloch_runner: {
     tag: 'Accurate',
     sections: [

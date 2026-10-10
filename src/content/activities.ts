@@ -18,6 +18,7 @@ const LIST: ActivityInfo[] = [
   game('quantum_heist', 'Quantum Heist'),
   game('coin_flip', 'Quantum Penny Paradox'),
   game('schrodingers_stealth', "Schrödinger's Stealth"),
+  game('miltons_box', "Milton's Box"),
   game('bloch_runner', 'Bloch Runner'),
   game('photon_escape_room', 'Photon Escape Room'),
   game('alice_and_bob', 'Alice & Bob: Escape Together'),

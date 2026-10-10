@@ -17,7 +17,7 @@ export const AskButton: React.FC<Props> = ({ label, text, noAnswer, onAsk }) => 
   <button
     className="chip"
     onClick={() => onAsk({ label, text, ...(noAnswer ? { noAnswer: true } : {}) })}
-    aria-label={`Ask Dr Quantum about this: ${label}`}
+    aria-label={`Ask Dr. Milton Schrody about this: ${label}`}
     style={{ alignSelf: 'flex-start', minHeight: 44, fontSize: '0.56rem' }}
   >
     <Sparkles size={14} color="var(--yellow)" />

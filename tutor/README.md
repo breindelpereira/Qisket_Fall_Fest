@@ -1,6 +1,6 @@
 # The tutor's notes
 
-Dr Quantum answers only from the files in this folder (the AI tutor never makes up facts from its own memory). Everything here is bundled into `index.json`, which the app and the function both read.
+Dr. Milton Schrody (the AI tutor) answers only from the files in this folder (the AI tutor never makes up facts from its own memory). Everything here is bundled into `index.json`, which the app and the function both read.
 
 ## What is in the folder
 

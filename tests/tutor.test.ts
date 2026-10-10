@@ -923,7 +923,7 @@ describe('Small talk and who may call the function', () => {
     expect(isSmallTalk('What is a qubit?')).toBe(false);
     const reply = smallTalkAnswer({ order: 2, lessonId: 'module_2' }, INDEX);
     expect(reply.provider).toBe('prepared');
-    expect(reply.answer).toMatch(/^Hi! I'm Dr Quantum/);
+    expect(reply.answer).toMatch(/^Hi! I'm Dr. Milton Schrody/);
     expect(reply.answer).toContain(starterQuestions(INDEX, 'module_2', 2)[0]);
 
     const f = vi.fn();
@@ -931,9 +931,9 @@ describe('Small talk and who may call the function', () => {
       request: { question: 'Hi', lessonId: 'module_2', order: 2, level: 'beginner', history: [] },
       index: INDEX, searcher: SEARCHER, prepared: PREPARED, online: true, url: 'https://tutor.example/api/tutor', fetchImpl: f as unknown as typeof fetch,
     });
-    expect(r.answer).toMatch(/Dr Quantum/);
+    expect(r.answer).toMatch(/Dr. Milton Schrody/);
     expect(f).not.toHaveBeenCalled();
-    expect(offlineAnswer(SEARCHER, { question: 'hey', order: 0, lessonId: 'module_0', level: 'beginner' }, INDEX).answer).toMatch(/Dr Quantum/);
+    expect(offlineAnswer(SEARCHER, { question: 'hey', order: 0, lessonId: 'module_0', level: 'beginner' }, INDEX).answer).toMatch(/Dr. Milton Schrody/);
   });
 
   it('tells the model to start with the answer and not to talk about its own instructions', () => {

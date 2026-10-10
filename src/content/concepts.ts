@@ -17,7 +17,7 @@ export const CONCEPTS: Record<string, ConceptRecord> = {
     name: 'Quantum Measurement',
     summary: 'Measurement collapses a superposition into a definitive classical outcome with probability proportional to the squared magnitude of its amplitude (Born Rule).',
     prerequisites: ['concept_qubits'],
-    relatedGames: ['schrodingers_stealth'],
+    relatedGames: ['schrodingers_stealth', 'miltons_box'],
     relatedSims: ['shots_histogram_lab'],
     relatedLessons: ['module_2'],
     honestyTag: 'Accurate',

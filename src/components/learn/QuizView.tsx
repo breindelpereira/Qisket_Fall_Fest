@@ -6,7 +6,7 @@ import { gradeQuiz, passRule, percent } from '../../core/learn/quiz';
 import type { QuizResult } from '../../core/learn/quiz';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, frameStyle } from '../shared/arcadeTheme';
-import { DrQuantum } from '../shared/DrQuantum';
+import { Milton } from '../shared/Milton';
 import type { TutorFocus } from '../../core/tutor/types';
 import { snippet } from '../../core/tutor/focus';
 import { AskButton } from './AskButton';
@@ -88,7 +88,7 @@ export const QuizView: React.FC<Props> = ({ quiz, lesson, nextLesson, onBackToLe
     return (
       <div ref={topRef} style={frameStyle(theme)}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <DrQuantum size={72} mood={result.passed ? 'happy' : 'wow'} />
+          <Milton size={72} mood={result.passed ? 'happy' : 'wow'} />
           <div>
             <Eyebrow color={theme.accent}>QUIZ RESULTS</Eyebrow>
             <div style={{ fontFamily: RETRO, fontSize: '3rem', lineHeight: 1, marginTop: 4 }}>

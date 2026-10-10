@@ -93,7 +93,7 @@ export function makeAnswerItem(question: SavedMessage, answer: SavedMessage, ctx
 
 /** A whole conversation. `chatId` stays the same while the chat goes on, so saving it again updates the saved copy. */
 export function makeChatItem(chatId: string, messages: SavedMessage[], ctx: SaveContext, now: Date = new Date()): SavedItem {
-  const firstQuestion = messages.find((m) => m.role === 'user')?.text ?? 'Chat with Dr Quantum';
+  const firstQuestion = messages.find((m) => m.role === 'user')?.text ?? 'Chat with Dr. Milton Schrody';
   return {
     id: `c:${chatId}`,
     kind: 'chat',

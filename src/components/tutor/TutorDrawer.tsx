@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, HelpCircle, History as HistoryIcon, Library, Plus, Save, Send, SlidersHorizontal, X } from 'lucide-react';
-import { DrQuantum } from '../shared/DrQuantum';
+import { Milton } from '../shared/Milton';
 import { ACTIVITIES } from '../../content/activities';
 import { activityStore } from '../../core/tutor/activityStore';
 import { askTutor } from '../../core/tutor/client';
@@ -319,9 +319,9 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-            <DrQuantum size={44} />
+            <Milton size={44} />
             <div style={{ minWidth: 0 }}>
-              <div className="pixel" style={{ fontSize: '0.8rem' }}>Ask Dr Quantum</div>
+              <div className="pixel" style={{ fontSize: '0.8rem' }}>Dr. Milton Schrody</div>
               <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.3 }}>
                 {here ? `Helping with ${here.where}: ${here.title}` : 'Your quantum tutor'}
               </div>
@@ -526,7 +526,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
                   </div>
                 );
               })}
-              {busy && <div role="status" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Dr Quantum is thinking…</div>}
+              {busy && <div role="status" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Dr. Milton Schrody is thinking…</div>}
               {loadFailed && <div style={{ fontSize: '0.8rem', color: 'var(--pink)', fontWeight: 700 }}>The notes could not be loaded. Close the tutor and try again.</div>}
               {messages.length === 0 && !needsChoice && starters.length > 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
