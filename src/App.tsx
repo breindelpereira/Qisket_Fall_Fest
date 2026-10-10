@@ -42,6 +42,7 @@ import type { LearnView } from './components/learn/learnView';
 import { AfterGameSheet } from './components/learn/AfterGameSheet';
 import { TutorDrawer } from './components/tutor/TutorDrawer';
 import { tutorPosition } from './core/tutor/position';
+import type { TutorFocus } from './core/tutor/types';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
 import { ProgressStore } from './utils/progressStore';
 import { startOffer } from './core/learn/start';
@@ -331,6 +332,12 @@ export default function App() {
   const [learnView, setLearnView] = useState<LearnView>({ kind: 'home' });
   const mainRef = useRef<HTMLElement>(null);
   const [tutorOpen, setTutorOpen] = useState(false);
+  // The part of a lesson or quiz the learner tapped "Ask about this" on; forgotten when the tutor is closed
+  const [tutorFocus, setTutorFocus] = useState<TutorFocus | null>(null);
+  const askAbout = (focus: TutorFocus) => {
+    setTutorFocus(focus);
+    setTutorOpen(true);
+  };
   // The lesson a game was opened from (so finishing it can offer that lesson's next step) and the sheet that does so
   const [originLesson, setOriginLesson] = useState<string | null>(null);
   const promptedRef = useRef<Set<string>>(new Set());
@@ -527,6 +534,7 @@ export default function App() {
             availableSimIds={AVAILABLE_SIM_IDS}
             onOpenGame={openGames}
             onOpenSim={openSims}
+            onAsk={askAbout}
           />
         )}
 
@@ -638,7 +646,9 @@ export default function App() {
 
       <TutorDrawer
         open={tutorOpen}
-        onClose={() => setTutorOpen(false)}
+        onClose={() => { setTutorOpen(false); setTutorFocus(null); }}
+        focus={tutorFocus}
+        onClearFocus={() => setTutorFocus(null)}
         position={tutorAt}
         inQuiz={activeTab === 'learn' && learnView.kind === 'quiz'}
         onOpenLesson={(lessonId) => { setTutorOpen(false); openLearn({ kind: 'lesson', lessonId }); }}

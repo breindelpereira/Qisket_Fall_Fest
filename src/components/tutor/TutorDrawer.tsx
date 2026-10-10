@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { BookOpen, Bookmark, BookmarkCheck, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, X } from 'lucide-react';
 import { DrQuantum } from '../shared/DrQuantum';
 import { ACTIVITIES } from '../../content/activities';
 import { activityStore } from '../../core/tutor/activityStore';
@@ -16,7 +16,7 @@ import {
 import type { SavedItem, SavedMessage } from '../../core/tutor/saved';
 import { starterQuestions } from '../../core/tutor/starters';
 import { LEVEL_LABELS, LIMITS, TUTOR_LEVELS } from '../../core/tutor/types';
-import type { ActivityRef, TutorLevel, TutorResponse, TutorSource } from '../../core/tutor/types';
+import type { ActivityRef, TutorFocus, TutorLevel, TutorResponse, TutorSource } from '../../core/tutor/types';
 import { safeStorage } from '../../utils/safeStorage';
 import { SavedList } from './SavedList';
 import type { KeptTab } from './SavedList';
@@ -30,6 +30,9 @@ interface Props {
   /** A quiz is open: the tutor explains ideas but never says which option is right. */
   inQuiz: boolean;
   onOpenLesson: (lessonId: string) => void;
+  /** The part of the page the learner tapped "Ask about this" on: its text goes with every question until it is cleared. */
+  focus: TutorFocus | null;
+  onClearFocus: () => void;
 }
 
 interface Message {
@@ -45,6 +48,9 @@ interface Message {
 const TUTOR_URL = (import.meta.env.VITE_TUTOR_URL as string | undefined)?.trim() ?? '';
 
 const newChatId = (): string => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+
+/** Questions to offer once a part of the page has been chosen: they work for any part, because the part's text goes along. */
+const FOCUS_STARTERS = ['Explain this in simple words.', 'Why does this matter?', 'Can you give me an example?'];
 
 const GAME_STATUS_WORDS: Record<ActivityRef['status'], string> = {
   playing: 'playing now',
@@ -77,7 +83,7 @@ function provenance(m: Message): string | null {
   return 'From the notes on your device (could not reach the online tutor).';
 }
 
-export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: Props) {
+export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, focus, onClearFocus }: Props) {
   const [knowledge, setKnowledge] = useState<TutorKnowledge | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [consent, setConsent] = useState<TutorConsent | null>(() => readConsent(safeStorage()));
@@ -174,7 +180,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
       setInput('');
       setBusy(true);
       const reply = await askTutor({
-        request: { question, lessonId: position.lessonId, order: position.order, level, history: recent, inQuiz, ...(gameForTutor ? { activity: gameForTutor } : {}) },
+        request: { question, lessonId: position.lessonId, order: position.order, level, history: recent, inQuiz, ...(gameForTutor ? { activity: gameForTutor } : {}), ...(focus ? { focus } : {}) },
         index: knowledge.index,
         searcher: knowledge.searcher,
         prepared: knowledge.prepared,
@@ -191,7 +197,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
       writeHistory(safeStorage(), list);
       setPastChats(list);
     },
-    [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats, gameForTutor],
+    [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats, gameForTutor, focus],
   );
 
   if (!open) return null;
@@ -203,7 +209,11 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
 
   const here = knowledge?.index.courseMap.find((e) => e.lessonId === position.lessonId);
   const reached = knowledge?.index.courseMap.find((e) => e.order === position.order);
-  const starters = knowledge ? starterQuestions(knowledge.index, position.lessonId, position.order, gameForTutor ?? undefined) : [];
+  const starters = focus
+    ? FOCUS_STARTERS
+    : knowledge
+      ? starterQuestions(knowledge.index, position.lessonId, position.order, gameForTutor ?? undefined)
+      : [];
   const needsChoice = consent === null;
   const canAsk = !needsChoice && !busy && knowledge !== null;
 
@@ -365,6 +375,22 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson }: P
                 </button>
               ))}
             </div>
+
+            {focus && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255, 210, 63, 0.12)', border: '2px solid var(--yellow)', borderRadius: 14, padding: '6px 6px 6px 12px' }}>
+                <FileText size={16} color="var(--yellow)" style={{ flexShrink: 0 }} />
+                <span style={{ flex: 1, minWidth: 0, fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.35, overflowWrap: 'anywhere' }}>
+                  Asking about: {focus.label}
+                </span>
+                <button
+                  aria-label="Stop asking about this part"
+                  onClick={onClearFocus}
+                  style={{ background: 'rgba(255, 255, 255, 0.14)', borderRadius: '50%', width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            )}
 
             {activity && gameTitle && !inQuiz && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>

@@ -14,6 +14,10 @@ import { Banner, Eyebrow } from '../shared/Arcade';
 import { THEMES } from '../shared/arcadeTheme';
 import { DrQuantum } from '../shared/DrQuantum';
 import { HonestyTagBadge } from '../shared/HonestyTag';
+import { mathToText } from '../../content/lessonText';
+import type { TutorFocus } from '../../core/tutor/types';
+import { MIN_ASK_WORDS, snippet } from '../../core/tutor/focus';
+import { AskButton } from './AskButton';
 import { MathView } from './MathView';
 import { ReadingCard, VideoCard } from './VideoCard';
 
@@ -71,27 +75,50 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity: a, ready, onOpenG
   );
 };
 
-const Blocks: React.FC<{ blocks: LessonBlock[] }> = ({ blocks }) => (
+const wordsIn = (text: string): number => text.split(/\s+/).filter(Boolean).length;
+
+const Blocks: React.FC<{ blocks: LessonBlock[]; onAsk?: (focus: TutorFocus) => void }> = ({ blocks, onAsk }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
     {blocks.map((block, i) => {
       if (block.type === 'paragraph') {
-        return <p key={i} style={{ fontSize: '1rem', lineHeight: 1.6, color: '#f1eaff' }}>{block.text}</p>;
+        return (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <p style={{ fontSize: '1rem', lineHeight: 1.6, color: '#f1eaff' }}>{block.text}</p>
+            {onAsk && wordsIn(block.text) >= MIN_ASK_WORDS && (
+              <AskButton label={`Lecture notes: "${snippet(block.text)}"`} text={block.text} onAsk={onAsk} />
+            )}
+          </div>
+        );
       }
       if (block.type === 'note') {
-        return <Banner key={i} tone="info">{block.text}</Banner>;
+        return (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <Banner tone="info">{block.text}</Banner>
+            {onAsk && wordsIn(block.text) >= MIN_ASK_WORDS && (
+              <AskButton label={`Lecture notes: "${snippet(block.text)}"`} text={block.text} onAsk={onAsk} />
+            )}
+          </div>
+        );
       }
       return (
         <ul key={i} style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {block.items.map((item, j) => (
-            <li key={j} style={{ display: 'flex', gap: 12 }}>
-              <span aria-hidden="true" style={{ flexShrink: 0, width: 10, height: 10, marginTop: 8, borderRadius: 3, background: THEMES.yellow.accent }} />
-              <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {item.label && <b style={{ color: THEMES.yellow.accent, fontSize: '1rem' }}>{item.label}</b>}
-                {item.text && <span style={{ fontSize: '1rem', lineHeight: 1.6, color: '#f1eaff' }}>{item.text}</span>}
-                {item.math && <MathView expr={item.math} />}
-              </div>
-            </li>
-          ))}
+          {block.items.map((item, j) => {
+            const plain = `${item.label ? `${item.label}: ` : ''}${item.text ?? ''}${item.math ? ` ${mathToText(item.math)}` : ''}`.trim();
+            return (
+              <li key={j} style={{ display: 'flex', gap: 12 }}>
+                <span aria-hidden="true" style={{ flexShrink: 0, width: 10, height: 10, marginTop: 8, borderRadius: 3, background: THEMES.yellow.accent }} />
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {item.label && <b style={{ color: THEMES.yellow.accent, fontSize: '1rem' }}>{item.label}</b>}
+                  {item.text && <span style={{ fontSize: '1rem', lineHeight: 1.6, color: '#f1eaff' }}>{item.text}</span>}
+                  {item.math && <MathView expr={item.math} />}
+                  {/* a labelled point or an equation is worth explaining however short it is: that is where a beginner stops */}
+                  {onAsk && (Boolean(item.label) || Boolean(item.math) || wordsIn(plain) >= MIN_ASK_WORDS) && (
+                    <AskButton label={`Lecture notes: ${item.label ?? `"${snippet(plain)}"`}`} text={plain} onAsk={onAsk} />
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       );
     })}
@@ -109,10 +136,12 @@ interface Props {
   onOpenSim: (id: string) => void;
   /** Scroll to this stage when the page opens (the app sets it after a game, to land on the video). */
   focusStep?: LessonStep;
+  /** "Ask about this": opens the tutor with the text of one part of the page. */
+  onAsk?: (focus: TutorFocus) => void;
 }
 
 export const LessonView: React.FC<Props> = ({
-  lesson, availableGameIds, availableSimIds, onBack, onOpenLesson, onStartQuiz, onOpenGame: openGameFrom, onOpenSim, focusStep,
+  lesson, availableGameIds, availableSimIds, onBack, onOpenLesson, onStartQuiz, onOpenGame: openGameFrom, onOpenSim, focusStep, onAsk,
 }) => {
   // Remember which lesson a game was opened from, so the app can offer this lesson's next step when it ends
   const onOpenGame = (id: string) => openGameFrom(id, lesson.id);
@@ -270,14 +299,20 @@ export const LessonView: React.FC<Props> = ({
           </div>
         </div>
       )}
+      {lesson.ahaMoment && onAsk && (
+        <AskButton label={`The key idea: "${snippet(lesson.ahaMoment)}"`} text={lesson.ahaMoment} onAsk={onAsk} />
+      )}
 
       {lesson.misconceptionToFix && (
         <Banner tone="warn" title="COMMON MIX-UP">{lesson.misconceptionToFix}</Banner>
       )}
+      {lesson.misconceptionToFix && onAsk && (
+        <AskButton label={`A common mix-up: "${snippet(lesson.misconceptionToFix)}"`} text={lesson.misconceptionToFix} onAsk={onAsk} />
+      )}
 
       <Section title="Lecture notes" hint={stages.length > 0 ? 'A recap to keep. Come back to it any time.' : undefined}>
         <div className="card" style={{ padding: 16 }}>
-          <Blocks blocks={lesson.blocks} />
+          <Blocks blocks={lesson.blocks} onAsk={onAsk} />
         </div>
       </Section>
 

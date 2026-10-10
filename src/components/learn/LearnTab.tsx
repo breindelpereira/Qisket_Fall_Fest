@@ -6,6 +6,7 @@ import { LessonView } from './LessonView';
 import { PartView } from './PartView';
 import { QuizView } from './QuizView';
 import type { LearnView } from './learnView';
+import type { TutorFocus } from '../../core/tutor/types';
 
 interface Props {
   view: LearnView;
@@ -15,10 +16,12 @@ interface Props {
   availableSimIds: string[];
   onOpenGame: (id: string, lessonId?: string) => void;
   onOpenSim: (id: string) => void;
+  /** "Ask about this": open the tutor with the text of the part the learner tapped. */
+  onAsk?: (focus: TutorFocus) => void;
 }
 
 /** The Learn tab: course home, a part's module list, a lesson, or its quiz. The current view is owned by the app so it survives tab switches. */
-export const LearnTab: React.FC<Props> = ({ view, onNavigate, availableGameIds, availableSimIds, onOpenGame, onOpenSim }) => {
+export const LearnTab: React.FC<Props> = ({ view, onNavigate, availableGameIds, availableSimIds, onOpenGame, onOpenSim, onAsk }) => {
   const openLesson = (lessonId: string) => onNavigate({ kind: 'lesson', lessonId });
 
   if (view.kind === 'part') {
@@ -39,6 +42,7 @@ export const LearnTab: React.FC<Props> = ({ view, onNavigate, availableGameIds, 
           nextLesson={adjacentLessons(LESSONS, lesson.id).next}
           onBackToLesson={() => openLesson(lesson.id)}
           onOpenLesson={openLesson}
+          onAsk={onAsk}
         />
       );
     }
@@ -55,6 +59,7 @@ export const LearnTab: React.FC<Props> = ({ view, onNavigate, availableGameIds, 
         onOpenGame={onOpenGame}
         onOpenSim={onOpenSim}
         focusStep={view.kind === 'lesson' ? view.focus : undefined}
+        onAsk={onAsk}
       />
     );
   }

@@ -44,7 +44,7 @@ export function readReply(raw: unknown): TutorResponse | null {
  */
 export async function askTutor(ctx: AskContext): Promise<TutorResponse> {
   const { request, index, searcher } = ctx;
-  if (isSmallTalk(request.question) && !isGameQuestion(request.activity, request.question)) return smallTalkAnswer(request, index);
+  if (isSmallTalk(request.question) && !request.focus && !isGameQuestion(request.activity, request.question)) return smallTalkAnswer(request, index);
 
   const prepared = matchPrepared(ctx.prepared, request.question, request.order, index);
   const fallback = (reason: TutorResponse['reason']): TutorResponse =>

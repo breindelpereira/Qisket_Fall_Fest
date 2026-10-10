@@ -1,5 +1,6 @@
 import { callGemini, DEFAULT_MAX_OUTPUT_TOKENS, DEFAULT_TIMEOUT_MS } from './gemini.ts';
 import type { GeminiFailure, GeminiResult } from './gemini.ts';
+import { searchQueryFor } from './focus.ts';
 import { withGameBasics } from './game.ts';
 import { createBreaker, createLimiter, parseRequest } from './guards.ts';
 import type { Breaker, Limiter, LimiterOptions } from './guards.ts';
@@ -81,7 +82,7 @@ export async function answerQuestion(
 
   const searcher = deps.searcher ?? createSearcher(index.chunks);
   // while a game is open its own passages are searched too, whatever the learner's position in the course
-  const found = searcher.search(req.question, {
+  const found = searcher.search(searchQueryFor(req.question, req.focus), {
     maxOrder: req.order,
     focusLessonId: req.lessonId,
     allowPart3: req.level === 'math',

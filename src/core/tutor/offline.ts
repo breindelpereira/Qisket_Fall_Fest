@@ -1,3 +1,4 @@
+import { searchQueryFor } from './focus.ts';
 import { asksForHint, isGameQuestion, withGameBasics } from './game.ts';
 import { tokenize } from './search.ts';
 import type { Searcher, SearchHit } from './search.ts';
@@ -17,7 +18,7 @@ export function trimWords(text: string, max: number): string {
 /** Passage text on one line, so line breaks from the notes do not show up in a chat bubble. */
 const body = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
-export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' | 'level'> & Partial<Pick<TutorRequest, 'activity'>>;
+export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' | 'level'> & Partial<Pick<TutorRequest, 'activity' | 'focus'>>;
 
 /** A later passage must contain at least this share of the question's words before we say the question is about it. */
 const LATER_MIN_COVERAGE = 0.6;
@@ -65,12 +66,14 @@ export function smallTalkAnswer(input: Pick<OfflineInput, 'order' | 'lessonId'>,
  * function itself when nothing in the learner's part of the course matches the question.
  */
 export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: TutorIndex): TutorResponse {
-  if (isSmallTalk(input.question) && !isGameQuestion(input.activity, input.question)) return smallTalkAnswer(input, index);
+  if (isSmallTalk(input.question) && !input.focus && !isGameQuestion(input.activity, input.question)) return smallTalkAnswer(input, index);
   const allowPart3 = input.level === 'math';
   const { activity } = input;
   // while a game is open its own notes are searched too, and a plain "I'm stuck" still finds the game
   const [top] = withGameBasics(
-    searcher.search(input.question, { maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, activityId: activity?.id, limit: 1 }),
+    searcher.search(searchQueryFor(input.question, input.focus), {
+      maxOrder: input.order, focusLessonId: input.lessonId, allowPart3, activityId: activity?.id, limit: 1,
+    }),
     index,
     activity,
     input.question,

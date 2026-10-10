@@ -1,3 +1,4 @@
+import { formatFocus } from './focus.ts';
 import { formatGameContext } from './game.ts';
 import type { SearchHit } from './search.ts';
 import { LIMITS } from './types.ts';
@@ -95,6 +96,7 @@ export function buildPrompt(index: TutorIndex, req: TutorRequest, hits: SearchHi
     req.inQuiz ? 'The learner has a quiz open right now. Help them understand the idea, but never say which option is correct.' : '',
     `The learner has reached ${reached ? `${reached.where} (${reached.title})` : 'the start of the course'}.`,
     req.activity ? formatGameContext(index, req.activity) : '',
+    req.focus ? formatFocus(req.focus) : '',
     `COURSE MAP\n${formatCourseMap(index.courseMap, req.order)}`,
     `PASSAGES\n${formatPassages(passages)}`,
   ].filter(Boolean);

@@ -7,6 +7,9 @@ import type { QuizResult } from '../../core/learn/quiz';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { PIXEL, RETRO, THEMES, frameStyle } from '../shared/arcadeTheme';
 import { DrQuantum } from '../shared/DrQuantum';
+import type { TutorFocus } from '../../core/tutor/types';
+import { snippet } from '../../core/tutor/focus';
+import { AskButton } from './AskButton';
 
 const theme = THEMES.mint;
 const LETTERS = ['A', 'B', 'C', 'D'];
@@ -17,6 +20,8 @@ interface Props {
   nextLesson?: LessonRecord;
   onBackToLesson: () => void;
   onOpenLesson: (lessonId: string) => void;
+  /** "Ask about this": open the tutor with this question's text (never its options or its answer). */
+  onAsk?: (focus: TutorFocus) => void;
 }
 
 type OptionState = 'idle' | 'selected' | 'correct' | 'wrong' | 'dim';
@@ -29,7 +34,7 @@ const optionColors: Record<OptionState, { bg: string; border: string }> = {
   dim: { bg: 'rgba(255, 255, 255, 0.03)', border: 'rgba(255, 255, 255, 0.1)' },
 };
 
-export const QuizView: React.FC<Props> = ({ quiz, lesson, nextLesson, onBackToLesson, onOpenLesson }) => {
+export const QuizView: React.FC<Props> = ({ quiz, lesson, nextLesson, onBackToLesson, onOpenLesson, onAsk }) => {
   const { progress, saveQuiz } = useProgress();
   const total = quiz.questions.length;
 
@@ -184,6 +189,14 @@ export const QuizView: React.FC<Props> = ({ quiz, lesson, nextLesson, onBackToLe
       )}
 
       <h2 id="quiz-prompt" style={{ fontSize: '1.08rem', fontWeight: 800, lineHeight: 1.4 }}>{question.prompt}</h2>
+
+      {onAsk && (
+        <AskButton
+          label={`Quiz question ${index + 1}: "${snippet(question.prompt)}"`}
+          text={`${question.prompt}${checked ? ' (The learner has already checked their answer to this question.)' : ''}`}
+          onAsk={onAsk}
+        />
+      )}
 
       <div role="radiogroup" aria-labelledby="quiz-prompt" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {question.options.map((option, i) => {

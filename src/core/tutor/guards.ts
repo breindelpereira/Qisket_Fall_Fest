@@ -1,5 +1,5 @@
 import { ACTIVITY_STATUSES, LIMITS, TUTOR_LEVELS } from './types.ts';
-import type { ActivityRef, ActivityStatus, TutorChunk, TutorIndex, TutorRequest, TutorTurn } from './types.ts';
+import type { ActivityRef, ActivityStatus, TutorChunk, TutorFocus, TutorIndex, TutorRequest, TutorTurn } from './types.ts';
 
 export type ParsedRequest = { ok: true; req: TutorRequest } | { ok: false; error: string };
 
@@ -29,6 +29,17 @@ export function parseActivity(raw: unknown, chunks?: TutorChunk[]): ActivityRef 
     if (value) ref[key] = value;
   }
   return ref;
+}
+
+/** The part of the page the learner asked about. Like the game, it is extra context: a bad value is dropped, not refused. */
+export function parseFocus(raw: unknown): TutorFocus | undefined {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return undefined;
+  const f = raw as Record<string, unknown>;
+  if (typeof f.text !== 'string') return undefined;
+  const text = tidy(f.text).slice(0, LIMITS.focusTextChars).trim();
+  if (!text) return undefined;
+  const label = typeof f.label === 'string' ? tidy(f.label).slice(0, LIMITS.focusLabelChars).trim() : '';
+  return { label: label || 'this part of the page', text };
 }
 
 /** Checks what a client sent. Anything unexpected is refused, never repaired, except over-long chat history which is trimmed. */
@@ -63,9 +74,14 @@ export function parseRequest(raw: unknown, index: Pick<TutorIndex, 'courseMap'> 
   }
 
   const activity = parseActivity(body.activity, index.chunks);
+  const focus = parseFocus(body.focus);
   return {
     ok: true,
-    req: { question, lessonId, order, level: level as TutorRequest['level'], history, inQuiz: body.inQuiz === true, ...(activity ? { activity } : {}) },
+    req: {
+      question, lessonId, order, level: level as TutorRequest['level'], history, inQuiz: body.inQuiz === true,
+      ...(activity ? { activity } : {}),
+      ...(focus ? { focus } : {}),
+    },
   };
 }
 

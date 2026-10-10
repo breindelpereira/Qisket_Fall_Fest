@@ -80,6 +80,17 @@ export interface ActivityRef {
   hint?: string;
 }
 
+/**
+ * A part of a lesson or a quiz the learner tapped "Ask about this" on: plain text of what is on the screen there, so a
+ * question like "explain this" can be answered about the right thing. It is data, never instructions.
+ */
+export interface TutorFocus {
+  /** Where it is, in a few words: "Lecture notes: The Born rule", "Quiz question 2". */
+  label: string;
+  /** The text of that part, as it is shown. */
+  text: string;
+}
+
 export interface TutorRequest {
   question: string;
   /** The lesson the learner has open (or is on). Its passages count for more. */
@@ -92,6 +103,8 @@ export interface TutorRequest {
   inQuiz?: boolean;
   /** The game the learner is playing or has just played. */
   activity?: ActivityRef;
+  /** The part of the page the learner asked about. */
+  focus?: TutorFocus;
 }
 
 export interface TutorSource {
@@ -120,4 +133,7 @@ export const LIMITS = {
   turnChars: 500,
   /** Each of the game's text fields (step, mission, state, hint). */
   activityChars: 400,
+  /** The label and the text of the part the learner asked about. */
+  focusLabelChars: 120,
+  focusTextChars: 800,
 } as const;
