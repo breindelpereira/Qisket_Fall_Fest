@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, History as HistoryIcon, Library, Plus, Save, Send, SlidersHorizontal, X } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, FileText, Gamepad2, HelpCircle, History as HistoryIcon, Library, Plus, Save, Send, SlidersHorizontal, X } from 'lucide-react';
 import { DrQuantum } from '../shared/DrQuantum';
 import { ACTIVITIES } from '../../content/activities';
 import { activityStore } from '../../core/tutor/activityStore';
@@ -484,17 +484,32 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
                     {provenance(m) && <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.35 }}>{provenance(m)}</div>}
                     {((m.sources && m.sources.length > 0) || asked) && (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-                        {m.sources?.map((s) => (
-                          <button
-                            key={`${s.lessonId}:${s.heading}`}
-                            className="chip"
-                            onClick={() => onOpenLesson(s.lessonId)}
-                            style={textChip}
-                          >
-                            <BookOpen size={14} style={{ flexShrink: 0 }} />
-                            <span>{s.where ? `${s.where}: ` : ''}{s.heading}</span>
-                          </button>
-                        ))}
+                        {m.sources?.map((s) =>
+                          // a passage about the game or lab being played is a question of its own: tapping it asks it
+                          s.where === 'Game' || s.where === 'Lab' ? (
+                            <button
+                              key={`${s.lessonId}:${s.heading}`}
+                              className="chip"
+                              disabled={!canAsk}
+                              onClick={() => void send(s.heading)}
+                              aria-label={`Ask: ${s.heading}`}
+                              style={{ ...textChip, opacity: canAsk ? 1 : 0.6 }}
+                            >
+                              <HelpCircle size={14} style={{ flexShrink: 0 }} />
+                              <span>{s.heading}</span>
+                            </button>
+                          ) : (
+                            <button
+                              key={`${s.lessonId}:${s.heading}`}
+                              className="chip"
+                              onClick={() => onOpenLesson(s.lessonId)}
+                              style={textChip}
+                            >
+                              <BookOpen size={14} style={{ flexShrink: 0 }} />
+                              <span>{s.where ? `${s.where}: ` : ''}{s.heading}</span>
+                            </button>
+                          ),
+                        )}
                         {asked && (
                           <button
                             className="chip"
