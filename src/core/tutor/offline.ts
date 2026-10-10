@@ -85,9 +85,14 @@ export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: Tu
     const source: TutorSource = { lessonId: c.lessonId, heading: c.heading, where: c.where };
     const tagNote = c.tag === 'Analogy' || c.tag === 'Simplified model' ? ` (This is ${c.tag === 'Analogy' ? 'an analogy' : 'a simplified model'}.)` : '';
     // the game's own hint is on the device, so a learner who is stuck can have it even when no tutor can be reached
+    // the intro was only added because the question was vague: say where the learner is first
+    const where =
+      activity && top.score === 0 && (activity.step || activity.state)
+        ? `Right now: ${[activity.step, activity.state].filter(Boolean).join('. ')}\n\n`
+        : '';
     const hint = activity && activity.status === 'playing' && activity.hint && asksForHint(input.question) ? `\n\nThe game's hint for this step: ${activity.hint}` : '';
     return {
-      answer: `From ${c.where}: ${c.heading}\n\n${trimWords(body(c.text), 80)}${tagNote}${hint}`,
+      answer: `${where}From ${c.where}: ${c.heading}\n\n${trimWords(body(c.text), 80)}${tagNote}${hint}`,
       sources: [source],
       provider: 'offline',
     };

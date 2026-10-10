@@ -329,7 +329,7 @@ describe('Answers about a game without the model', () => {
   });
 
   it('does not take "what do I do now" for small talk while a game is open', () => {
-    expect(ask('what do I do now', playing()).answer).toMatch(/^From Game:/);
+    expect(ask('what do I do now', playing()).answer).toMatch(/From Game:/);
     expect(ask('what do I do now').answer).toMatch(/^Hi! I'm Dr Quantum/);
   });
 });
@@ -524,5 +524,24 @@ describe('The tutor while a lab is open', () => {
   it('never offers one lab\'s passages while another is open', () => {
     const hits = SEARCHER.search('how does the bomb test work', { maxOrder: 40, activityId: 'grover_explorer' });
     expect(hits.some((h) => h.chunk.activityId === 'mach_zehnder_lab')).toBe(false);
+  });
+});
+
+describe('Vague questions while a game is open', () => {
+  const act: ActivityRef = { id: 'bloch_runner', status: 'playing', step: 'Level 3 of 8: The Other Side', state: 'Gates used so far: H.' };
+
+  it('treats "whats going on?" as a question about the screen', () => {
+    for (const q of ["Whats going on?", "what's happening", 'huh', 'what now']) expect(looksLikeGameHelp(q), q).toBe(true);
+    expect(withGameBasics([], INDEX, act, 'Whats going on?').length).toBe(1);
+  });
+
+  it('answers a vague question offline by saying where the learner is', () => {
+    const r = offlineAnswer(SEARCHER, { question: 'Whats going on?', order: 0, lessonId: 'module_0', level: 'beginner', activity: act }, INDEX);
+    expect(r.answer).toContain('Right now: Level 3 of 8: The Other Side');
+    expect(r.answer).toContain('Gates used so far: H.');
+  });
+
+  it('still turns away a longer question that has nothing to do with it', () => {
+    expect(withGameBasics([], INDEX, act, 'What is the capital of France?')).toEqual([]);
   });
 });

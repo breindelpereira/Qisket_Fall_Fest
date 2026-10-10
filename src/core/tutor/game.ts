@@ -28,7 +28,7 @@ export function gameIntro(index: Pick<TutorIndex, 'chunks'>, activityId: string)
  * topic ("I'm stuck", "what do I do now", "why did I lose"). A question like that goes to the game's passages.
  */
 const GAME_HELP_WORDS =
-  /\b(stuck|hints?|help|confus\w*|lost|doubts?|clues?|no idea|give up|not working|(?:don'?t|dont|do not|can'?t|cant) (?:get|understand|know|see|figure)|how (?:do|can|should) i|what (?:do|should) i|what now|what next|(?:this|the|that|current) (?:level|stage|sector|round|room|case|ward|card|hop|step|screen|game|puzzle|part|checkpoint|patient)|level|stage|sector|puzzle|stars?|shields?|alarm|par)\b/i;
+  /\b(stuck|hints?|help|confus\w*|lost|doubts?|clues?|no idea|give up|not working|what(?:'?s| is| are)? (?:going on|happening|this|that|happened|next)|whats (?:going on|happening|this|that|happened|next)|what (?:now|next)|explain|huh|wait|why|(?:don'?t|dont|do not|can'?t|cant) (?:get|understand|know|see|figure)|how (?:do|can|should) i|what (?:do|should) i|what now|what next|(?:this|the|that|current) (?:level|stage|sector|round|room|case|ward|card|hop|step|screen|game|puzzle|part|checkpoint|patient)|level|stage|sector|puzzle|stars?|shields?|alarm|par)\b/i;
 
 export const looksLikeGameHelp = (question: string): boolean => GAME_HELP_WORDS.test(question);
 
@@ -48,7 +48,10 @@ export const asksForHint = (question: string): boolean => STUCK_WORDS.test(quest
  * like "I don't get this" is not turned away for lack of keywords.
  */
 export function withGameBasics(hits: SearchHit[], index: Pick<TutorIndex, 'chunks'>, activity: ActivityRef | undefined, question: string): SearchHit[] {
-  if (!activity || !looksLikeGameHelp(question)) return hits;
+  if (!activity) return hits;
+  // a very short question that matched nothing at all ("whats going on?") can only be about what is on the screen
+  const vague = hits.length === 0 && question.trim().split(/\s+/).length <= 4;
+  if (!looksLikeGameHelp(question) && !vague) return hits;
   if (hits.some((h) => h.chunk.activityId === activity.id)) return hits;
   const intro = gameIntro(index, activity.id);
   return intro ? [...hits, { chunk: intro, score: 0, matched: 0, coverage: 0 }] : hits;
