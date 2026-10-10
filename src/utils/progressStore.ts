@@ -10,6 +10,7 @@ export interface ProgressState {
   quizScores: Record<string, number>; // quizId -> best score [0.0 - 1.0]
   conceptQuizzes: Record<string, string[]>; // conceptId -> ids of the quizzes taken for it
   readLessons: string[]; // lessons marked as read (for lessons that have no quiz)
+  solvedProblems: string[]; // Math Companion practice problems solved (they do not count towards course progress)
   conceptMastery: Record<string, MasteryTier>;
   lastUpdated: string;
 }
@@ -72,6 +73,7 @@ const createDefaultState = (): ProgressState => ({
   quizScores: {},
   conceptQuizzes: {},
   readLessons: [],
+  solvedProblems: [],
   conceptMastery: {},
   lastUpdated: new Date().toISOString(),
 });
@@ -125,6 +127,7 @@ export const ProgressStore = {
         quizScores: parsed.quizScores || {},
         conceptQuizzes: parsed.conceptQuizzes || {},
         readLessons: parsed.readLessons || [],
+        solvedProblems: parsed.solvedProblems || [],
       };
     } catch {
       return createDefaultState();
@@ -215,6 +218,15 @@ export const ProgressStore = {
     if (read && !has) state.readLessons.push(lessonId);
     if (!read && has) state.readLessons = state.readLessons.filter((id) => id !== lessonId);
     ProgressStore.save(state);
+    return state;
+  },
+
+  recordProblemSolved: (problemId: string): ProgressState => {
+    const state = ProgressStore.get();
+    if (!state.solvedProblems.includes(problemId)) {
+      state.solvedProblems.push(problemId);
+      ProgressStore.save(state);
+    }
     return state;
   },
 

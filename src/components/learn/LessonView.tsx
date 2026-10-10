@@ -18,7 +18,9 @@ import { mathToText } from '../../content/lessonText';
 import type { TutorFocus } from '../../core/tutor/types';
 import { MIN_ASK_WORDS, snippet } from '../../core/tutor/focus';
 import { AskButton } from './AskButton';
+import { practiceFor } from '../../content/practice';
 import { MathView } from './MathView';
+import { PracticeView } from './PracticeView';
 import { ReadingCard, VideoCard } from './VideoCard';
 
 const sectionTitle: React.CSSProperties = { fontSize: '0.72rem', lineHeight: 1.5 };
@@ -315,6 +317,12 @@ export const LessonView: React.FC<Props> = ({
           <Blocks blocks={lesson.blocks} onAsk={onAsk} />
         </div>
       </Section>
+
+      {lesson.part === 3 && practiceFor(lesson.id).length > 0 && (
+        <Section title="Practice" hint="Try it yourself. Wrong answers cost nothing, and the working is there when you want it.">
+          <PracticeView problems={practiceFor(lesson.id)} onAsk={onAsk} />
+        </Section>
+      )}
 
       {quiz ? (
         <Section title="Check yourself">

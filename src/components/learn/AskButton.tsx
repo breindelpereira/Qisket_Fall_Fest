@@ -7,14 +7,16 @@ interface Props {
   label: string;
   /** The plain text of the part, exactly as the learner sees it. */
   text: string;
+  /** A practice problem: the tutor must not give the final answer. */
+  noAnswer?: boolean;
   onAsk: (focus: TutorFocus) => void;
 }
 
 /** "Ask about this": opens the tutor with the text of one part of the page, so the learner does not have to retype it. */
-export const AskButton: React.FC<Props> = ({ label, text, onAsk }) => (
+export const AskButton: React.FC<Props> = ({ label, text, noAnswer, onAsk }) => (
   <button
     className="chip"
-    onClick={() => onAsk({ label, text })}
+    onClick={() => onAsk({ label, text, ...(noAnswer ? { noAnswer: true } : {}) })}
     aria-label={`Ask Dr Quantum about this: ${label}`}
     style={{ alignSelf: 'flex-start', minHeight: 44, fontSize: '0.56rem' }}
   >

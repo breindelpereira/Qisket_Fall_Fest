@@ -39,7 +39,7 @@ export function parseFocus(raw: unknown): TutorFocus | undefined {
   const text = tidy(f.text).slice(0, LIMITS.focusTextChars).trim();
   if (!text) return undefined;
   const label = typeof f.label === 'string' ? tidy(f.label).slice(0, LIMITS.focusLabelChars).trim() : '';
-  return { label: label || 'this part of the page', text };
+  return { label: label || 'this part of the page', text, ...(f.noAnswer === true ? { noAnswer: true } : {}) };
 }
 
 /** Checks what a client sent. Anything unexpected is refused, never repaired, except over-long chat history which is trimmed. */

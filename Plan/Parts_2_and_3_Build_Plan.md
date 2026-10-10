@@ -10,6 +10,14 @@ This is the working plan for the three biggest pieces left in Qisket. It is writ
 
 Read "Ground rules" once, then jump to your workstream.
 
+### Status
+
+| Workstream | State |
+| --- | --- |
+| **A** Tutor notes (15 files) | **Done**: `tutor/notes/hw_module_0` to `hw_module_8_9` and `math_week_0`, `math_lesson_1` to `5`. Still worth doing: have a second person check every claim, and add Part 2 and Part 3 questions to `tutor/eval-questions.json` (the test expects exactly 20 today, so change that test with it). |
+| **C** Part 3 practice | **Done** for C0 to C3 and C5: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen. Not done: seeded problem variants, and the optional Maths Workbench (C4). |
+| **B** Part 2 games and labs | **Not started.** The lessons they belong to are now deeper, so the explanations they refer to exist. |
+
 ---
 
 ## 0. Where we are today

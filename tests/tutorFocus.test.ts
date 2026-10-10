@@ -147,3 +147,19 @@ describe('The buttons themselves', () => {
     }
   });
 });
+
+describe('Practice problems: the tutor helps but never answers', () => {
+  const problem: TutorFocus = { label: 'Practice: "A qubit is in the state…"', text: 'A qubit is in the state (3/5)|0⟩ + β|1⟩. Find β.', noAnswer: true };
+
+  it('keeps the practice flag when the part is sent', () => {
+    expect(parseFocus(problem)).toEqual(problem);
+    expect(parseFocus({ ...problem, noAnswer: 'yes' })).not.toHaveProperty('noAnswer');
+  });
+
+  it('tells the model to guide and never state the final answer', () => {
+    const s = buildPrompt(INDEX, { ...base, question: 'What is the answer?', focus: problem }, []).system;
+    expect(s).toContain('practice problem the learner is solving');
+    expect(s).toContain('never state the final answer');
+    expect(formatFocus({ label: 'x', text: 'y' })).not.toContain('practice problem');
+  });
+});

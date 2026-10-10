@@ -89,6 +89,8 @@ export interface TutorFocus {
   label: string;
   /** The text of that part, as it is shown. */
   text: string;
+  /** A practice problem: help the learner work it out and never state the final answer. */
+  noAnswer?: boolean;
 }
 
 export interface TutorRequest {

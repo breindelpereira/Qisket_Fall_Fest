@@ -21,6 +21,10 @@ export function useProgress() {
     ProgressStore.setLessonRead(lessonId, read);
   }, []);
 
+  const solveProblem = useCallback((problemId: string) => {
+    ProgressStore.recordProblemSolved(problemId);
+  }, []);
+
   const getMastery = useCallback((conceptId: string): MasteryTier => {
     return progress.conceptMastery[conceptId] || 'locked';
   }, [progress]);
@@ -31,6 +35,7 @@ export function useProgress() {
     runSimulation,
     saveQuiz,
     setLessonRead,
+    solveProblem,
     getMastery,
   };
 }
