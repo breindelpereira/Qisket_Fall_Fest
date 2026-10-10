@@ -97,8 +97,10 @@ const SpeedMenu: React.FC<{ speed: Speed; onChoose: (speed: Speed) => void }> = 
 export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference }) => {
   const [embedOn, setEmbedOn] = useState(false);
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' || navigator.onLine !== false);
-  const [fullscreen, setFullscreen] = useState(false);
-  const [fullscreenRefused, setFullscreenRefused] = useState(false);
+  // The browser's own full screen when it allows it; otherwise (iPhones, some app webviews) the card covers the page instead
+  const [nativeFullscreen, setNativeFullscreen] = useState(false);
+  const [coversPage, setCoversPage] = useState(false);
+  const fullscreen = nativeFullscreen || coversPage;
   const [prefs, setPrefs] = useState<PlayerPrefs>(() => readPrefs(safeStorage()));
   const frameRef = useRef<HTMLIFrameElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -120,10 +122,19 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   }, []);
 
   useEffect(() => {
-    const onChange = () => setFullscreen(document.fullscreenElement === wrapperRef.current);
+    const onChange = () => setNativeFullscreen(document.fullscreenElement === wrapperRef.current);
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
+
+  useEffect(() => {
+    if (!coversPage) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setCoversPage(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [coversPage]);
 
   // Once the player is up, apply the remembered speed and captions (and again after a retry or a change)
   const live = showPlayer && (player.status === 'ready' || player.status === 'playing');
@@ -170,8 +181,19 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   const toggleFullscreen = () => {
     const el = wrapperRef.current;
     if (!el) return;
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else void el.requestFullscreen?.().catch(() => setFullscreenRefused(true));
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+      return;
+    }
+    if (coversPage) {
+      setCoversPage(false);
+      return;
+    }
+    if (!el.requestFullscreen) {
+      setCoversPage(true);
+      return;
+    }
+    el.requestFullscreen().catch(() => setCoversPage(true));
   };
 
   // A finished clip reads as complete (the player is paused a moment before the very end)
@@ -179,8 +201,31 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   const problem = showPlayer && player.status === 'error';
   const stuck = showPlayer && player.status === 'ready' && player.slow;
   const externalIsPrimary = !online || problem || stuck;
-  const canFullscreen = typeof document !== 'undefined' && document.fullscreenEnabled && !fullscreenRefused;
   const segment = clip ? `${formatClock(clip.start)}–${formatClock(clip.end)}` : null;
+
+  // In full screen these two sit in the same row as play and skip, so the video can have the rest of the screen
+  const ccButton = (
+    <button
+      className="chip"
+      aria-pressed={prefs.captions}
+      aria-label={prefs.captions ? 'Captions on. Tap to turn off' : 'Captions off. Tap to turn on'}
+      onClick={() => choose({ ...prefs, captions: !prefs.captions })}
+      style={{ marginLeft: fullscreen ? undefined : 'auto', justifyContent: 'center', padding: '8px 12px' }}
+    >
+      {prefs.captions ? <Captions size={18} /> : <CaptionsOff size={18} />}
+      <span>CC</span>
+    </button>
+  );
+  const fullscreenButton = (
+    <button
+      className="chip"
+      onClick={toggleFullscreen}
+      aria-label={fullscreen ? 'Exit full screen' : 'Full screen'}
+      style={{ ...iconButton, marginLeft: fullscreen ? undefined : 'auto' }}
+    >
+      {fullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+    </button>
+  );
 
   return (
     <div
@@ -192,7 +237,10 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
       <div
         ref={wrapperRef}
         style={fullscreen
-          ? { height: '100%', display: 'flex', flexDirection: 'column', background: '#000', padding: 12, gap: 8 }
+          ? {
+              height: '100%', display: 'flex', flexDirection: 'column', background: '#000', padding: 8, gap: 4,
+              ...(coversPage ? { position: 'fixed', inset: 0, zIndex: 60, height: '100dvh' } : {}),
+            }
           : { display: 'flex', flexDirection: 'column', gap: 10 }}
       >
         <div
@@ -256,22 +304,29 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
         </div>
 
         {clip && showPlayer && position && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <input
-              type="range"
-              aria-label="Seek within the clip"
-              min={0}
-              max={Math.max(1, Math.round(position.total))}
-              step={1}
-              value={Math.round(position.elapsed)}
-              aria-valuetext={`${formatClock(position.elapsed)} of ${formatClock(position.total)}`}
-              onChange={(e) => clip && seekTo(clip.start + Number(e.target.value))}
-              style={{ width: '100%', minHeight: 44, accentColor: '#ffd23f' }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }} aria-hidden="true">
-              <span className="retro-num" style={{ fontSize: '1.2rem' }}>{formatClock(position.elapsed)}</span>
-              <span className="retro-num" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>{formatClock(position.total)}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: fullscreen ? 2 : 8 }}>
+            {/* in full screen the times sit beside the bar, so the controls take two rows and the video keeps the rest */}
+            <div style={fullscreen ? { display: 'flex', alignItems: 'center', gap: 10 } : undefined}>
+              {fullscreen && <span className="retro-num" aria-hidden="true" style={{ fontSize: '1.1rem' }}>{formatClock(position.elapsed)}</span>}
+              <input
+                type="range"
+                aria-label="Seek within the clip"
+                min={0}
+                max={Math.max(1, Math.round(position.total))}
+                step={1}
+                value={Math.round(position.elapsed)}
+                aria-valuetext={`${formatClock(position.elapsed)} of ${formatClock(position.total)}`}
+                onChange={(e) => clip && seekTo(clip.start + Number(e.target.value))}
+                style={{ width: '100%', minHeight: 44, accentColor: '#ffd23f', ...(fullscreen ? { flex: 1, minWidth: 0 } : {}) }}
+              />
+              {fullscreen && <span className="retro-num" aria-hidden="true" style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>{formatClock(position.total)}</span>}
             </div>
+            {!fullscreen && (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }} aria-hidden="true">
+                <span className="retro-num" style={{ fontSize: '1.2rem' }}>{formatClock(position.elapsed)}</span>
+                <span className="retro-num" style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>{formatClock(position.total)}</span>
+              </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <button
                 className="btn"
@@ -289,31 +344,23 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
                 <span>10s</span>
                 <RotateCw size={16} />
               </button>
-              {canFullscreen && (
-                <button
-                  className="chip"
-                  onClick={toggleFullscreen}
-                  aria-label={fullscreen ? 'Exit full screen' : 'Full screen'}
-                  style={{ ...iconButton, marginLeft: 'auto' }}
-                >
-                  {fullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
-                </button>
+              {fullscreen ? (
+                <div role="group" aria-label="Speed, captions and full screen" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <SpeedMenu speed={prefs.speed} onChoose={(v) => choose({ ...prefs, speed: v })} />
+                  {ccButton}
+                  {fullscreenButton}
+                </div>
+              ) : (
+                fullscreenButton
               )}
             </div>
-            <div role="group" aria-label="Speed and captions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-              <SpeedMenu speed={prefs.speed} onChoose={(v) => choose({ ...prefs, speed: v })} />
-              <button
-                className="chip"
-                aria-pressed={prefs.captions}
-                aria-label={prefs.captions ? 'Captions on. Tap to turn off' : 'Captions off. Tap to turn on'}
-                onClick={() => choose({ ...prefs, captions: !prefs.captions })}
-                style={{ marginLeft: 'auto', justifyContent: 'center', padding: '8px 12px' }}
-              >
-                {prefs.captions ? <Captions size={18} /> : <CaptionsOff size={18} />}
-                <span>CC</span>
-              </button>
-            </div>
-            {prefs.captions && (
+            {!fullscreen && (
+              <div role="group" aria-label="Speed and captions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                <SpeedMenu speed={prefs.speed} onChoose={(v) => choose({ ...prefs, speed: v })} />
+                {ccButton}
+              </div>
+            )}
+            {!fullscreen && prefs.captions && (
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                 English captions show when the video has them. Not every video does.
               </div>
