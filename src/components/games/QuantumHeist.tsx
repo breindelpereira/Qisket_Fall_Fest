@@ -933,8 +933,8 @@ export const QuantumHeist: React.FC = () => {
               |ψ⟩ = (1/√2)|0⟩ + (1/√2)|1⟩
             </div>
             <p>
-              By the Born rule, the probability is \(|\alpha|^2 = (1/\sqrt{2})^2 = 0.5\) (50%).
-              In Stage 2, the <b>[Z] gate</b> inverts the phase to produce destructive interference, which is the foundational mechanism behind quantum speedups like Grover's and Shor's algorithms!
+              By the Born rule, the chance of each door is the amplitude squared: |α|² = (1/√2)² = 0.5, or 50%.
+              In Stage 2, the <b>[Z] gate</b> flips the sign (the phase) of the |1⟩ part. Waves with opposite signs cancel, and arranging that cancellation is the mechanism behind speed-ups in algorithms like Grover's and Shor's.
             </p>
             <HonestyTagBadge tag="Simplified model" />
           </div>

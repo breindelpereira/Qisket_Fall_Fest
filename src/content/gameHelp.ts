@@ -158,17 +158,17 @@ export const GAME_HELP: Record<string, GameHelp> = {
       {
         kind: 'explain',
         heading: `How do I play Schrödinger's Stealth?`,
-        text: `There are three sectors, each a corridor of laser checkpoints. Every checkpoint is a slot shaped like a quantum state: vertical for |0>, horizontal for |1>, 45 degrees for |+>, and the opposite diagonal for |->. Your agent starts vertical. Use the gadgets [H] TILT, [X] FLIP and [Z] PHASE to change your stance until it matches the slot, then slip through. A match passes with certainty. A mismatch lets the laser measure you, which collapses your state and raises the alarm by 25 to 40 percent, and at 100 percent the run is over. Using gadgets is free. A gadget pulses when it is the one that helps.`,
+        text: `There are three sectors, each a corridor of laser checkpoints. Every checkpoint is a slot shaped like a quantum state: vertical for |0>, horizontal for |1>, 45 degrees for |+>, and the opposite diagonal for |->. Your agent starts vertical. Use the gadgets [H] TILT, [X] FLIP and [Z] PHASE to change your stance until it matches the slot, then slip through. A match passes with certainty. If it does not match, the laser measures you: you slip through with exactly the chance shown (a 50% match passes half the time), and otherwise your state collapses and the alarm goes up by 25 to 40 percent. At 100 percent the run is over. Using gadgets is free. A gadget pulses when it is the one that helps.`,
       },
       {
         kind: 'explain',
         heading: 'What are the blue and pink scanners?',
-        text: `A scanner is a measurement in a chosen basis. The blue scanner asks whether you are |0> or |1>. The pink scanner asks whether you are |+> or |->, and the purple scanner is the pink one set for the negative diagonal. If your state matches what a scanner is asking about, the answer is certain and nothing is disturbed. If it does not match, the answer is random, and the measurement collapses your state.`,
+        text: `A scanner is a measurement in a chosen basis. The blue scanner asks whether you are |0> or |1>. The pink scanner asks whether you are |+> or |->, and the purple scanner is the pink one set for the negative diagonal. If your state matches what a scanner is asking about, the answer is certain and nothing is disturbed. If it does not match, the answer is random with chances given by the Born rule, and the measurement collapses your state into whichever answer came out.`,
       },
       {
         kind: 'faq',
         heading: 'What does the percent chance of stealth mean?',
-        text: `It is the chance that this scanner finds you in exactly the state its slot is shaped for. When your state is close enough to a match (above 95%) the game shows 100% STEALTH and you pass for certain. Anything lower is a gamble: the laser measures you and you may be caught.`,
+        text: `It is the chance that this scanner finds you in exactly the state its slot is shaped for. When your state is close enough to a match (above 95%) the game shows 100% STEALTH and you pass for certain. Anything lower is a gamble: the laser measures you, you slip through with exactly that chance, and otherwise you are caught.`,
       },
       {
         kind: 'faq',

@@ -5,6 +5,7 @@ import { ArcadeHeader, ArcadeModal, Banner, Eyebrow, GameTitle } from '../shared
 import { THEMES, RETRO, frameStyle, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import { sound } from '../../utils/audio';
 import { Complex } from '../../core/circuit';
+import { afterScan, matchProbability, MATCH_AT, slipsThrough } from '../../core/games/stealth';
 import { 
   Sparkles, 
   ShieldAlert, 
@@ -138,37 +139,9 @@ export const SchrodingersStealth: React.FC = () => {
   const currentSectorCheckpoints = sectorCheckpoints[sector];
   const activeCheckpoint = currentSectorCheckpoints[currentStep] || currentSectorCheckpoints[currentSectorCheckpoints.length - 1];
 
-  // Helper to compute stealth probability (quantum inner product overlap)
-  const getStealthProbability = (): number => {
-    if (!activeCheckpoint) return 1.0;
-    const { requiredState } = activeCheckpoint;
-
-    let targetAlpha = Complex.zero();
-    let targetBeta = Complex.zero();
-
-    const inv = 1 / Math.SQRT2;
-    if (requiredState === '0') {
-      targetAlpha = Complex.one();
-      targetBeta = Complex.zero();
-    } else if (requiredState === '1') {
-      targetAlpha = Complex.zero();
-      targetBeta = Complex.one();
-    } else if (requiredState === '+') {
-      targetAlpha = Complex.create(inv, 0);
-      targetBeta = Complex.create(inv, 0);
-    } else if (requiredState === '-') {
-      targetAlpha = Complex.create(inv, 0);
-      targetBeta = Complex.create(-inv, 0);
-    }
-
-    const innerRe = targetAlpha.re * alpha.re + targetAlpha.im * alpha.im + targetBeta.re * beta.re + targetBeta.im * beta.im;
-    const innerIm = targetAlpha.re * alpha.im - targetAlpha.im * alpha.re + targetBeta.re * beta.im - targetBeta.im * beta.re;
-    const prob = innerRe * innerRe + innerIm * innerIm;
-    return Math.max(0, Math.min(1, prob));
-  };
-
-  const stealthProb = getStealthProbability();
-  const isAligned = stealthProb > 0.95;
+  // The chance the laser finds the agent in the slot's state: the Born rule, |<slot|agent>|^2
+  const stealthProb = activeCheckpoint ? matchProbability(alpha, beta, activeCheckpoint.requiredState) : 1;
+  const isAligned = stealthProb > MATCH_AT;
 
   // Quantum Gadget operations
   const applyHadamard = () => {
@@ -196,10 +169,16 @@ export const SchrodingersStealth: React.FC = () => {
   const advanceThroughCheckpoint = () => {
     if (soundEnabled) sound.playFootstep();
 
-    // If aligned, 100% deterministic stealth pass
-    if (isAligned) {
+    // The laser measures the agent: they slip through with the Born-rule chance (certain when the stance matches), and
+    // afterwards they are in the slot's state, or in the state that could never have passed
+    const slipped = slipsThrough(stealthProb);
+    const [afterA, afterB] = afterScan(activeCheckpoint.requiredState, slipped);
+    setAlpha(afterA);
+    setBeta(afterB);
+
+    if (slipped) {
       if (soundEnabled) sound.playSuccess();
-      setScore((s) => s + 350);
+      setScore((s) => s + (isAligned ? 350 : 250));
 
       const nextStep = currentStep + 1;
       if (nextStep >= currentSectorCheckpoints.length) {
@@ -214,10 +193,14 @@ export const SchrodingersStealth: React.FC = () => {
       } else {
         setCurrentStep(nextStep);
         setGameState('checkpoint_passed');
-        setFeedback(`CLEARED CHECKPOINT ${currentStep + 1}! You slipped through the slot undetected. Next laser ahead!`);
+        setFeedback(
+          isAligned
+            ? `CLEARED CHECKPOINT ${currentStep + 1}! You slipped through the slot undetected. Next laser ahead!`
+            : `LUCKY! The laser measured you and found you in the slot's state, a ${Math.round(stealthProb * 100)}% chance. Next laser ahead!`,
+        );
       }
     } else {
-      // Mismatch! Random Born-rule collapse
+      // The measurement found the agent in the other state: the wave function collapsed and the alarm goes off
       if (soundEnabled) sound.playAlert();
       const penalty = stealthProb === 0 ? 40 : 25;
       const nextAlarm = alarmLevel + penalty;
@@ -705,7 +688,7 @@ export const SchrodingersStealth: React.FC = () => {
               </li>
             </ul>
             <p>
-              This is the cornerstone of <b>Quantum Key Distribution (BB84)</b>: If an eavesdropper listens in using the wrong basis, they inevitably cause collapse, alerting the sender and receiver immediately!
+              This idea sits at the heart of <b>Quantum Key Distribution (BB84)</b>: an eavesdropper who guesses the wrong basis disturbs the qubit, and the sender and receiver notice the extra errors when they compare a sample of their bits.
             </p>
           </div>
         )}
