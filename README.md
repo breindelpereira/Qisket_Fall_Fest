@@ -1,12 +1,12 @@
 # Qisket
 
-A mobile-first app that teaches quantum computing through games, labs, lessons and an AI tutor. Built for the Qiskit Fall Fest 2026 (React 19, TypeScript, Vite; wrapped for Android with Capacitor).
+A mobile-first app that teaches quantum computing through games, labs, lessons and an AI tutor, also usable as a website on a computer. Built for the Qiskit Fall Fest 2026 (React 19, TypeScript, Vite; wrapped for Android with Capacitor).
 
 Everything quantum runs on small physics engines written in this repo (no quantum library), and every game and lab shows an honesty tag (Analogy, Simplified model, Accurate, Experimental/Contested).
 
 ## For judges: what to look at (3 minutes)
 
-**Try it:** `LIVE_APP_LINK` (opens in any browser, best on a phone) or install the Android app from the latest GitHub Release (`app-debug.apk`). No account, no sign-in.
+**Try it:** `LIVE_APP_LINK` (opens in any browser, on a computer or a phone) or install the Android app from the latest GitHub Release (`app-debug.apk`). No account, no sign-in.
 
 **What it is:** a complete beginner course in quantum computing that you learn by playing. 11 games, 10 hands-on labs, lessons with short videos, quizzes, and an AI tutor that knows what you are looking at.
 
@@ -72,6 +72,14 @@ Please read before you start:
 - `RULES.md`: the project rulebook (honesty tags, 44px touch targets, no timers without an untimed mode).
 - `Plan/Parts_2_and_3_Build_Plan.md`: what is left to build and how to pick up a piece (tutor notes, hardware games and labs, maths practice).
 - `tutor/README.md`: how to write tutor notes (a good first job that needs no coding).
+
+## Website (computer and phone)
+
+The same build runs in any browser. From 900 px wide it switches to a desktop layout: tabs in a top bar, games and labs in a grid, lessons and games in a centred reading column, the tutor as a dialog, and Esc closes dialogs. Narrower windows get the phone layout.
+
+The three phone-sensor games (Hold the Bloch Sphere, Shake to Measure, Entangled Pair) are Android-app only: the website build leaves them out, and lessons do not mention them. The `npm run dev` server shows them so they can be developed.
+
+To publish the website, run `npm run build` and upload the `dist/` folder to any static host. If it is served from a sub-folder (for example GitHub Pages at `/Qisket_Fall_Fest/`), build with `VITE_BASE=./ npm run build`, which works from any folder. Then add the site's address to `ALLOWED_ORIGINS` in `worker/wrangler.toml` and redeploy the Worker, otherwise the browser blocks the online tutor (the offline tutor still works).
 
 ## Android (only if you need the phone app)
 

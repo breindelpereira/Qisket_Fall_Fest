@@ -715,9 +715,9 @@ export default function App() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
-      <header className="app-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '14px 20px 8px', zIndex: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-brand">
           <img
             src={`${import.meta.env.BASE_URL}favicon.svg`}
             alt=""
@@ -733,17 +733,17 @@ export default function App() {
           </div>
         </div>
 
-        <button className="chip" onClick={() => setTutorOpen(true)}>
+        <button className="chip app-ask" onClick={() => setTutorOpen(true)}>
           <Sparkles size={16} color="var(--yellow)" />
           <span>Ask Tutor</span>
         </button>
       </header>
 
-      <main ref={mainRef} style={{ flex: 1, overflowY: 'auto', padding: '10px 20px 96px' }}>
+      <main ref={mainRef} className="app-main">
         {activeTab === 'home' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div className="page page-wide home-grid">
             {/* Mascot + primary action */}
-            <section className="card" style={{ padding: '18px 18px 22px', background: 'var(--bg-surface-elevated)' }}>
+            <section className="card home-hero" style={{ padding: '18px 18px 22px', background: 'var(--bg-surface-elevated)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                 <Milton size={92} />
                 <div style={{
@@ -780,7 +780,7 @@ export default function App() {
             </section>
 
             {/* XP / progress */}
-            <section className="card" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <section className="card home-progress" style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <span className="pixel" style={{ fontSize: '0.75rem' }}>Your progress</span>
                 <span className="retro-num" style={{ fontSize: '1.6rem', color: 'var(--yellow)' }}>{progressPercent}%</span>
@@ -813,8 +813,9 @@ export default function App() {
             </section>
 
             {/* Play / Experiment / Study */}
-            <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <section className="home-adventure">
               <h2 className="pixel" style={sectionTitle}>Choose your adventure</h2>
+              <div className="adventure-list">
               {[
                 { title: 'Play', sub: 'Arcade games that teach quantum', icon: Gamepad2, color: 'var(--yellow)', edge: 'var(--yellow-edge)', go: () => openGames(null) },
                 { title: 'Experiment', sub: 'Interactive labs: gates, light, entanglement', icon: FlaskConical, color: 'var(--pink)', edge: 'var(--pink-edge)', go: () => openSims(null) },
@@ -836,15 +837,17 @@ export default function App() {
                   </span>
                 </button>
               ))}
+              </div>
             </section>
 
-            <div style={{ textAlign: 'center', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-tertiary)' }}>
+            <div className="home-footer" style={{ textAlign: 'center', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-tertiary)' }}>
               NMIMS MPSTME × IBM Quantum · Qiskit Fall Fest '26
             </div>
           </div>
         )}
 
         {activeTab === 'learn' && (
+          <div className="page page-reading">
           <LearnTab
             view={learnView}
             onNavigate={setLearnView}
@@ -854,10 +857,11 @@ export default function App() {
             onOpenSim={openSims}
             onAsk={askAbout}
           />
+          </div>
         )}
 
         {activeTab === 'games' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className={`page ${activeGame ? 'page-narrow' : 'page-wide'}`} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {activeGame ? (
               <div>
                 <button
@@ -879,6 +883,7 @@ export default function App() {
                   </p>
                 </div>
 
+                <div className="hub-grid">
                 {SHOWN_GAMES.map(g => (
                   <article key={g.id} className="card" style={{
                     padding: 18, display: 'flex', flexDirection: 'column', gap: 12, borderColor: g.accent,
@@ -897,6 +902,7 @@ export default function App() {
                     </button>
                   </article>
                 ))}
+                </div>
 
               </>
             )}
@@ -904,7 +910,7 @@ export default function App() {
         )}
 
         {activeTab === 'sims' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className={`page ${activeSim ? 'page-narrow' : 'page-wide'}`} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {activeSim ? (
               <div>
                 <button onClick={() => setSelectedSim(null)} className="chip" style={{ marginBottom: 12 }}>
@@ -922,6 +928,7 @@ export default function App() {
                   </p>
                 </div>
 
+                <div className="hub-grid">
                 {SIMS.map(x => (
                   <article key={x.id} className="card" style={{
                     padding: 18, display: 'flex', flexDirection: 'column', gap: 12, borderColor: x.accent,
@@ -940,6 +947,7 @@ export default function App() {
                     </button>
                   </article>
                 ))}
+                </div>
 
               </>
             )}
@@ -947,6 +955,7 @@ export default function App() {
         )}
 
         {activeTab === 'progress' && (
+          <div className="page page-wide">
           <ProgressView
             games={SHOWN_GAMES.map((g) => ({ id: g.id, title: g.title, emoji: g.emoji }))}
             sims={SIMS.map((x) => ({ id: x.id, title: x.title, emoji: x.emoji }))}
@@ -954,6 +963,7 @@ export default function App() {
             onOpenSim={(id) => openSims(id)}
             onOpenLearn={(view) => openLearn(view)}
           />
+          </div>
         )}
       </main>
 
@@ -982,11 +992,7 @@ export default function App() {
         onOpenLesson={(lessonId) => { setTutorOpen(false); openLearn({ kind: 'lesson', lessonId }); }}
       />
 
-      <nav style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 68, background: 'var(--bg-nav)',
-        borderTop: '3px solid rgba(255, 255, 255, 0.1)', display: 'flex', alignItems: 'center',
-        justifyContent: 'space-around', padding: '0 8px', zIndex: 10,
-      }}>
+      <nav className="app-nav" aria-label="Main">
         {TABS.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

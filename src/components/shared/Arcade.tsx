@@ -70,7 +70,16 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string }> = 
 /** Full-screen dialog used for rules and briefings. */
 export const ArcadeModal: React.FC<{ theme: Theme; title: string; onClose: () => void; children: React.ReactNode; closeLabel?: string }> = ({
   theme, title, onClose, children, closeLabel = 'Got it',
-}) => (
+}) => {
+  // Escape closes a dialog on a computer
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  return (
   <div onClick={onClose} style={{
     position: 'fixed', inset: 0, background: 'rgba(23, 6, 54, 0.8)', backdropFilter: 'blur(6px)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 100,
@@ -83,4 +92,5 @@ export const ArcadeModal: React.FC<{ theme: Theme; title: string; onClose: () =>
       <button className="btn" onClick={onClose}>{closeLabel}</button>
     </div>
   </div>
-);
+  );
+};

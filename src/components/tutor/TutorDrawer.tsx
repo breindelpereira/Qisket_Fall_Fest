@@ -209,6 +209,16 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
     [busy, knowledge, consent, messages, position, level, inQuiz, chatId, pastChats, gameForTutor, focus],
   );
 
+  // Escape closes the drawer on a computer
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const submit = (e: FormEvent) => {
@@ -310,6 +320,7 @@ export function TutorDrawer({ open, onClose, position, inQuiz, onOpenLesson, foc
     >
       <div
         role="dialog"
+        className="tutor-sheet"
         aria-label="AI Quantum Tutor"
         onClick={(e) => e.stopPropagation()}
         style={{
