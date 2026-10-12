@@ -75,7 +75,7 @@ Please read before you start:
 
 ## Website (computer and phone)
 
-The same build runs in any browser. From 900 px wide it switches to a desktop layout: tabs in a top bar, games and labs in a grid, lessons and games in a centred reading column, the tutor as a dialog, and Esc closes dialogs. Narrower windows get the phone layout.
+The same build runs in any browser and picks its layout by itself (CSS in `src/desktop.css`, no setting): a computer window, or a tablet on its side, gets the desktop layout; a phone gets the phone layout. The desktop layout has tabs in a top bar, games and labs in a grid, lessons and games in a centred reading column, the tutor as a dialog, and Esc closes dialogs.
 
 The three phone-sensor games (Hold the Bloch Sphere, Shake to Measure, Entangled Pair) are Android-app only: the website build leaves them out, and lessons do not mention them. The `npm run dev` server shows them so they can be developed.
 

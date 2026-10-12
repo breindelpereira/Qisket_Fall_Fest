@@ -1,0 +1,113 @@
+/*
+ * Desktop website layout. index.css is the phone layout (a 440 px column with a bottom bar); everything here only applies
+ * on a computer. The browser decides which one it is, by itself:
+ *   - a window at least 900 px wide and 560 px tall (a laptop, a monitor, a tablet on its side), or
+ *   - a window at least 640 px wide on a device with a mouse (hover and a fine pointer), so a narrow desktop window or
+ *     the browser pane in an editor still gets the computer layout.
+ * A phone in portrait, or on its side (too short), keeps the phone layout. Loaded after index.css so it wins.
+ */
+
+/* ---------- Desktop website: a wide window with a top bar instead of the phone column ---------- */
+@media ((min-width: 900px) and (min-height: 560px)), ((min-width: 640px) and (hover: hover) and (pointer: fine)) {
+  #root {
+    max-width: none;
+    box-shadow: none;
+  }
+  .app-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 0 40px;
+  }
+  /* the header's two children become cells of the shell grid, so the tabs can sit between them */
+  .app-header { display: contents; }
+  .app-brand { grid-column: 1; grid-row: 1; padding: 16px 0; }
+  .app-ask { grid-column: 3; grid-row: 1; justify-self: end; align-self: center; }
+  .app-nav {
+    grid-column: 2;
+    grid-row: 1;
+    position: static;
+    height: auto;
+    background: transparent;
+    border-top: none;
+    gap: 6px;
+    padding: 0;
+    align-self: center;
+  }
+  .nav-tab {
+    flex-direction: row;
+    gap: 8px;
+    min-width: 0;
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 16px;
+    font-size: 0.6rem;
+    transition: background 0.15s ease;
+  }
+  .nav-tab:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+  .nav-tab .nav-icon { width: auto; height: auto; border-radius: 0; background: none !important; }
+  .nav-tab[aria-current='page'] { background: rgba(255, 210, 63, 0.18); color: var(--yellow); }
+  .app-main {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding: 12px 0 48px;
+  }
+  .page-wide { max-width: 1120px; }
+  .page-reading { max-width: 820px; }
+  .page-narrow { max-width: 820px; }
+
+  .home-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .home-adventure,
+  .home-footer { grid-column: 1 / -1; }
+  .adventure-list { flex-direction: row; }
+  .adventure-list > * { flex: 1; }
+
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 20px;
+  }
+
+  .tutor-sheet {
+    max-width: 680px !important;
+    height: 82vh !important;
+    max-height: 820px !important;
+    border-radius: 28px !important;
+    margin-bottom: 4vh;
+  }
+  .card:is(button):hover { border-color: var(--border-accent); }
+}
+
+/* A mouse can scroll and wants to see the bar; phones keep it hidden */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  * {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+  }
+}
+
+/* A narrow computer window (640 to 899 px): the tabs keep only their icons so the top bar fits */
+@media ((min-width: 640px) and (max-width: 899px)) and (hover: hover) and (pointer: fine) {
+  .nav-tab > span:last-child { display: none; }
+  .nav-tab { padding: 0 14px; }
+  .app-shell { padding: 0 20px; }
+}
+

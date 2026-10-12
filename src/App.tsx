@@ -802,7 +802,7 @@ export default function App() {
               <button
                 className="chip"
                 onClick={() => setActiveTab('progress')}
-                style={{ marginTop: 12, minHeight: 48, width: '100%', justifyContent: 'center' }}
+                style={{ marginTop: 12, minHeight: 48, width: '100%', justifyContent: 'center', whiteSpace: 'normal', textAlign: 'center', lineHeight: 1.5 }}
               >
                 <Trophy size={16} color="var(--yellow)" />
                 <span>
@@ -1000,6 +1000,8 @@ export default function App() {
             <button
               key={tab.id}
               className="nav-tab"
+              aria-label={tab.label}
+              title={tab.label}
               aria-current={isActive ? 'page' : undefined}
               onClick={() => {
                 if (tab.id === 'games') setSelectedGame(null);
