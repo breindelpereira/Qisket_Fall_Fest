@@ -33,7 +33,7 @@ Everything quantum runs on small physics engines written in this repo (no quantu
 - The Android app has been installed and used on a real phone (including full-screen video). The three sensor games and the hardware back button were checked with simulated input and on an emulator, not yet on a range of phones.
 - The hardware and maths text was written and tested by its author. A second person should still check every claim, and the hardware figures are dated snapshots (`src/content/hardwareData.ts`).
 
-**Team and contact:** `TEAM_NAMES`
+**Team and contact:** Breindel and Ananya
 
 ---
 
