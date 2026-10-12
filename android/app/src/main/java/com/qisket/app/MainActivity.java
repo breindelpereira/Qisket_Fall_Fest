@@ -3,6 +3,8 @@ package com.qisket.app;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -37,5 +39,22 @@ public class MainActivity extends BridgeActivity {
             return WindowInsetsCompat.CONSUMED;
         });
         ViewCompat.requestApplyInsets(webView);
+
+        // Back button: Capacitor core does not handle it (that is the @capacitor/app plugin, which this app does not use),
+        // so Android would close the activity at once. The page pushes one history entry per screen (see
+        // src/hooks/useBackNavigation.ts); here the web view walks back through them, and only on the first screen does
+        // the button leave the app.
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                WebView web = getBridge().getWebView();
+                if (web != null && web.canGoBack()) {
+                    web.goBack();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 }
