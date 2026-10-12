@@ -68,6 +68,7 @@ import { TutorDrawer } from './components/tutor/TutorDrawer';
 import { ProgressView } from './components/progress/ProgressView';
 import { useBadges } from './hooks/useBadges';
 import { isAppBuild } from './utils/motion';
+import { useBackNavigation } from './hooks/useBackNavigation';
 import { tutorPosition } from './core/tutor/position';
 import type { TutorFocus } from './core/tutor/types';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
@@ -631,6 +632,21 @@ export default function App() {
   const [originLesson, setOriginLesson] = useState<string | null>(null);
   const promptedRef = useRef<Set<string>>(new Set());
   const [afterGame, setAfterGame] = useState<{ gameId: string; lessonId: string } | null>(null);
+
+  // The phone's back button walks back through the screens instead of closing the app (see hooks/useBackNavigation.ts).
+  // The snapshot is everything that makes one screen different from another, including a sheet that is open.
+  useBackNavigation(
+    { tab: activeTab, game: selectedGame, sim: selectedSim, learn: learnView, tutor: tutorOpen, after: afterGame?.gameId ?? null },
+    (screen) => {
+      setActiveTab(screen.tab);
+      setSelectedGame(screen.game);
+      setSelectedSim(screen.sim);
+      setLearnView(screen.learn);
+      setTutorOpen(screen.tutor);
+      if (!screen.tutor) setTutorFocus(null);
+      if (!screen.after) setAfterGame(null);
+    },
+  );
 
   const { progress } = useProgress();
 
