@@ -1,10 +1,12 @@
 # Builds the website and publishes it to GitHub Pages.
 # One-time setup: in the repository, Settings > Pages > Build and deployment > Source = "GitHub Actions".
-# Then open the Actions tab, pick "Publish website" and press "Run workflow". It runs only when started by hand,
-# so a repository without Pages switched on never shows a failed run.
+# It republishes the site on every push to main, and can also be started by hand from the Actions tab
+# ("Publish website" > "Run workflow"). Tests and the key check run first, so a broken build is never published.
 name: Publish website
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
