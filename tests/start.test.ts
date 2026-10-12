@@ -14,6 +14,7 @@ const SIMS = [
   'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer', 'noise_lab',
   'qubit_metrics_lab', 'transmon_lab', 'topology_compiler', 'rydberg_blockade_lab', 'loss_budget_lab',
   'exchange_coupling_lab', 'annealing_lab', 'overhead_calculator', 'comparison_dashboard',
+  'maths_workbench',
 ];
 const offer = (id: string, games = GAMES, sims = SIMS) => startOffer(LESSON_BY_ID[id], games, sims);
 

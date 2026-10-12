@@ -16,6 +16,7 @@ const SIMS = [
   'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer', 'noise_lab',
   'qubit_metrics_lab', 'transmon_lab', 'topology_compiler', 'rydberg_blockade_lab', 'loss_budget_lab',
   'exchange_coupling_lab', 'annealing_lab', 'overhead_calculator', 'comparison_dashboard',
+  'maths_workbench',
 ];
 /** The same lists from before Module 0 and Module 7 had their games and labs, to test a module whose activities are not built yet. */
 const GAMES_BEFORE = GAMES.filter((g) => g !== 'hype_check' && g !== 'qubit_surgeon');

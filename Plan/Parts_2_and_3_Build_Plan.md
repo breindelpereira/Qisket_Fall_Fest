@@ -15,9 +15,9 @@ Read "Ground rules" once, then jump to your workstream.
 
 | Workstream | State |
 | --- | --- |
-| **A** Tutor notes (15 files) | **Done**: `tutor/notes/hw_module_0` to `hw_module_8_9` and `math_week_0`, `math_lesson_1` to `5`. Still worth doing: have a second person check every claim, and add Part 2 and Part 3 questions to `tutor/eval-questions.json` (the test expects exactly 20 today, so change that test with it). |
-| **C** Part 3 practice | **Done** for C0 to C3 and C5: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen. Not done: seeded problem variants, and the optional Maths Workbench (C4). |
-| **B** Part 2 games and labs | **Not started.** The lessons they belong to are now deeper, so the explanations they refer to exist. |
+| **A** Tutor notes (15 files) | **Done**: `tutor/notes/hw_module_0` to `hw_module_8_9` and `math_week_0`, `math_lesson_1` to `5`, and 17 more evaluation questions (37 in all: hardware, maths and Schrödinger's cat). Still worth doing: have a second person check every claim, and run `TUTOR_URL=<address> npm run tutor:eval` against the deployed function. |
+| **C** Part 3 practice | **Done**: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen, "New numbers" variants for ten of the problems, and the Maths Workbench lab (C4). Not done: more variant families, and links to external courses. |
+| **B** Part 2 games and labs | **Labs done (B0 and B1)**: the sourced data file (`src/content/hardwareData.ts`) and all nine labs, with tests, tutor help and notes. **Games not started (B2)**: the nine games reuse the lab maths in `src/core/hardware/`. Still open from B1: a second person must read the lab text against the code. |
 | **D** Phone-sensor games | **Planned, not started.** Waiting for the team to confirm the three games (section 4B). |
 
 ---

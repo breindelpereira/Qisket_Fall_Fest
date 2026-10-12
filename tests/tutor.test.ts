@@ -766,14 +766,26 @@ describe('Where the learner is in the course', () => {
   });
 });
 
-describe('The 20-question set: the notes find the right lesson', () => {
-  it('has twenty questions across the planned kinds', () => {
-    expect(EVAL).toHaveLength(20);
-    expect(new Set(EVAL.map((q) => q.id)).size).toBe(20);
+describe('The evaluation question set: the notes find the right lesson', () => {
+  it('has every planned kind of question: the first twenty cover Part 1, then come Parts 2 and 3 and the app cat', () => {
+    // q01 to q20 are the original set; q21 to q37 add hardware (Part 2), maths (Part 3) and Schrödinger's cat
+    expect(EVAL).toHaveLength(37);
+    expect(new Set(EVAL.map((q) => q.id)).size).toBe(37);
     for (const category of ['in-scope', 'paraphrase', 'out-of-scope', 'misconception', 'later-topic', 'injection']) {
       expect(EVAL.some((q) => q.category === category), category).toBe(true);
     }
     for (const q of EVAL) expect(INDEX.courseMap.some((e) => e.lessonId === q.lessonId), q.id).toBe(true);
+    // each new part has in-scope questions and an out-of-scope one; Part 2 also has a "comes later" one. Part 3 has no such
+    // question on purpose: the Math Companion comes after the whole main course, so a maths question is nearly always
+    // answered from a lesson the learner already has, and the tutor does not say "later" for it.
+    const part = (prefix: string) => EVAL.filter((q) => q.lessonId.startsWith(prefix));
+    for (const prefix of ['hw_module', 'math_']) {
+      expect(part(prefix).some((q) => q.category === 'out-of-scope'), prefix).toBe(true);
+      expect(part(prefix).length, prefix).toBeGreaterThanOrEqual(4);
+    }
+    expect(part('hw_module').some((q) => q.category === 'later-topic')).toBe(true);
+    expect(part('hw_module').length).toBeGreaterThanOrEqual(6);
+    expect(EVAL.filter((q) => q.level === 'math').length).toBeGreaterThanOrEqual(4);
   });
 
   for (const q of EVAL.filter((x) => x.expectLesson)) {

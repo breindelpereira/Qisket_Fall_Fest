@@ -38,6 +38,7 @@ import { TeleportationLab } from './components/simulations/TeleportationLab';
 import { DeutschJozsaExplorer } from './components/simulations/DeutschJozsaExplorer';
 import { GroverExplorer } from './components/simulations/GroverExplorer';
 import { NoiseLab } from './components/simulations/NoiseLab';
+import { MathsWorkbench } from './components/simulations/MathsWorkbench';
 import { QubitMetricsLab } from './components/simulations/QubitMetricsLab';
 import { TransmonLab } from './components/simulations/TransmonLab';
 import { TopologyCompiler } from './components/simulations/TopologyCompiler';
@@ -436,6 +437,17 @@ const SIMS: SimEntry[] = [
     btn: 'btn-sky',
     accent: '#38c8ff',
     Component: ComparisonDashboard,
+  },
+  {
+    id: 'maths_workbench',
+    title: 'Maths Workbench',
+    emoji: '🧮',
+    kicker: 'Math Companion · type and see',
+    blurb: "Type a qubit state or a 2 × 2 matrix as you would on paper and see its chances, its place on the Bloch sphere, whether it is a legal gate, and what it does.",
+    tag: 'Accurate',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: MathsWorkbench,
   },
 ];
 

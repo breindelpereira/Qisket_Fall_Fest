@@ -37,6 +37,8 @@ const LIST: ActivityInfo[] = [
   sim('deutsch_jozsa_explorer', 'Deutsch–Jozsa Explorer'),
   sim('grover_explorer', 'Grover Explorer'),
   sim('noise_lab', 'Noise Lab'),
+  // Part 3 labs
+  sim('maths_workbench', 'Maths Workbench'),
   // Part 2 games
   game('coherence_race', 'Coherence Race'),
   game('cool_down', 'Cool Down'),

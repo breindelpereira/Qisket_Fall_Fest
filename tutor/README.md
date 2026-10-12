@@ -8,7 +8,7 @@ Dr. Milton Schrody (the AI tutor) answers only from the files in this folder (th
 | --- | --- | --- |
 | `notes/<lessonId>.md` | Richer notes for one lesson: worked examples, FAQs, mix-ups, key words. | Yes |
 | `demo-answers.json` | Pre-written answers for questions we expect in a demo. Used when the online tutor is off or cannot be reached, so a demo still works without a network. | Yes |
-| `eval-questions.json` | The 20-question test set. | Yes |
+| `eval-questions.json` | The 37-question test set. | Yes |
 | `index.json` | Everything above plus the lesson text, split into passages. | **No**: run `npm run tutor:index` |
 
 Every lesson is searchable even without a notes file, because the lesson's own text is split into passages automatically. A notes file just makes answers better. Quiz questions are never included, so the tutor cannot leak an answer.
@@ -71,6 +71,6 @@ Commit `index.json` together with your notes.
 
 `demo-answers.json` is a list of `{ id, questions, answer, sources }`. `questions` are the ways a learner might ask it; a question matches when it uses (almost) the same words. Each source needs a `lessonId` and a `heading` that exists in the notes (a test checks this). A prepared answer is only shown once the learner has reached the lesson it comes from.
 
-## The 20-question set
+## The 37-question set
 
-`eval-questions.json` has the questions used to check the tutor. Each has the lesson the learner is on, a level, and rules for the answer: `mustContainAny` (at least one of these phrases) and `mustNotContain` (none of these). `expectLesson` and `expectNothing` / `expectLater` are checked automatically against the search in `npm test`. To check the real answers from the deployed function, see step 7 in `worker/README.md`.
+`eval-questions.json` has the questions used to check the tutor: q01 to q20 for Part 1, q21 to q29 for Part 2 (hardware, with one out-of-scope and one "comes later" question), q30 to q34 for Part 3 (maths, with one out-of-scope) and q35 to q37 about Schrödinger's cat and the app's own mascot. Each has the lesson the learner is on, a level, and rules for the answer: `mustContainAny` (at least one of these phrases) and `mustNotContain` (none of these). `expectLesson` and `expectNothing` / `expectLater` are checked automatically against the search in `npm test` (the test also pins the number of questions, so change it when you add one). Part 3 has no "comes later" question on purpose: the Math Companion comes after the whole main course, so a maths question is nearly always answered from a lesson the learner already has. To check the real answers from the deployed function, see step 7 in `worker/README.md`.

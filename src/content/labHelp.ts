@@ -693,6 +693,46 @@ export const LAB_HELP: Record<string, GameHelp> = {
       },
     ],
   },
+  maths_workbench: {
+    tag: 'Accurate',
+    sections: [
+      {
+        kind: 'explain',
+        heading: 'How do I use the Maths Workbench?',
+        text: `Choose A state or A matrix. For a state, type the amplitude of 0 and of 1 in the two boxes, or tap a preset. For a matrix, type its four entries row by row. You can write numbers the way you would on paper: 1/√2, 0.7071, i/√2 or (1+i)/2. The symbol buttons insert √, π and i for a phone keyboard. The screen then shows the chances, the point on the Bloch sphere, or whether the matrix is a legal gate.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'What does the squared sizes must add up to 1 message mean?',
+        text: `The chances of 0 and 1 come from the squared sizes of the two amplitudes, and a measurement has to give one of them, so the two chances must add up to 1. If they do not, the typed vector is not a valid state yet. The Normalise button divides both entries by the same number so that they do, which keeps the ratio between them and so the chances.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'How do I read the point on the Bloch sphere?',
+        text: `The picture shows the sphere seen from the side: up is z, to the right is x, and y points into the page. A state with z equal to 1 is |0⟩, with z equal to −1 is |1⟩. A state with z equal to zero is on the equator, where 0 and 1 are equally likely, and the direction around the equator is the relative phase.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'What does unitary mean for a matrix?',
+        text: `A matrix is unitary when multiplying its conjugate transpose by it gives the identity matrix. That is exactly the condition that it keeps the total chance at 1 for every state, so only unitary matrices can be quantum gates. A matrix such as all ones does not keep the total chance, so it is not a gate, and the workbench says so.`,
+      },
+      {
+        kind: 'faq',
+        heading: 'Why does it say a matrix is a gate up to a global phase?',
+        text: `Multiplying a whole state, or a whole matrix, by a number of size 1 changes nothing that any measurement can show. So minus X acts on measurable things exactly like X, and the workbench names it X times a phase. Only relative phases, between 0 and 1 inside a state, are physical.`,
+      },
+      {
+        kind: 'misconception',
+        heading: 'Does the workbench show more than one qubit?',
+        text: `No. It handles one qubit, with two amplitudes, and 2 by 2 matrices, which is where the arithmetic of the first lessons lives. Several qubits have four or more amplitudes and bigger matrices, and the Circuit Lab and the Two-Qubit Lab show those. The workbench is exact, with no noise and no sampling.`,
+      },
+      {
+        kind: 'explain',
+        heading: 'What should I notice in the Maths Workbench?',
+        text: `Notice that a state is just two numbers, a gate is a grid of four, and applying the gate is the multiplication from the lessons. Notice that chances come from squared sizes, so signs and phases are invisible until a gate turns them into chances, which you can see by applying H after a Z. And check that every named gate is unitary.`,
+      },
+    ],
+  },
 };
 
 export const LAB_HELP_IDS = Object.keys(LAB_HELP);

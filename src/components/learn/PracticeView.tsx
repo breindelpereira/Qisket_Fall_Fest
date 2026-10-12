@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { Check, ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Lightbulb, RefreshCw } from 'lucide-react';
 import type { PracticeProblem } from '../../content/practice';
+import { hasVariants, nextSeed, variantOf } from '../../content/practiceVariants';
 import { checkCells, sameAnswer } from '../../core/math/answer';
 import type { Verdict } from '../../core/math/answer';
 import { snippet } from '../../core/tutor/focus';
@@ -39,16 +40,19 @@ const ProblemCard: React.FC<{
   problem: PracticeProblem;
   index: number;
   solved: boolean;
+  startOpen: boolean;
   onSolved: (id: string) => void;
   onAsk?: (focus: TutorFocus) => void;
-}> = ({ problem: p, index, solved, onSolved, onAsk }) => {
+  /** Asks the same kind of problem again with different numbers (only for problems that have variants). */
+  onNewNumbers?: () => void;
+}> = ({ problem: p, index, solved, startOpen, onSolved, onAsk, onNewNumbers }) => {
   const n = cellCount(p);
   const [cells, setCells] = useState<string[]>(() => Array.from({ length: n }, () => ''));
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [hints, setHints] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
-  const [open, setOpen] = useState(!solved && index === 0);
+  const [open, setOpen] = useState(startOpen);
   const focusedCell = useRef(0);
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -161,6 +165,11 @@ const ProblemCard: React.FC<{
             >
               <Lightbulb size={16} /> {hints === 0 ? 'Hint' : hints === 1 ? 'Another hint' : 'No more hints'}
             </button>
+            {onNewNumbers && (done || attempts > 0) && (
+              <button className="chip" onClick={onNewNumbers} style={{ minHeight: 48 }}>
+                <RefreshCw size={16} /> New numbers
+              </button>
+            )}
           </div>
 
           {outcome?.kind === 'right' && (
@@ -219,6 +228,8 @@ const ProblemCard: React.FC<{
 /** The practice section at the bottom of a Math Companion lesson. */
 export const PracticeView: React.FC<{ problems: PracticeProblem[]; onAsk?: (focus: TutorFocus) => void }> = ({ problems, onAsk }) => {
   const { progress, solveProblem } = useProgress();
+  // which set of numbers each problem is showing: 0 is the original, anything else a variant (see content/practiceVariants.ts)
+  const [seeds, setSeeds] = useState<Record<string, number>>({});
   const solved = problems.filter((p) => progress.solvedProblems.includes(p.id)).length;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -231,16 +242,22 @@ export const PracticeView: React.FC<{ problems: PracticeProblem[]; onAsk?: (focu
       <p style={{ fontSize: '0.88rem', lineHeight: 1.45, color: 'var(--text-secondary)' }}>
         Type your answer in any form: 1/√2, 0.707 and √2/2 all count. Use the symbol buttons on a phone. Vectors are columns, entered top to bottom; matrices are entered row by row.
       </p>
-      {problems.map((p, i) => (
-        <ProblemCard
-          key={p.id}
-          problem={p}
-          index={i}
-          solved={progress.solvedProblems.includes(p.id)}
-          onSolved={solveProblem}
-          onAsk={onAsk}
-        />
-      ))}
+      {problems.map((p, i) => {
+        const seed = seeds[p.id] ?? 0;
+        const solved = progress.solvedProblems.includes(p.id);
+        return (
+          <ProblemCard
+            key={`${p.id}:${seed}`}
+            problem={seed > 0 ? variantOf(p.id, seed) : p}
+            index={i}
+            solved={seed > 0 ? false : solved}
+            startOpen={seed > 0 || (!solved && i === 0)}
+            onSolved={solveProblem}
+            onAsk={onAsk}
+            onNewNumbers={hasVariants(p.id) ? () => setSeeds((s) => ({ ...s, [p.id]: nextSeed(p.id, s[p.id] ?? 0) })) : undefined}
+          />
+        );
+      })}
     </div>
   );
 };

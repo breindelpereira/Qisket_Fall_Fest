@@ -117,7 +117,7 @@ export const CONCEPTS: Record<string, ConceptRecord> = {
     summary: 'Qubit states are column vectors, gates are unitary matrices and several qubits combine with the tensor product; this optional track checks intuition with calculation.',
     prerequisites: ['concept_qubits', 'concept_gates'],
     relatedGames: [],
-    relatedSims: [],
+    relatedSims: ['maths_workbench'],
     relatedLessons: [
       'math_week_0', 'math_lesson_1', 'math_lesson_2', 'math_lesson_3', 'math_lesson_4', 'math_lesson_5',
     ],

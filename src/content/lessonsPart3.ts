@@ -1,5 +1,5 @@
 import type { LessonRecord, MathExpr } from './types';
-import { makeLesson, video } from './lessonText';
+import { makeLesson, sim, video } from './lessonText';
 
 const X_MATRIX: MathExpr = [{ mat: [['0', '1'], ['1', '0']] }];
 const H_MATRIX: MathExpr = [{ frac: ['1', '√2'] }, { mat: [['1', '1'], ['1', '−1']] }];
@@ -133,7 +133,7 @@ export const PART3_LESSONS: LessonRecord[] = [
     linkedConceptId: 'concept_math',
     ahaMoment: 'Applying a gate is just multiplying a matrix by the state vector, and a valid gate is one that keeps the total probability at 1.',
     misconceptionToFix: 'When gates are written out, the first gate applied is the rightmost matrix, not the leftmost.',
-    activities: [],
+    activities: [sim('maths_workbench')],
     references: [
       video('Single qubit and its logic gates', 'Professor Nano', 'rD_fH7O-D5Y', 0, 824),
       video('The Hadamard Gate and the +, -, i and -i States', 'Quantum Soar', 'G9d0QWM82sU', 0, 147),

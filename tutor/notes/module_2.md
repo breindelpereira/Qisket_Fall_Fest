@@ -26,6 +26,12 @@ According to quantum mechanics, the randomness is built in. When the amplitudes 
 ## FAQ: What is wavefunction collapse?
 It is the name for the sudden change when you measure: a superposition turns into one definite outcome. After it, the state matches what you measured. The rule for the probabilities (the Born rule) is well tested. What collapse means physically is debated, with several interpretations that make the same predictions.
 
+## FAQ: What is Schrödinger's cat?
+It is a thought experiment from 1935 by the physicist Erwin Schrödinger. A cat sits in a sealed box with a device that releases poison if a single atom decays. If the atom is described as a superposition of "decayed" and "not decayed", the rules of quantum mechanics seem to say the cat is in a superposition of dead and alive until someone opens the box. Schrödinger offered it to show how strange it is to apply the rules of tiny things to an everyday object, not as an experiment anyone could run.
+
+## FAQ: Is Schrödinger's cat really both alive and dead?
+No experiment has ever put a cat, or anything that large, in a clean superposition. A real cat, the air around it and the light in the box interact with each other all the time, which spreads any superposition out into the surroundings (this is called decoherence), so a big object always looks as if it is in one state. What happens at the moment of measurement is still discussed as an interpretation question. The useful, testable part is the one-qubit version: a qubit in a superposition gives 0 or 1 with the chances the Born rule predicts, and a second look at the same qubit gives the same answer.
+
 ## FAQ: Does measurement need a conscious observer?
 No. In physics, a measurement is any interaction that records the outcome in a way that cannot be undone, such as a detector clicking. No person has to look.
 

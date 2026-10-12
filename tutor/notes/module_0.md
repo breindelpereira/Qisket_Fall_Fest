@@ -19,6 +19,9 @@ Adding up a column of numbers in a spreadsheet gains nothing from quantum tricks
 
 Working out how a caffeine molecule behaves is different. The molecule's electrons follow quantum rules, and the number of possibilities to track grows extremely fast as the molecule gets bigger. A classical computer struggles to keep up, while a quantum computer follows the same rules natively. That is the kind of job people hope quantum computers will do well.
 
+## FAQ: Who is Dr. Milton Schrody?
+Dr. Milton Schrody, called Milton, is the cat who is the tutor and mascot of Qisket. His name is a joke on Schrödinger's cat. He is a cartoon character, not a physics claim: nobody has ever put a real cat in a quantum superposition. In the game Milton's Box he stands for one qubit, who is Awake or Asleep when the box is opened.
+
 ## FAQ: Will a quantum computer replace my laptop or phone?
 No. Quantum computers are not meant to replace everyday computers. They are specialised machines for certain problems, and they currently need extreme conditions such as very low temperatures or vacuum chambers. Think of one as a special tool that sits next to normal computers, not instead of them.
 
