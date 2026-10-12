@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { ChevronRight, RotateCcw, Star } from 'lucide-react';
-import { useProgress } from '../../hooks/useProgress';
 import type { HonestyTag } from '../../content/types';
 import { Banner, ArcadeFrame, ArcadeHeader, GameTitle } from './Arcade';
 import { PIXEL, RETRO } from './arcadeTheme';
@@ -11,49 +10,6 @@ import { Milton } from './Milton';
  * Shared pieces of the level-based games in Part 2: the run (which level, how many stars, finished), the frame with its
  * header, the "next" button and the finish screen. A game keeps only its own rules and board.
  */
-export type StarCount = 0 | 1 | 2 | 3;
-
-export interface LevelRun {
-  levelIdx: number;
-  stars: Record<number, number>;
-  total: number;
-  finished: boolean;
-  /** Changes when the learner plays again, so each level's state starts fresh (use it in a React key). */
-  round: number;
-  isLast: boolean;
-  clear: (s: StarCount) => void;
-  next: () => void;
-  again: () => void;
-}
-
-/** Keeps track of one play-through of `levelCount` levels, and records the game as completed at the end. */
-export function useLevelRun(gameId: string, levelCount: number, conceptId = 'concept_hardware'): LevelRun {
-  const { completeGame } = useProgress();
-  const [levelIdx, setLevelIdx] = useState(0);
-  const [stars, setStars] = useState<Record<number, number>>({});
-  const [finished, setFinished] = useState(false);
-  const [round, setRound] = useState(0);
-
-  const clear = useCallback((s: StarCount) => setStars((prev) => ({ ...prev, [levelIdx]: Math.max(prev[levelIdx] ?? 0, s) })), [levelIdx]);
-  const isLast = levelIdx === levelCount - 1;
-  const next = useCallback(() => {
-    if (isLast) {
-      setFinished(true);
-      completeGame(gameId, conceptId);
-    } else {
-      setLevelIdx((i) => i + 1);
-    }
-  }, [isLast, completeGame, gameId, conceptId]);
-  const again = useCallback(() => {
-    setLevelIdx(0);
-    setStars({});
-    setFinished(false);
-    setRound((r) => r + 1);
-  }, []);
-
-  return { levelIdx, stars, total: Object.values(stars).reduce((a, b) => a + b, 0), finished, round, isLast, clear, next, again };
-}
-
 export const Stars: React.FC<{ n: number; max?: number; size?: number }> = ({ n, max = 3, size = 20 }) => (
   <span role="img" aria-label={`${n} of ${max} stars`} style={{ display: 'inline-flex', gap: 3 }}>
     {Array.from({ length: max }, (_, i) => <Star key={i} size={size} color="#ffd23f" fill={i < n ? '#ffd23f' : 'none'} />)}
@@ -113,9 +69,6 @@ export const FinishPanel: React.FC<FinishProps> = ({ theme, title, total, levelC
     </div>
   </ArcadeFrame>
 );
-
-/** Words for a star count, so the result never relies on the stars alone. */
-export const starWords = (n: number): string => (n >= 3 ? 'Three stars: as good as it gets.' : n === 2 ? 'Two stars: a good solution, with room to do better.' : n === 1 ? 'One star: it works, but not efficiently.' : 'No stars yet.');
 
 /** A labelled horizontal bar with the value written out, for resource and load readouts. */
 export const MeterBar: React.FC<{ label: string; value: number; max: number; text: string; ok: boolean; color: string }> = ({ label, value, max, text, ok, color }) => (

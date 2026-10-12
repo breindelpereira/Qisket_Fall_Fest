@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useActivityReport } from '../../hooks/useActivityReport';
 import { Banner, Eyebrow } from '../shared/Arcade';
 import { THEMES, panelStyle } from '../shared/arcadeTheme';
-import { FinishPanel, LevelFrame, MeterBar, NextButton, starWords, useLevelRun } from '../shared/LevelKit';
-import type { StarCount } from '../shared/LevelKit';
+import { FinishPanel, LevelFrame, MeterBar, NextButton } from '../shared/LevelKit';
+import { starWords, useLevelRun } from '../shared/levelRun';
+import type { StarCount } from '../shared/levelRun';
 import { sound } from '../../utils/audio';
 import {
   BARRIER_MAX, LEVELS, PULSE_MAX, PULSE_MIN, VOLTAGE_MAX, couplingMHz, evaluate, stars as starsFor,

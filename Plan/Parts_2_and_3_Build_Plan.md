@@ -17,7 +17,8 @@ Read "Ground rules" once, then jump to your workstream.
 | --- | --- |
 | **A** Tutor notes (15 files) | **Done**: `tutor/notes/hw_module_0` to `hw_module_8_9` and `math_week_0`, `math_lesson_1` to `5`, and 17 more evaluation questions (37 in all: hardware, maths and Schrödinger's cat). Still worth doing: have a second person check every claim, and run `TUTOR_URL=<address> npm run tutor:eval` against the deployed function. |
 | **C** Part 3 practice | **Done**: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen, "New numbers" variants for ten of the problems, and the Maths Workbench lab (C4). Not done: more variant families, and links to external courses. |
-| **B** Part 2 games and labs | **Labs done (B0 and B1)**: the sourced data file (`src/content/hardwareData.ts`) and all nine labs, with tests, tutor help and notes. **Games not started (B2)**: the nine games reuse the lab maths in `src/core/hardware/`. Still open from B1: a second person must read the lab text against the code. |
+| **B** Part 2 games and labs | **Done (B0 to B2)**: the sourced data file (`src/content/hardwareData.ts`), all nine labs and all nine games, with tests, tutor help and notes. Not done: the optional Module 7 "Claim check" card sort (B3). Still open: a second person must read the lab and game text against the code, and the illustrative numbers in Cool Down and the qualitative ratings in Quantum Architect deserve a check by someone who knows the hardware. |
+| **Progress and badges** | **Done**: a Progress tab with a rank, 19 badges, the parts, quizzes, games and labs (`core/learn/badges.ts`, `components/progress/ProgressView.tsx`). |
 | **D** Phone-sensor games | **Planned, not started.** Waiting for the team to confirm the three games (section 4B). |
 
 ---

@@ -61,6 +61,8 @@ import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { AfterGameSheet } from './components/learn/AfterGameSheet';
 import { TutorDrawer } from './components/tutor/TutorDrawer';
+import { ProgressView } from './components/progress/ProgressView';
+import { useBadges } from './hooks/useBadges';
 import { tutorPosition } from './core/tutor/position';
 import type { TutorFocus } from './core/tutor/types';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
@@ -69,7 +71,7 @@ import { startOffer } from './core/learn/start';
 import { courseProgressPercent, moduleEyebrow, nextUpLesson, partProgress } from './core/learn/curriculum';
 import { passes } from './core/learn/quiz';
 
-type Tab = 'home' | 'learn' | 'games' | 'sims';
+type Tab = 'home' | 'learn' | 'games' | 'sims' | 'progress';
 
 interface GameEntry {
   id: string;
@@ -322,6 +324,7 @@ const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'learn', label: 'Learn', icon: BookOpen },
   { id: 'games', label: 'Games', icon: Gamepad2 },
   { id: 'sims', label: 'Labs', icon: FlaskConical },
+  { id: 'progress', label: 'Progress', icon: Trophy },
 ];
 
 interface SimEntry {
@@ -590,6 +593,8 @@ export default function App() {
   const modulesDone = partProgress(LESSONS, QUIZZES, progress).done;
   const activitiesTried = new Set([...progress.completedGames, ...progress.exploredSims]).size;
 
+  const { earned: earnedBadges, fresh: freshBadges, badges: allBadges, rank } = useBadges(GAMES.map((g) => g.id), AVAILABLE_SIM_IDS);
+
   const progressPercent = courseProgressPercent(LESSONS, QUIZZES, progress);
   const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
   const started = progressPercent > 0 || activitiesTried > 0 || Object.keys(progress.quizScores).length > 0;
@@ -732,6 +737,17 @@ export default function App() {
                   </div>
                 ))}
               </div>
+              <button
+                className="chip"
+                onClick={() => setActiveTab('progress')}
+                style={{ marginTop: 12, minHeight: 48, width: '100%', justifyContent: 'center' }}
+              >
+                <Trophy size={16} color="var(--yellow)" />
+                <span>
+                  {earnedBadges.length} of {allBadges.length} badges · {rank.name}
+                  {freshBadges.length > 0 ? ` · ${freshBadges.length} new!` : ''}
+                </span>
+              </button>
             </section>
 
             {/* Play / Experiment / Study */}
@@ -866,6 +882,16 @@ export default function App() {
               </>
             )}
           </div>
+        )}
+
+        {activeTab === 'progress' && (
+          <ProgressView
+            games={GAMES.map((g) => ({ id: g.id, title: g.title, emoji: g.emoji }))}
+            sims={SIMS.map((x) => ({ id: x.id, title: x.title, emoji: x.emoji }))}
+            onOpenGame={(id) => openGames(id)}
+            onOpenSim={(id) => openSims(id)}
+            onOpenLearn={(view) => openLearn(view)}
+          />
         )}
       </main>
 
