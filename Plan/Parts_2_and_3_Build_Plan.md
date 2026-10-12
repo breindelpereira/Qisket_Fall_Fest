@@ -7,6 +7,7 @@ This is the working plan for the three biggest pieces left in Qisket. It is writ
 | **A** | Tutor notes for Part 2 (hardware) and Part 3 (maths) | ~15 notes files | Writing, no code. Good first job. |
 | **B** | Part 2 games and labs: 9 games and 9 labs | ~25 to 30 person-days | Code, physics checking, sourced data |
 | **C** | Part 3 practice activities: an answer checker and problem sets | ~10 to 12 person-days | Code, writing, maths checking |
+| **D** | Three phone-sensor games (tilt, shake, two-player angles) | ~6 to 9 person-days | Code, a real phone to test on |
 
 Read "Ground rules" once, then jump to your workstream.
 
@@ -17,6 +18,7 @@ Read "Ground rules" once, then jump to your workstream.
 | **A** Tutor notes (15 files) | **Done**: `tutor/notes/hw_module_0` to `hw_module_8_9` and `math_week_0`, `math_lesson_1` to `5`. Still worth doing: have a second person check every claim, and add Part 2 and Part 3 questions to `tutor/eval-questions.json` (the test expects exactly 20 today, so change that test with it). |
 | **C** Part 3 practice | **Done** for C0 to C3 and C5: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen. Not done: seeded problem variants, and the optional Maths Workbench (C4). |
 | **B** Part 2 games and labs | **Not started.** The lessons they belong to are now deeper, so the explanations they refer to exist. |
+| **D** Phone-sensor games | **Planned, not started.** Waiting for the team to confirm the three games (section 4B). |
 
 ---
 
@@ -286,6 +288,53 @@ Rules: every problem has at least one accepted answer **and** one listed wrong a
 ### Suggested order
 
 C1 (checker) → C2 (card, with 3 sample problems) → C0 and C3 lesson by lesson (Lesson 1 first, then 2, 3, 4, 5, primer) → C5 → C4.
+
+---
+
+## 4B. Workstream D: phone-sensor games
+
+Games that use the phone's own sensors (gyroscope, accelerometer). The sensor is only a **control**: the quantum state is still computed by our own engine, so every one of these carries the **Analogy** tag and says so on screen ("your phone's tilt is a classical sensor; it steers the qubit, it is not quantum").
+
+### The three games
+
+| # | Game | Sensor | Concept | Where it goes |
+| --- | --- | --- | --- | --- |
+| D1 | **Hold the Bloch Sphere** | Orientation (continuous tilt) | A qubit is a point on a sphere; gates are rotations | Module 1 (qubit and Bloch sphere); could replace the drag control in Bloch Runner or sit beside it |
+| D2 | **Shake to Measure** | Accelerometer (sudden shake) | Measurement is random but follows the Born rule | Measurement module, next to the measurement lab |
+| D3 | **Entangled Pair** | Orientation, used to choose an angle | Entanglement and the CHSH game: correlations beat the classical 75% (quantum limit about 85%) | Entanglement module, built on `core/games/chsh.ts` |
+
+They differ on purpose: steering (smooth, deterministic), measuring (sudden, statistical), and strategy (two players, a proof).
+
+### Design
+
+- **D1.** Tilt forward or back turns the Bloch vector about X, sideways about Y, twisting the phone about Z. Goal: bring the state onto a glowing target, with a tolerance ring. Smooth the sensor (low-pass filter) so the vector does not shake. A "recalibrate: this is my zero" button.
+- **D2.** Set a superposition (for example 70 / 30), shake to collapse. A running histogram approaches the right odds. A second step: shaking an already-collapsed qubit always gives the same answer. Haptic buzz on a measurement (different pattern for 0 and 1) where the device allows it.
+- **D3.** Phase one is **pass-the-phone** (one device, two players choose an angle each in turn), which needs no network. Phase two, only if time remains: two phones. Show the score against the classical bound of 75% and the quantum value of about 85%, over enough rounds that luck does not decide it.
+
+### Ground rules specific to this workstream
+
+1. **Never depend on a sensor.** Every game has a touch/slider mode that works with no sensor, on a laptop, and for judges. The sensor mode is the extra, not the only way to play. This also keeps the untimed and accessibility rules.
+2. **Ask for permission politely.** iOS needs a tap to enable motion; Android WebView usually allows it. If it is denied or missing, drop to touch mode with a short sentence, no error.
+3. **Pure logic stays in `src/core/games/`** (for example `sensorControl.ts` for smoothing, calibration and tilt to rotation; `shakeMeasure.ts` for the shake detector and statistics), with tests that feed fake sensor readings. The component only reads the sensor and renders.
+4. **Honesty:** `Analogy` tag, and an "in real hardware" note. Same tutor and `useActivityReport` hooks as every other game (a `gameHelp.ts` entry with `How do I play`, `I'm stuck`, and `What does finishing`), then `npm run tutor:index`.
+5. **Test on a real phone.** Drift, jitter and the shake threshold cannot be judged in a browser. Check on the phone before calling a game done.
+
+### Definition of done (per game)
+
+- Works with the sensor and with the touch fallback; denied permission handled.
+- Logic tests pass with fake sensor input; types, lint and build clean.
+- Honesty tag, game help, tutor index rebuilt, 44 px targets, progress recorded.
+- Tried on a phone, and a second person has read the explanation text.
+
+### Suggested order
+
+D1 (also builds the shared sensor helper) → D2 (reuses it) → D3 pass-the-phone → D3 two phones (optional).
+
+### Open questions
+
+1. Add D1 beside the existing drag control, or replace it? (Recommendation: beside, with a toggle, because the drag control is more precise.)
+2. Is a two-phone D3 worth the networking work, or is pass-the-phone enough for the competition?
+3. Do we need the iOS build? The app is Android only today, so iOS permission handling can wait.
 
 ---
 
