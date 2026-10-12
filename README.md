@@ -6,7 +6,7 @@ Everything quantum runs on small physics engines written in this repo (no quantu
 
 ## For judges: what to look at (3 minutes)
 
-**Try it:** the website at `LIVE_APP_LINK` (works on a computer or a phone) or the Android app (`app-debug.apk` in the latest GitHub Release). No account, no sign-in. The Android app also has three phone-sensor games that a website cannot offer.
+**Try it:** the website at https://breindelpereira.github.io/Qisket_Fall_Fest/ (works on a computer or a phone) or the Android app (`app-debug.apk` in the latest GitHub Release). No account, no sign-in. The Android app also has three phone-sensor games that a website cannot offer.
 
 **What it is:** a complete beginner course in quantum computing that you learn by playing. 24 lessons in three parts (concepts, hardware, maths), 24 games (21 on the website), 20 hands-on labs, 40 short lesson videos, 11 quizzes, 32 maths practice problems, a Progress screen with 19 badges, and an AI tutor, Dr. Milton Schrody (a cat), who knows which game, lab, paragraph or video you are looking at.
 
