@@ -8,12 +8,28 @@ Dr. Milton Schrody (the AI tutor) answers only from the files in this folder (th
 | --- | --- | --- |
 | `notes/<lessonId>.md` | Richer notes for one lesson: worked examples, FAQs, mix-ups, key words. | Yes |
 | `demo-answers.json` | Pre-written answers for questions we expect in a demo. Used when the online tutor is off or cannot be reached, so a demo still works without a network. | Yes |
-| `eval-questions.json` | The 37-question test set. | Yes |
+| `eval-questions.json` | The 40-question test set. | Yes |
 | `index.json` | Everything above plus the lesson text, split into passages. | **No**: run `npm run tutor:index` |
 
 Every lesson is searchable even without a notes file, because the lesson's own text is split into passages automatically. A notes file just makes answers better. Quiz questions are never included, so the tutor cannot leak an answer.
 
 Written so far: `module_0` to `module_7` (all of Part 1). Part 2 (`hw_module_0` to `hw_module_8_9`) and Part 3 (`math_week_0`, `math_lesson_1` to `math_lesson_5`) still use their lesson text only. Writing those is a good job for teammates.
+
+## Notes about the lesson videos
+
+Every lesson video has notes, so a learner can ask the tutor about what a video says, and the "Ask about this video" button under each video hands the tutor the notes for the moment they have reached. They are ordinary sections of `notes/<lessonId>.md` whose first line is `Video: <youtube id> m:ss-m:ss`:
+
+```markdown
+## Explain: The Hahn echo measures T2
+Video: RRvzE_430DY 3:10-4:35
+Your own summary of that stretch of the video, in plain language.
+```
+
+- The id must be one of that lesson's videos (`references` in `src/content/lessonsPart*.ts`) and the range must lie inside the part the lesson plays. The build refuses anything else, and it adds "From the video "<title>" (<channel>), 3:10 to 4:35." to the passage so the model can say where it comes from.
+- **Write them in your own words, as a summary, and never paste a transcript.** The videos belong to other people, and the notes are published in this repository and in the app. A test keeps every section short. Say who is speaking, attribute numbers and claims to the video ("the video says"), and flag a company's claims about its own product as the company's.
+- Use `Explain` for what a stretch says, and one `FAQ` per video ("What does the ... video cover?") for the overview; FAQ headings become "Try asking" buttons.
+- Keep to the lesson's own level. The Module 0 video tours the whole field, so its notes do not name later topics (a test checks that a Module 1 learner is told they come later).
+- A note is only written for a video somebody has actually read or watched. `tests/videoNotes.test.ts` lists the videos that are still waiting (`PENDING`) and fails when that list and the notes disagree.
 
 ## Game help
 
@@ -71,6 +87,6 @@ Commit `index.json` together with your notes.
 
 `demo-answers.json` is a list of `{ id, questions, answer, sources }`. `questions` are the ways a learner might ask it; a question matches when it uses (almost) the same words. Each source needs a `lessonId` and a `heading` that exists in the notes (a test checks this). A prepared answer is only shown once the learner has reached the lesson it comes from.
 
-## The 37-question set
+## The 40-question set
 
-`eval-questions.json` has the questions used to check the tutor: q01 to q20 for Part 1, q21 to q29 for Part 2 (hardware, with one out-of-scope and one "comes later" question), q30 to q34 for Part 3 (maths, with one out-of-scope) and q35 to q37 about Schrödinger's cat and the app's own mascot. Each has the lesson the learner is on, a level, and rules for the answer: `mustContainAny` (at least one of these phrases) and `mustNotContain` (none of these). `expectLesson` and `expectNothing` / `expectLater` are checked automatically against the search in `npm test` (the test also pins the number of questions, so change it when you add one). Part 3 has no "comes later" question on purpose: the Math Companion comes after the whole main course, so a maths question is nearly always answered from a lesson the learner already has. To check the real answers from the deployed function, see step 7 in `worker/README.md`.
+`eval-questions.json` has the questions used to check the tutor: q01 to q20 for Part 1, q21 to q29 for Part 2 (hardware, with one out-of-scope and one "comes later" question), q30 to q34 for Part 3 (maths, with one out-of-scope) q35 to q37 about Schrödinger's cat and the app's own mascot, and q38 to q40 about what the lesson videos say. Each has the lesson the learner is on, a level, and rules for the answer: `mustContainAny` (at least one of these phrases) and `mustNotContain` (none of these). `expectLesson` and `expectNothing` / `expectLater` are checked automatically against the search in `npm test` (the test also pins the number of questions, so change it when you add one). Part 3 has no "comes later" question on purpose: the Math Companion comes after the whole main course, so a maths question is nearly always answered from a lesson the learner already has. To check the real answers from the deployed function, see step 7 in `worker/README.md`.

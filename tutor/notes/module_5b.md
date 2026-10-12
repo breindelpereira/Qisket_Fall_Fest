@@ -38,3 +38,35 @@ No-cloning theorem: unknown quantum states cannot be copied. Teleportation: movi
 
 ## Misconception: Teleportation is like in science fiction
 Nothing physical is sent, nothing is instant, and the original is not left behind. It is a careful way to move a quantum state using entanglement and a normal message.
+
+## FAQ: What do the two teleportation videos in this module cover?
+Video: dAaHHGHuy1c 0:00-2:01
+The first, a two-minute MinutePhysics clip, relates science-fiction transporters to quantum teleportation and explains the no-cloning rule in plain words. The second, Qiskit's "How Quantum Teleportation Really Works", is a full walk-through: the setting with Alice and Bob, the steps (a CNOT, a Hadamard, two measurements, then Bob's corrections), and a real run on an IBM quantum computer. Together they say that teleportation moves a state, never matter, and that it needs entanglement plus ordinary communication.
+
+## Explain: Transporters, copies and the no-cloning rule
+Video: dAaHHGHuy1c 0:00-2:01
+The clip starts with the worry about a Star-Trek style transporter: if it takes you apart and rebuilds you elsewhere, is the rebuilt person really you, and what if the original were not taken apart? Then it brings in the one real teleportation we have, discovered in the 1990s. You can transfer the exact quantum condition of one set of quantum objects onto others arbitrarily far away. The objects do not move, only their state does. An important rule comes with it: it is impossible to make an identical copy of an unknown quantum state without destroying the original, which is called the no-cloning theorem. The presenter's closing thought, about what this would mean for a transporter, is speculation, not established science.
+
+## Explain: What quantum teleportation is, and where it came from
+Video: jxqnzltpDdE 0:00-1:48
+Qiskit's video says plainly that movie-style teleportation is impossible, since nothing can travel faster than light. Quantum teleportation is real, though, and it moves information, not matter. All it needs is an entangled pair with one half at each site, and a way to send ordinary classical information between the sites. It was worked out in 1993 by a team that included IBM's Charles Bennett. It is called teleportation because the quantum information disappears at one place and appears at another without crossing the space between. The video stresses that nothing about it is magic.
+
+## Explain: The set-up: Alice, Bob, an unknown qubit and an e-bit
+Video: jxqnzltpDdE 1:48-3:14
+Alice holds a qubit in an unknown state and wants to give that state to Bob, who is far away. She cannot send the qubit itself, perhaps because she does not know where he is. But they already share an entangled pair of qubits, one each, which the video calls an e-bit and treats as a resource for sending quantum information. The video also notes that in Qiskit the usual order of qubits is right to left, so qubit 0 is written last.
+
+## Explain: The steps: CNOT, Hadamard and measuring both qubits
+Video: jxqnzltpDdE 3:14-5:23
+Step one: Alice applies a CNOT with her unknown qubit as the control and her half of the e-bit as the target. Step two: she applies a Hadamard gate to her unknown qubit. Written out, the three-qubit state looks like a mess, but it can be regrouped into four terms. Step three: she measures both of her qubits. Whichever of the four results she gets, Bob's qubit is left in a state closely related to the original unknown one. For one of the four results it is exactly the original state already.
+
+## Explain: Bob's corrections and why this is not faster-than-light
+Video: jxqnzltpDdE 5:23-7:08
+Bob has to know what Alice measured. With one of the other outcomes he must apply a Z gate, with another an X gate, and with the last both, to turn his qubit into the original state. So Alice phones him with her two classical bits. This is the reason teleportation does not break causality: Bob's qubit changes the instant Alice measures, but he cannot get any use out of it until her message arrives, and that message cannot go faster than light. The video also highlights that the original state at Alice's side is destroyed, and she does not need to know where Bob is.
+
+## Explain: Running it in Qiskit and checking it worked
+Video: jxqnzltpDdE 7:08-10:20
+The circuit uses three qubits. A Hadamard and a CNOT make the e-bit. A random unitary, drawn as a box U, prepares Alice's qubit in an unknown state. Then the CNOT, the Hadamard and the two measurements, followed by Bob's conditional X and Z gates (applied only if the matching measurement was 1). To check it, the video adds the inverse of U on Bob's qubit at the end. If teleportation worked, Bob's qubit should now read 0. The video points out that this check is only a diagnostic, since it undoes the very state you teleported.
+
+## Explain: The real-hardware result, and teleporting across the chip
+Video: jxqnzltpDdE 10:20-14:38
+On a real IBM processor, noise and imperfect gates mean Bob does not always read 0, but he does the large majority of the time, which counts as success. In that first run Alice and Bob were neighbours, so swap gates would have done the same job. To make it more impressive, the video moves them far apart on the chip with swap gates after creating the e-bit. It still works, but the success rate is lower, because the extra swaps cost accuracy and weaken the e-bit. The video ends by saying the 1993 protocol is a basis for gate teleportation and quantum networks, and that states have been teleported to a satellite 1,400 km up.

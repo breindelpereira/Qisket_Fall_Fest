@@ -768,9 +768,9 @@ describe('Where the learner is in the course', () => {
 
 describe('The evaluation question set: the notes find the right lesson', () => {
   it('has every planned kind of question: the first twenty cover Part 1, then come Parts 2 and 3 and the app cat', () => {
-    // q01 to q20 are the original set; q21 to q37 add hardware (Part 2), maths (Part 3) and Schrödinger's cat
-    expect(EVAL).toHaveLength(37);
-    expect(new Set(EVAL.map((q) => q.id)).size).toBe(37);
+    // q01 to q20 are the original set; q21 to q37 add hardware (Part 2), maths (Part 3) and Schrödinger's cat; q38 to q40 are about the lesson videos
+    expect(EVAL).toHaveLength(40);
+    expect(new Set(EVAL.map((q) => q.id)).size).toBe(40);
     for (const category of ['in-scope', 'paraphrase', 'out-of-scope', 'misconception', 'later-topic', 'injection']) {
       expect(EVAL.some((q) => q.category === category), category).toBe(true);
     }

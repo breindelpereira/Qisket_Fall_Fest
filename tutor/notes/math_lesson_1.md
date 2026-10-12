@@ -32,3 +32,15 @@ It is the squared sizes of the amplitudes that add up to 1. For |+⟩ the amplit
 
 ## Glossary: Key words
 Ket: the symbol |ψ⟩, a column vector. Basis state: |0⟩ or |1⟩. Amplitude: a number that goes with a basis state. Normalisation: the squared sizes add to 1. Born rule: probability equals squared size. Superposition: a state with more than one non-zero amplitude.
+
+## FAQ: What does the 3Blue1Brown segment in this lesson show?
+Video: RQWpF2Gb-gU 6:03-12:00
+This is the part of 3Blue1Brown's "But what is quantum computing?" where the state vector is introduced. It says that what a quantum computer reads out is random, that a program fixes a probability distribution and not a single output, and that the computer's state is a vector whose entries, squared in size, give those probabilities. It is the same material as the first part of Module 2 but told more slowly and with the maths in focus.
+
+## Explain: The video's picture: a random readout from a hidden distribution
+Video: RQWpF2Gb-gU 6:03-9:17
+The presenter separates layers: at the top the readout is a string of bits, in the middle is a mathematical description, and underneath is the physics. In a classical computer the stored state and the readout are the same bits. In a quantum computer the thing being operated on is the state vector, which is continuous, and the readout is random. A program does not give one output but a probability distribution over all 2^k outputs of a k-qubit machine. You never see that distribution. You see one string, drawn at random from it, and you infer the distribution from running the program.
+
+## Explain: The squaring rule, an example and negative entries
+Video: RQWpF2Gb-gU 9:17-12:00
+After you read a value the state changes so all of the probability sits on it, so reading again gives the same value. The state vector has one entry for each possible readout, and the rule is that squaring the size of an entry gives the probability of that readout. If the entry for 0011 is 0.5, the probability is 0.25. Entries may be negative. A sign change does not alter any probability, but the video stresses that it is a different state, and that sign flips matter a great deal later. The presenter also notes that a subtlety is deferred to the end of the video.

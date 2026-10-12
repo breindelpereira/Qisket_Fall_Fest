@@ -273,7 +273,7 @@ export const LessonView: React.FC<Props> = ({
           {stage.step === 'watch'
             ? (
               <>
-                {stage.videos.map((v) => <VideoCard key={v.url} reference={v} />)}
+                {stage.videos.map((v) => <VideoCard key={v.url} reference={v} onAsk={onAsk} />)}
                 {stage.readings.map((r) => <ReadingCard key={r.url} reference={r} />)}
               </>
             )

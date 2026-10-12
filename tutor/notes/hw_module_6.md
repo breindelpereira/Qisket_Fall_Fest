@@ -31,3 +31,27 @@ It is built for one kind of task. For anything outside optimisation problems in 
 
 ## Glossary: Key words
 Annealing: slowly changing a system so it settles into a low-energy state. Ising model: spins with couplings, used to describe optimisation problems. Energy landscape: the energy for every arrangement. Tunnelling: passing through an energy barrier instead of over it. Gate model: the usual circuit-based kind of quantum computer.
+
+## FAQ: What do the two D-Wave videos in this module cover?
+Video: zvfkXjzzYOo 0:00-5:58
+Both are explainers from D-Wave, a company that builds quantum annealers, so they present annealing from the maker's viewpoint. The first says what annealing is for (optimisation and sampling problems) and how it differs from gate-model quantum computing. The second shows how a chip actually works: each qubit settles into one of two valleys of an energy landscape, biases tilt the valleys, couplers link qubits, and the user programs the machine by choosing the biases and couplings.
+
+## Explain: What annealing is for: optimisation and sampling
+Video: zvfkXjzzYOo 0:00-2:54
+The video says quantum annealing uses quantum effects to help solve optimisation problems, finding the best configuration among very many, and the related task of sampling. Its example is spending a fixed budget on a house to get the most happiness out of the things you can afford. These can be written as energy-minimisation problems, and physics always tries to reach the lowest energy: things roll downhill and hot things cool. Sampling means collecting many low-energy states to describe the shape of the energy landscape, useful in machine learning for building a probabilistic model. Both kinds of problem are hard on classical computers, which is why alternatives are of interest.
+
+## Explain: Annealing versus gate-model computing
+Video: zvfkXjzzYOo 2:54-5:58
+In annealing you set up the problem and let the quantum system evolve naturally, and the final configuration is the answer, with no control over the evolution in between. Gate-model machines aim to control and manipulate that evolution, which is much more ambitious and delicate, but lets them solve a bigger class of problems. The video says that is why annealers had been scaled past a thousand qubits while gate-model machines were around ten. That comparison is from the video's time and counts different things, so do not read it as one being ahead. Annealing is not a universal quantum computer, but adiabatic quantum computing, which is universal, is closely related to it.
+
+## Explain: A single qubit as a valley that splits in two
+Video: UV_RlCAc5Zs 0:00-2:07
+In the annealing chip a qubit is a circulating current with an associated magnetic field, and can be in a superposition of the 0 and 1 states. At the start of the anneal the energy diagram has one valley whose bottom is the superposition. As the anneal runs, a barrier is raised and the diagram becomes a double well: the left valley bottom is 0 and the right one is 1. With nothing else, the qubit has an even chance of ending in either. Applying an external magnetic field, called a bias, tilts the double well and makes the lower valley more likely.
+
+## Explain: Couplers, entanglement and how you program the machine
+Video: UV_RlCAc5Zs 2:07-4:13
+A coupler defines how two qubits influence each other. It can make them prefer the same value (both 0 or both 1) or opposite values. Coupled qubits are entangled and must be treated as a single object with four states, and what the coupler "wants" means that it lowers the energy of those states. The user chooses every bias and every coupler, including its sign and strength, and that set of numbers defines an energy landscape. Programming the machine means choosing that landscape, and the annealer then finds its lowest-energy point.
+
+## Explain: Why the number of states explodes, and the whole sequence
+Video: UV_RlCAc5Zs 4:13-5:56
+Each added qubit doubles the number of states the landscape is defined over: 4 for two qubits, 8 for three, 2 to the n for n. The summary the video gives: start with qubits each in a superposition and not yet connected, introduce the biases and couplings during the anneal so the qubits become entangled as one large quantum object, which shifts the probability of each qubit ending as 0 or 1, and at the end each qubit is 0 or 1. The end result is the lowest-energy state of your problem, or one very close to it, and this takes around 20 microseconds on their chips, according to the video.

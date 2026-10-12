@@ -42,3 +42,23 @@ Qubit: the quantum version of a bit. Amplitude: a number (possibly negative or c
 
 ## Misconception: A qubit is both 0 and 1, so it stores infinite information
 A qubit's state does take continuous values, but you cannot read them out. Measuring gives one bit, 0 or 1. One qubit never lets you extract more than one bit of information, however clever the blend was.
+
+## FAQ: What does the WIRED clip in this module show?
+Video: OWJCfOvochA 2:18-6:15
+It is the first level of WIRED's "Quantum Computing in 5 Levels": a quantum computing researcher explains the idea to a young person. It uses a spinning penny to show superposition, a pair of pennies to show entanglement, and a quick look at the very cold fridge that quantum chips sit in, ending with one hoped-for use: simulating chemistry. It is a friendly analogy-level introduction, so it matches the idea of a qubit in this module without any maths.
+
+## Explain: Why a different kind of computer
+Video: OWJCfOvochA 2:18-3:22
+The researcher starts from an everyday experience, running out of space on a phone, and says some problems run out of room in the same way even on the biggest supercomputer. Her team is building computers that follow a different set of rules, those of quantum mechanics, the branch of physics for things that are very small, very well isolated and very cold. A quantum computer is a machine designed around those rules instead of ordinary on/off bits.
+
+## Explain: Superposition shown with a spinning penny
+Video: OWJCfOvochA 3:22-4:25
+A penny lying on the table is clearly heads or tails. A spinning penny is neither one nor the other while it spins: it is a mix of both. The video uses this to say that superposition means a thing is in a state that combines two outcomes, and that real physical objects can be in such states. Remember this is an analogy: a real qubit is not a tiny spinning coin, and a measured qubit gives 0 or 1 with chances set by its state, which the next module's Bloch sphere makes precise.
+
+## Explain: Entanglement shown with two pennies
+Video: OWJCfOvochA 4:25-5:28
+In everyday speech "entangled" means tied together but separable, like tangled hair. For quantum objects it means a much stronger link that is hard to undo. Two ordinary pennies spun and stopped separately give unrelated results. Two entangled "pennies" would always match when measured: one shows heads exactly when the other does, and tails exactly when the other does, even if you measure at the same moment. The video calls this correlated outcomes. As with the spinning penny, treat it as a picture; the Bell-test module later shows what entanglement really does and does not allow.
+
+## Explain: Why the chips are kept so cold
+Video: OWJCfOvochA 5:28-6:15
+To see these quantum properties the chips have to be kept extremely cold, which is what the dilution refrigerator (a tall fridge that looks nothing like a kitchen one) is for. Cooling lets qubits stay in superposition and become entangled without their information leaking away into the surroundings. The clip ends with one proposed use: simulating chemical bonding, using one quantum system to model another.

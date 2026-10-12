@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BookOpen, Captions, CaptionsOff, Check, ChevronUp, CirclePlay, Gauge, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, WifiOff } from 'lucide-react';
+import { BookOpen, Captions, CaptionsOff, Check, ChevronUp, CirclePlay, Gauge, ExternalLink, Maximize, Minimize, Pause, Play, RotateCcw, RotateCw, Sparkles, WifiOff } from 'lucide-react';
 import type { ReferenceLink } from '../../content/types';
 import {
   SPEEDS, atClipEnd, captionCommands, clampSeek, clipOf, clipPosition, embedUrl, describePlayerError, formatClock, formatSpeed,
   readPrefs, watchUrl, writePrefs,
 } from '../../core/learn/video';
 import type { PlayerPrefs, Speed } from '../../core/learn/video';
+import { loadTutorKnowledge } from '../../core/tutor/loader';
+import type { TutorFocus } from '../../core/tutor/types';
+import { videoMomentFocus } from '../../core/tutor/videoMoment';
 import { Banner } from '../shared/Arcade';
 import { safeStorage } from '../../utils/safeStorage';
 import { setImmersive } from '../../utils/immersive';
@@ -95,7 +98,7 @@ const SpeedMenu: React.FC<{ speed: Speed; onChoose: (speed: Speed) => void }> = 
  * - YouTube does not always allow in-app playback (it can ask for a sign-in inside an app webview), so the page listens
  *   to the player and "Watch on YouTube" is always available as the dependable fallback.
  */
-export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference }) => {
+export const VideoCard: React.FC<{ reference: ReferenceLink; onAsk?: (focus: TutorFocus) => void }> = ({ reference, onAsk }) => {
   const [embedOn, setEmbedOn] = useState(false);
   const [online, setOnline] = useState(() => typeof navigator === 'undefined' || navigator.onLine !== false);
   // The browser's own full screen when it allows it; otherwise (iPhones, some app webviews) the card covers the page instead
@@ -110,6 +113,18 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
   const showPlayer = embedOn && online;
   const player = useYouTubePlayer(frameRef, showPlayer);
   const { send } = player;
+
+  // "Ask about this video": the tutor gets our notes for the moment the learner has reached (or the start, if it has not begun)
+  const askAboutVideo = async () => {
+    if (!onAsk) return;
+    const seconds = showPlayer && player.time !== null ? player.time : null;
+    try {
+      const knowledge = await loadTutorKnowledge();
+      onAsk(videoMomentFocus(knowledge.index.chunks, reference, seconds));
+    } catch {
+      onAsk(videoMomentFocus([], reference, seconds));
+    }
+  };
 
   useEffect(() => {
     const goOnline = () => setOnline(true);
@@ -401,6 +416,18 @@ export const VideoCard: React.FC<{ reference: ReferenceLink }> = ({ reference })
         <Banner tone="info">
           Not starting? {clip ? 'Tap the video or the play button.' : 'Tap the play button in the video.'} If it asks you to sign in, use Watch on YouTube below instead.
         </Banner>
+      )}
+
+      {onAsk && (
+        <button
+          className="chip"
+          onClick={askAboutVideo}
+          aria-label={`Ask Dr. Milton Schrody about this video: ${reference.title}`}
+          style={{ alignSelf: 'flex-start', minHeight: 44, fontSize: '0.56rem' }}
+        >
+          <Sparkles size={14} color="var(--yellow)" />
+          <span>Ask about this video</span>
+        </button>
       )}
 
       <a

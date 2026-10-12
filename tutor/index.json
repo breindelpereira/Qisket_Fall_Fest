@@ -417,6 +417,222 @@
    "from": "notes"
   },
   {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n12",
+   "heading": "What does the Map of Quantum Computing video cover?",
+   "kind": "faq",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 0:00 to 33:28.\nIt is a long overview from Domain of Science. First it explains the three ideas behind every quantum computer (superposition, entanglement and interference). Then it covers what quantum algorithms are for, and why simulating nature is the application the presenter likes best. Then it compares the different models of quantum computing, and ends with the many physical ways of building qubits and the obstacles they all share: noise, decoherence and scale. The presenter's own conclusion is that nobody knows yet which hardware approach will end up on top.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 0,
+    "end": 2008
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n13",
+   "heading": "The video's three ideas: superposition, entanglement, interference",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 0:00 to 2:45.\nThe presenter says that to understand a quantum computer you need three things. Superposition comes first. A classical bit is a switch that is 0 or 1 and gives you exactly what it holds when you read it. A qubit is pictured as an arrow in 3D space: up means 0, down means 1, and any other direction is a superposition of the two. When you measure, you still only get 0 or 1, but the direction of the arrow sets the odds. Pointing mostly up makes 0 likely, mostly down makes 1 likely, and on the equator it is 50/50. This arrow picture is the Bloch sphere from Module 1.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 0,
+    "end": 165
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n14",
+   "heading": "Entanglement and why n qubits give 2^n possibilities",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 2:45 to 4:23.\nIn a classical computer each bit is independent. Entangled qubits are not: they become parts of one shared state, so you describe the group with one set of probabilities over all the outcomes (00, 01, 10 and 11 for two qubits) instead of separate odds for each. Changing one qubit then changes the odds for the whole system. The video points out that the number of outcomes doubles with every qubit you add (2, 4, 8 and so on, so 2^n for n qubits). It calls this the core difference: a classical machine holds one state at a time, a quantum one can hold a superposition over all of them.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 165,
+    "end": 263
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n15",
+   "heading": "Interference is how a quantum algorithm gets its answer",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 4:23 to 6:30.\nThe video says the Bloch sphere is only a convenient picture. What really describes a qubit is a wavefunction, and the wavefunctions of the qubits add together, like ripples on water: they can reinforce (constructive interference) or cancel (destructive interference). The final wavefunction sets the probability of each outcome. A useful algorithm is a recipe that steers constructive interference onto the correct answer and destructive interference onto wrong ones, so that the one result you get when you measure is very likely the right one. Having a superposition of millions of states does not help by itself, because a measurement returns only one.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 263,
+    "end": 390
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n16",
+   "heading": "Why factoring made people take quantum computing seriously",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 6:30 to 10:25.\nMultiplying two big numbers is easy, but working backwards (finding the factors of a big number) has no known fast classical method, and a lot of internet encryption relies on that. In 1994 Peter Shor published a fast quantum method for factoring, the first practical application with serious security consequences, and that is when many people began to take quantum computers seriously. The video explains it through complexity: the best classical method scales exponentially as the number gets longer, while the quantum one scales polynomially. It then calms the worry: breaking real encryption would need about a million qubits (the video's estimate) and the best machines then had around a hundred, and people are already working on post-quantum encryption and on quantum cryptography.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 390,
+    "end": 625
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n17",
+   "heading": "Classical and quantum machines compute the same things, at different cost",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 10:25 to 12:36.\nThe presenter is careful not to oversell. A clever classical way of factoring is unlikely but not ruled out, and anything that is impossible for a classical computer (such as the halting problem) is impossible for a quantum one too. In terms of what can be computed at all, the two kinds of machine are equivalent, and a classical computer can simulate a quantum one. The catch is cost. Simulating a quantum system on a classical machine gets exponentially harder with every extra qubit, while a quantum computer is already a quantum system, which is why the video calls simulation its favourite application.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 625,
+    "end": 756
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n18",
+   "heading": "What quantum simulation could be used for, and a warning about hype",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 12:36 to 15:00.\nSimulating chemistry or materials with only about 30 particles already strains the best supercomputers. The video lists hoped-for payoffs: understanding why some materials superconduct, a more energy-efficient way to make fertiliser (fertiliser production is around 2% of global carbon emissions, the video says), better batteries and solar panels, new drugs and aerospace materials, all tested inside a computer before anyone builds them. Other proposed uses are optimisation, machine learning, finance, weather and security. The presenter adds two cautions: these are potential uses, since no quantum computer yet beats an ordinary one on a practical problem, and many claims come from people raising money, so treat them with care.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 756,
+    "end": 900
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n19",
+   "heading": "The circuit (gate) model, and why the video mentions Qiskit",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 15:00 to 19:23.\nThe video separates two layers: the model of computing (how you manipulate the qubits) and the physical qubit you build it from. The most common model is the circuit or gate model: a set of qubits, a sequence of gates that rotate the arrows without measuring, and a measurement at the end. A classical computer can be built from just bits and NOR gates, and the quantum circuit model is the same kind of idea. The video is sponsored by Qiskit, which is free and open source, and the presenter states plainly that Qiskit is funded by IBM and that they used to work for another quantum company, so you know where the speaker is coming from.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 900,
+    "end": 1163
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n20",
+   "heading": "The other models of quantum computing the video mentions",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 19:23 to 24:15.\nMeasurement-based (one-way) computing starts from a large entangled state and measures qubits one at a time; it has been shown equivalent to the circuit model. Adiabatic computing encodes the problem as an energy landscape whose lowest point is the answer, and changes the landscape slowly so the system stays in the lowest state; it is also equivalent to the circuit model. A related but less general scheme keeps the energy-landscape idea and is used for optimisation problems. The most theoretical model builds its qubits from exotic quasi-particles that are expected to be protected from noise; the video notes that it is still debated whether they have really been observed.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 1163,
+    "end": 1455
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n21",
+   "heading": "Why building one is hard: decoherence, error correction and scale",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 24:15 to 27:15.\nA qubit only needs two states, such as spin up and spin down, but every design shares the same problems. Decoherence is information leaking into the environment because your qubits entangle with whatever is nearby. Noise from heat, radiation and stray particles pushes them off course, and it gets worse as you add qubits. Quantum error correction spreads one reliable qubit over many physical ones, and the video quotes a range of 100 to 1000 physical qubits per fault-tolerant qubit. Scalability is the other obstacle: every qubit needs its own control and readout wiring, which becomes a huge engineering task. The video says that whether big working machines are possible is still an open question.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 1455,
+    "end": 1635
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n22",
+   "heading": "The physical approaches the video surveys",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 27:15 to 31:49.\nThe video walks through how a qubit can be made. Superconducting circuits are currently the most popular. Silicon and other semiconductor chips can hold a qubit in the spin or charge of electrons. Photonic computers use particles of light steered through chips. Trapped ions are charged atoms held by electromagnetic fields and controlled with lasers or microwaves. Colour-centre qubits sit inside diamond or silicon carbide. Neutral atoms are held in a lattice made of laser beams. The video adds that other designs exist but are less developed. Each of these gets its own lesson in Part 2 (Hardware).",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 1635,
+    "end": 1909
+   }
+  },
+  {
+   "lessonId": "module_0",
+   "lessonTitle": "Why Quantum? (Orientation)",
+   "where": "Module 0",
+   "order": 0,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_0#n23",
+   "heading": "The video's conclusion: no clear front-runner yet",
+   "kind": "explain",
+   "text": "From the video \"The Map of Quantum Computing - Quantum Computing Explained\" (Domain of Science), 31:49 to 33:28.\nAfter the tour, the presenter's point is that nobody knows yet which approach will come out on top in the long run. The video does not cover the companies and their roadmaps, which it says would come in a follow-up, and then ends with credits.",
+   "from": "notes",
+   "video": {
+    "id": "-UlxHPIEVqA",
+    "start": 1909,
+    "end": 2008
+   }
+  },
+  {
    "lessonId": "module_1",
    "lessonTitle": "Qubits & Superposition",
    "where": "Module 1",
@@ -636,6 +852,96 @@
    "kind": "misconception",
    "text": "A qubit's state does take continuous values, but you cannot read them out. Measuring gives one bit, 0 or 1. One qubit never lets you extract more than one bit of information, however clever the blend was.",
    "from": "notes"
+  },
+  {
+   "lessonId": "module_1",
+   "lessonTitle": "Qubits & Superposition",
+   "where": "Module 1",
+   "order": 1,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_1#n12",
+   "heading": "What does the WIRED clip in this module show?",
+   "kind": "faq",
+   "text": "From the video \"Quantum Computing in 5 Levels\" (WIRED), 2:18 to 6:15.\nIt is the first level of WIRED's \"Quantum Computing in 5 Levels\": a quantum computing researcher explains the idea to a young person. It uses a spinning penny to show superposition, a pair of pennies to show entanglement, and a quick look at the very cold fridge that quantum chips sit in, ending with one hoped-for use: simulating chemistry. It is a friendly analogy-level introduction, so it matches the idea of a qubit in this module without any maths.",
+   "from": "notes",
+   "video": {
+    "id": "OWJCfOvochA",
+    "start": 138,
+    "end": 375
+   }
+  },
+  {
+   "lessonId": "module_1",
+   "lessonTitle": "Qubits & Superposition",
+   "where": "Module 1",
+   "order": 1,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_1#n13",
+   "heading": "Why a different kind of computer",
+   "kind": "explain",
+   "text": "From the video \"Quantum Computing in 5 Levels\" (WIRED), 2:18 to 3:22.\nThe researcher starts from an everyday experience, running out of space on a phone, and says some problems run out of room in the same way even on the biggest supercomputer. Her team is building computers that follow a different set of rules, those of quantum mechanics, the branch of physics for things that are very small, very well isolated and very cold. A quantum computer is a machine designed around those rules instead of ordinary on/off bits.",
+   "from": "notes",
+   "video": {
+    "id": "OWJCfOvochA",
+    "start": 138,
+    "end": 202
+   }
+  },
+  {
+   "lessonId": "module_1",
+   "lessonTitle": "Qubits & Superposition",
+   "where": "Module 1",
+   "order": 1,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_1#n14",
+   "heading": "Superposition shown with a spinning penny",
+   "kind": "explain",
+   "text": "From the video \"Quantum Computing in 5 Levels\" (WIRED), 3:22 to 4:25.\nA penny lying on the table is clearly heads or tails. A spinning penny is neither one nor the other while it spins: it is a mix of both. The video uses this to say that superposition means a thing is in a state that combines two outcomes, and that real physical objects can be in such states. Remember this is an analogy: a real qubit is not a tiny spinning coin, and a measured qubit gives 0 or 1 with chances set by its state, which the next module's Bloch sphere makes precise.",
+   "from": "notes",
+   "video": {
+    "id": "OWJCfOvochA",
+    "start": 202,
+    "end": 265
+   }
+  },
+  {
+   "lessonId": "module_1",
+   "lessonTitle": "Qubits & Superposition",
+   "where": "Module 1",
+   "order": 1,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_1#n15",
+   "heading": "Entanglement shown with two pennies",
+   "kind": "explain",
+   "text": "From the video \"Quantum Computing in 5 Levels\" (WIRED), 4:25 to 5:28.\nIn everyday speech \"entangled\" means tied together but separable, like tangled hair. For quantum objects it means a much stronger link that is hard to undo. Two ordinary pennies spun and stopped separately give unrelated results. Two entangled \"pennies\" would always match when measured: one shows heads exactly when the other does, and tails exactly when the other does, even if you measure at the same moment. The video calls this correlated outcomes. As with the spinning penny, treat it as a picture; the Bell-test module later shows what entanglement really does and does not allow.",
+   "from": "notes",
+   "video": {
+    "id": "OWJCfOvochA",
+    "start": 265,
+    "end": 328
+   }
+  },
+  {
+   "lessonId": "module_1",
+   "lessonTitle": "Qubits & Superposition",
+   "where": "Module 1",
+   "order": 1,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_1#n16",
+   "heading": "Why the chips are kept so cold",
+   "kind": "explain",
+   "text": "From the video \"Quantum Computing in 5 Levels\" (WIRED), 5:28 to 6:15.\nTo see these quantum properties the chips have to be kept extremely cold, which is what the dilution refrigerator (a tall fridge that looks nothing like a kitchen one) is for. Cooling lets qubits stay in superposition and become entangled without their information leaking away into the surroundings. The clip ends with one proposed use: simulating chemical bonding, using one quantum system to model another.",
+   "from": "notes",
+   "video": {
+    "id": "OWJCfOvochA",
+    "start": 328,
+    "end": 375
+   }
   },
   {
    "lessonId": "module_2",
@@ -898,6 +1204,132 @@
    "from": "notes"
   },
   {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n14",
+   "heading": "What does the 3Blue1Brown video in this module cover?",
+   "kind": "faq",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 0:00 to 15:52.\nThis is the first part of 3Blue1Brown's \"But what is quantum computing?\". It starts by arguing that the popular \"a quantum computer tries every answer at once\" summary is misleading, using a search quiz as the test. Then it builds quantum computing as maths rather than analogy: a computer's output is random, the machine's state is a vector, and squaring the vector's entries gives the probabilities. It finishes with the single qubit as an arrow of length 1 and the notation for its two basic states.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 0,
+    "end": 952
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n15",
+   "heading": "The quiz that exposes a common misconception",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 0:00 to 2:33.\nThe video begins with the usual pop-science line that a quantum computer holds every possible bit pattern at once and processes them in parallel. To test it, the presenter sets a puzzle. A secret number lies somewhere among the numbers from 0 to n-1, and a mystery function says \"true\" only for that number. You may only try values. A classical computer can do nothing better than guess and check, which takes about n/2 tries on average, written O(n) because the runtime grows in proportion to n. The question is then: what is the best a quantum computer can do?",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 0,
+    "end": 153
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n16",
+   "heading": "The answer: a square-root speed-up, not magic",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 2:33 to 5:30.\nMost people, including audiences of thousands, pick the constant-time answer, which is wrong and comes from the \"everything in parallel\" picture. The next most popular answer, a logarithmic runtime, is also wrong: exponential speed-ups exist only for special problems. The true best runtime is about the square root of n. That limit was proven in 1994, and a procedure that reaches it was found two years later. So searching a million options takes about a thousand steps, and a trillion options about a million. It is a real but modest gain that applies to a huge class of problems, any problem where a proposed answer is easy to check.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 153,
+    "end": 330
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n17",
+   "heading": "A computer's readout is random, and the program sets the odds",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 5:30 to 9:12.\nThe video builds the idea in layers. The bottom layer is the physics, the middle layer is the maths, and the top layer is the numbers you read out. In a classical machine, what is stored and what you read are the same string of bits. In a quantum machine they differ. What you read out is random: a program does not fix one output, it fixes a probability distribution over all possible outputs. With k qubits you read k bits, so there are 2^k possible outputs. You never see the whole distribution or all the strings at once. You see one string drawn at random.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 330,
+    "end": 552
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n18",
+   "heading": "The state vector and the squaring rule",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 9:12 to 11:24.\nAfter you read the result, the computer's state changes so that all the probability sits on what you saw, so reading again gives the same value. The state is described by a vector, a long list of numbers with one entry for each possible output (16 entries for a 4-bit readout). The key rule: take the size of an entry and square it, and you get the probability of that output. For example, an entry of 0.5 gives 0.25, a 25% chance. The presenter admits this takes getting used to and promises to come back to a detail he is leaving out for now.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 552,
+    "end": 684
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n19",
+   "heading": "Negative entries and the unit circle",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 11:24 to 13:14.\nEntries may be negative. Flipping a sign does not change the square, so the probabilities stay the same, but the video insists it is a different state, and says that sign flips play a central role later. To picture the smallest case, take two possible outputs, 0 and 1. The state vector then has two entries and can be drawn as an arrow in a plane: the horizontal part gives the chance of 0 and the vertical part gives the chance of 1. Because the chances add to 1, the arrow always has length 1, so it lives on a circle of radius 1.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 684,
+    "end": 794
+   }
+  },
+  {
+   "lessonId": "module_2",
+   "lessonTitle": "Measurement",
+   "where": "Module 2",
+   "order": 2,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_2#n20",
+   "heading": "What a qubit is, and kets",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), first part: state vectors & measurement\" (3Blue1Brown), 13:14 to 15:52.\nThis two-entry example is the qubit: a unit vector in a two-dimensional space, with one axis for each readout value. Measuring gives 0 or 1 and the arrow then jumps onto that axis, so repeating the measurement gives the same result unless something prepares the qubit again. The presenter says the rules look odd, and they are the postulates of quantum mechanics: spins and photon polarisations behave like this, and the squaring rule is called the Born rule. A qubit is an abstraction over such systems in the way a bit is over many physical switches. The video also introduces ket notation: the vectors for the two readouts are written with a 0 or a 1 inside, and a general qubit is written as a weighted sum of those two.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 794,
+    "end": 952
+   }
+  },
+  {
    "lessonId": "module_3",
    "lessonTitle": "Gates",
    "where": "Module 3",
@@ -1132,6 +1564,132 @@
    "from": "notes"
   },
   {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n12",
+   "heading": "What does the Physics but Awesome video on quantum gates cover?",
+   "kind": "faq",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 0:00 to 10:51.\nIt explains how a quantum computer actually computes. It starts from classical computers, where everything is gates acting on bits, then shows that a quantum computer is the same idea with gates acting on qubits, with two special rules: gates must be reversible, and they can act on superpositions. It covers single-qubit gates such as the Hadamard, the CNOT that creates entanglement, which sets of gates are universal, and why measurement is the one irreversible step.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 0,
+    "end": 651
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n13",
+   "heading": "Everything is gates, even adding two numbers",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 0:00 to 1:45.\nThe video begins with ordinary arithmetic: adding 34 and 8 by writing the 2 and carrying the 1. Computers do the same with binary numbers, and the whole addition, carries included, can be built from nothing but NAND gates, a simple gate that takes two inputs and gives one output. The point is not the details but the principle: what a computer does, from adding to streaming video, comes down to gates acting on bits. A quantum computer follows the same principle with qubits, so every algorithm in the end is gates acting on qubits.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 0,
+    "end": 105
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n14",
+   "heading": "A qubit and the arrow in the Bloch sphere",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 1:45 to 3:09.\nA bit is simply 0 or 1. A qubit is a quantum system with two basic states that we call 0 and 1, but it can also be in any combination of the two. The Bloch sphere shows this as an arrow inside a sphere. The arrow does not point in physical space: it shows which mixture of 0 and 1 the system is in, it is the state vector, and its position is given by two angles, like latitude and longitude. Those two angles are enough to work out the chance of measuring 0 or 1.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 105,
+    "end": 189
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n15",
+   "heading": "Circuits, reversibility and rotations",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 3:09 to 5:36.\nIn the circuit picture a line is a wire carrying a bit and a box is a gate. Quantum circuits look the same, except the wire may be a moving particle or just time passing, and the gates act on qubits; the quantum NOT is called the X gate. Two things are special. First, every gate must be reversible. The state vector must always keep a length of 1 because the chances must add to 100%, so a gate can only rotate the arrow, and a rotation can always be undone; such a gate is called unitary. Second, because a qubit may be a mix of 0 and 1, a gate acts on both parts at once, which the video says is useful but has limits that appear at measurement.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 189,
+    "end": 336
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n16",
+   "heading": "Single-qubit gates, the Hadamard and the CNOT",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 5:36 to 7:23.\nThe simplest gate takes one qubit and rotates it. The key example is the Hadamard gate, which turns a definite qubit into a 50/50 mix of 0 and 1 (with a different phase on the two parts). Two-qubit gates must also be reversible, so they cannot be NAND, which loses information: from an output of 1 you cannot recover the inputs. The usual solution is a controlled operation, where one qubit is the trigger and the other the target. The controlled-NOT flips the target only when the trigger is 1. If the trigger is in a superposition, the result is an entangled pair that cannot be split into separate states, which is why this gate is the standard way of making entanglement.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 336,
+    "end": 443
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n17",
+   "heading": "Universal sets of gates",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 7:23 to 8:24.\nIn classical computing, certain small sets of gates can reproduce any circuit: AND with NOT, or OR with NOT, and NAND alone or NOR alone. That is why computers can do anything with very few kinds of component. Quantum computing has the same notion. One universal set is the CNOT plus any single-qubit rotation. The video says results like this made people realise that building a quantum computer might really be possible, since a machine that can do arbitrary single-qubit gates and the CNOT can in theory perform any quantum computation.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 443,
+    "end": 504
+   }
+  },
+  {
+   "lessonId": "module_3",
+   "lessonTitle": "Gates",
+   "where": "Module 3",
+   "order": 3,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_3#n18",
+   "heading": "Measurement is the irreversible step",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Compute - Quantum Gates\" (Physics but Awesome), 8:24 to 10:30.\nThe only way to get an answer out is to measure, which the video treats as a gate that is not reversible. A measurement collapses the state to one outcome, so it destroys superposition and entanglement. On the Bloch sphere it projects the arrow to the 0 or 1 pole, and the chance depends on where the arrow was: northern hemisphere is more likely 0, southern hemisphere more likely 1. This is the catch behind quantum parallelism. The gates can act on every input at once, but a measurement returns only one result at random, so by itself it is useless. Quantum algorithms are the clever ways of combining the parallel results so the information you want comes out. The video also says a quantum computer can do anything a classical one can, and that these gates are logical ideas that must be realised in real hardware.",
+   "from": "notes",
+   "video": {
+    "id": "HHV-P4_Xp1E",
+    "start": 504,
+    "end": 630
+   }
+  },
+  {
    "lessonId": "module_4",
    "lessonTitle": "Phase & Interference",
    "where": "Module 4",
@@ -1338,6 +1896,96 @@
    "kind": "misconception",
    "text": "For quantum events with several routes, amplitudes add first and probabilities come from squaring the total. That is why a \"guaranteed\" path can go dark: the amplitudes cancel.",
    "from": "notes"
+  },
+  {
+   "lessonId": "module_4",
+   "lessonTitle": "Phase & Interference",
+   "where": "Module 4",
+   "order": 4,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_4#n11",
+   "heading": "What does the Veritasium single-photon video show?",
+   "kind": "faq",
+   "text": "From the video \"Single Photon Interference\" (Veritasium), 0:00 to 6:00.\nIt shows that interference survives even when only one photon is in the apparatus at a time. First it recalls how the double-slit experiment makes bright and dark bands with a laser. Then it turns the light down so low that photons arrive one by one, counts them with a very sensitive detector, and shows the interference pattern slowly appearing as the counts add up. The conclusion is that light is neither simply a wave nor simply a particle.",
+   "from": "notes",
+   "video": {
+    "id": "GzbKb59my3U",
+    "start": 0,
+    "end": 360
+   }
+  },
+  {
+   "lessonId": "module_4",
+   "lessonTitle": "Phase & Interference",
+   "where": "Module 4",
+   "order": 4,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_4#n12",
+   "heading": "How two slits make bright and dark bands",
+   "kind": "explain",
+   "text": "From the video \"Single Photon Interference\" (Veritasium), 0:00 to 1:45.\nThe video recalls the history briefly: Huygens thought light was a wave, Newton thought it was a stream of tiny bullets, Young's double-slit experiment in 1801 made it look like a wave, and by 1900 it was clear that light energy comes in lumps called photons. With a laser shining through two slits you see bright and dark bands. The bright spot in the middle exists because light from both slits travels the same distance, so the waves arrive crest with crest. A dark spot appears where one path is half a wavelength longer, so a crest meets a trough and they cancel. Further out, a whole extra wavelength brings them back in step and gives another bright band.",
+   "from": "notes",
+   "video": {
+    "id": "GzbKb59my3U",
+    "start": 0,
+    "end": 105
+   }
+  },
+  {
+   "lessonId": "module_4",
+   "lessonTitle": "Phase & Interference",
+   "where": "Module 4",
+   "order": 4,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_4#n13",
+   "heading": "Single photons still build up the pattern",
+   "kind": "explain",
+   "text": "From the video \"Single Photon Interference\" (Veritasium), 1:45 to 3:30.\nThe question the video asks is what happens when the light is so faint that only one photon is in the device at a time, so there is nothing else for it to interfere with. The presenter sets up a photomultiplier tube, which can detect single photons, and a counter, and plots where photons land. After one second the dots look random. But if you keep adding the results over time, the same bright and dark bands emerge, even though each photon was counted on its own.",
+   "from": "notes",
+   "video": {
+    "id": "GzbKb59my3U",
+    "start": 105,
+    "end": 210
+   }
+  },
+  {
+   "lessonId": "module_4",
+   "lessonTitle": "Phase & Interference",
+   "where": "Module 4",
+   "order": 4,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_4#n14",
+   "heading": "What the slowly appearing pattern says about light",
+   "kind": "explain",
+   "text": "From the video \"Single Photon Interference\" (Veritasium), 3:30 to 4:33.\nThe presenter points out that you cannot make sense of this using everyday objects. A single photon cannot be a tiny ball that goes through one slit, because then there would be no pattern, and it is not an ordinary wave spread across both either, since it is detected at one point. His answer is that a photon is a quantum object that sometimes acts like a wave and sometimes like a lump, and is really something different from anything we meet every day. This is the idea the module builds on: a single photon's two possible paths each carry an amplitude, and the amplitudes add before you square them.",
+   "from": "notes",
+   "video": {
+    "id": "GzbKb59my3U",
+    "start": 210,
+    "end": 273
+   }
+  },
+  {
+   "lessonId": "module_4",
+   "lessonTitle": "Phase & Interference",
+   "where": "Module 4",
+   "order": 4,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_4#n15",
+   "heading": "Interference of waves, and an answer to a viewer question",
+   "kind": "explain",
+   "text": "From the video \"Single Photon Interference\" (Veritasium), 4:33 to 6:00.\nThe last part recaps wave interference: where peaks meet peaks the amplitude grows (constructive interference), and where a peak meets a trough they cancel. The presenter then spends the closing minute answering a viewer question about a detail of the previous video's experiment, which used ordinary daylight instead of a laser: the blobs in that pattern were images of the light source, each slit spreading light out by diffraction and the overlapping spreads cancelling in places because they are out of phase. That is a side detail and is not needed for the single-photon idea.",
+   "from": "notes",
+   "video": {
+    "id": "GzbKb59my3U",
+    "start": 273,
+    "end": 360
+   }
   },
   {
    "lessonId": "module_5a",
@@ -1587,6 +2235,150 @@
    "from": "notes"
   },
   {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n13",
+   "heading": "What does the MinutePhysics Bell's theorem video explain?",
+   "kind": "faq",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 0:00 to 17:34.\nIt builds up Bell's theorem from a pair of polarised sunglasses. First comes a demo where adding a third filter lets more light through, which turns out to be impossibly more than a simple model predicts. Then it shows with a Venn diagram that photons cannot be carrying pre-set answers to every possible filter question. Finally it moves the argument to entangled photons far apart, so the answer cannot be \"one filter changed the photon for the next\", and concludes that nature cannot be both \"real\" and \"local\". It ends with the history: Bell's inequalities in 1964, loophole-free tests from 2015.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 0,
+    "end": 1054
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n14",
+   "heading": "The three-filter sunglasses demo",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 0:00 to 1:49.\nA polarising filter lets a photon through or not, which works as a measurement of its polarisation. Cross two filters at 90 degrees and almost no light gets through. Now slide a third filter in between, at 45 degrees to the first. The lamp looks brighter, even though the filters only remove light. With perfect filters you can keep adding in-between filters and keep getting more light. The video says the exact amounts are not only surprising, they are too large to explain in a simple way, and following that thread leads to Bell's theorem.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 0,
+    "end": 109
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n15",
+   "heading": "Polarisation, probability and the hidden-variable idea",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 1:49 to 3:16.\nLight is a wave in the electromagnetic field and polarisation is the direction it wiggles in. A filter absorbs wiggling along one direction, but photons are quantum objects: each one passes completely or not at all, and which happens looks random. Anyone unhappy with real randomness might suspect a hidden variable, some extra property of each photon that already decides whether it will pass a given filter, too subtle for us to measure so far. The video then says that, surprisingly, a simple experiment can test whether such hidden variables are possible at all.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 109,
+    "end": 196
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n16",
+   "heading": "The numbers: 100%, 0%, 50% and 85%",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 3:16 to 5:07.\nTwo filters in the same direction: the photon passes with certainty. At 90 degrees: it never passes. At 45 degrees: 50/50. And these chances depend only on the angle between the two filters, not on what the photon met earlier. The odd value is at 22.5 degrees: 85% pass, much more than the 75% you might guess from being halfway. Take filters A at 0 degrees, B at 22.5 and C at 45. Without B, half the photons that pass A are blocked at C. With B, only 15% are blocked at B and 15% of the rest at C. Two small blocks do not add up to 50%, which is why the lamp gets brighter when B is added.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 196,
+    "end": 307
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n17",
+   "heading": "The Venn diagram argument",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 5:07 to 8:31.\nSuppose each photon did carry definite answers to \"would you pass A, B or C\" in advance. Draw 100 photons that pass A. About 85 also pass B, 15 do not. Of the ones passing B, about 15% are then blocked at C. So the photons that pass A but are blocked at C would number fewer than 15 + 15, yet experiments say 50 of them are blocked at C. The video compares it to a counting rule about people with beards and glasses that cannot be broken. The numbers cannot all be right if the answers were fixed beforehand, which is the contradiction.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 307,
+    "end": 511
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n18",
+   "heading": "The loophole: filters might change the photon",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 8:31 to 9:17.\nThe presenters then point out a hole in that argument. It assumed each answer is static. A photon passing through one filter could change how it meets the next one, and that would explain the numbers. So all the first argument rules out is a hidden-variable theory where one filter's effect on a photon is felt by later filters. The way to close the hole is to use measurements at different places at the same time, so no influence could cross between them without travelling faster than light. That needs entanglement.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 511,
+    "end": 557
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n19",
+   "heading": "The entangled-photon version and what it rules out",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 9:17 to 12:13.\nFor this video, \"entangled\" just means two photons that always give matching results when both are measured along one direction (both pass or both are blocked), however far apart they are. Send entangled pairs to two distant places, and at each place pick one of the filters at random. The counts repeat the same numbers: 15% for A and B, 15% for B and C, and 50% for A and C. The same Venn diagram then cannot be drawn: regions limited to 15% each cannot make up a 50% region. The only escape would be an influence between the two photons faster than light.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 557,
+    "end": 733
+   }
+  },
+  {
+   "lessonId": "module_5a",
+   "lessonTitle": "Entanglement & Bell Tests",
+   "where": "Module 5A",
+   "order": 5,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5a#n20",
+   "heading": "Local realism, Bell inequalities and the history",
+   "kind": "explain",
+   "text": "From the video \"Bell's Theorem: The Quantum Venn Diagram Paradox\" (MinutePhysics), 12:13 to 17:34.\nRealism is the idea that a particle has definite properties even when nobody measures it. Locality is the idea that nothing influences anything faster than light. The experiment shows that at least one of them is false, and that nature cannot be locally real. The counting rule that definite-answer questions obey is called a Bell inequality; quantum states break it. John Bell published this in 1964, and experiments since then have confirmed it, though early ones had loopholes that left room for local realism. The first test with no loopholes was in 2015. The presenters add that the maths is only a counting argument and the demo can be done at home with cheap filters.",
+   "from": "notes",
+   "video": {
+    "id": "zcqZHYo7ONs",
+    "start": 733,
+    "end": 1054
+   }
+  },
+  {
    "lessonId": "module_5b",
    "lessonTitle": "Entanglement as a Resource (Teleportation)",
    "where": "Module 5B",
@@ -1780,6 +2572,150 @@
    "kind": "misconception",
    "text": "Nothing physical is sent, nothing is instant, and the original is not left behind. It is a careful way to move a quantum state using entanglement and a normal message.",
    "from": "notes"
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n12",
+   "heading": "What do the two teleportation videos in this module cover?",
+   "kind": "faq",
+   "text": "From the video \"Transporters and Quantum Teleportation\" (minutephysics), 0:00 to 2:01.\nThe first, a two-minute MinutePhysics clip, relates science-fiction transporters to quantum teleportation and explains the no-cloning rule in plain words. The second, Qiskit's \"How Quantum Teleportation Really Works\", is a full walk-through: the setting with Alice and Bob, the steps (a CNOT, a Hadamard, two measurements, then Bob's corrections), and a real run on an IBM quantum computer. Together they say that teleportation moves a state, never matter, and that it needs entanglement plus ordinary communication.",
+   "from": "notes",
+   "video": {
+    "id": "dAaHHGHuy1c",
+    "start": 0,
+    "end": 121
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n13",
+   "heading": "Transporters, copies and the no-cloning rule",
+   "kind": "explain",
+   "text": "From the video \"Transporters and Quantum Teleportation\" (minutephysics), 0:00 to 2:01.\nThe clip starts with the worry about a Star-Trek style transporter: if it takes you apart and rebuilds you elsewhere, is the rebuilt person really you, and what if the original were not taken apart? Then it brings in the one real teleportation we have, discovered in the 1990s. You can transfer the exact quantum condition of one set of quantum objects onto others arbitrarily far away. The objects do not move, only their state does. An important rule comes with it: it is impossible to make an identical copy of an unknown quantum state without destroying the original, which is called the no-cloning theorem. The presenter's closing thought, about what this would mean for a transporter, is speculation, not established science.",
+   "from": "notes",
+   "video": {
+    "id": "dAaHHGHuy1c",
+    "start": 0,
+    "end": 121
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n14",
+   "heading": "What quantum teleportation is, and where it came from",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 0:00 to 1:48.\nQiskit's video says plainly that movie-style teleportation is impossible, since nothing can travel faster than light. Quantum teleportation is real, though, and it moves information, not matter. All it needs is an entangled pair with one half at each site, and a way to send ordinary classical information between the sites. It was worked out in 1993 by a team that included IBM's Charles Bennett. It is called teleportation because the quantum information disappears at one place and appears at another without crossing the space between. The video stresses that nothing about it is magic.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 0,
+    "end": 108
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n15",
+   "heading": "The set-up: Alice, Bob, an unknown qubit and an e-bit",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 1:48 to 3:14.\nAlice holds a qubit in an unknown state and wants to give that state to Bob, who is far away. She cannot send the qubit itself, perhaps because she does not know where he is. But they already share an entangled pair of qubits, one each, which the video calls an e-bit and treats as a resource for sending quantum information. The video also notes that in Qiskit the usual order of qubits is right to left, so qubit 0 is written last.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 108,
+    "end": 194
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n16",
+   "heading": "The steps: CNOT, Hadamard and measuring both qubits",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 3:14 to 5:23.\nStep one: Alice applies a CNOT with her unknown qubit as the control and her half of the e-bit as the target. Step two: she applies a Hadamard gate to her unknown qubit. Written out, the three-qubit state looks like a mess, but it can be regrouped into four terms. Step three: she measures both of her qubits. Whichever of the four results she gets, Bob's qubit is left in a state closely related to the original unknown one. For one of the four results it is exactly the original state already.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 194,
+    "end": 323
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n17",
+   "heading": "Bob's corrections and why this is not faster-than-light",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 5:23 to 7:08.\nBob has to know what Alice measured. With one of the other outcomes he must apply a Z gate, with another an X gate, and with the last both, to turn his qubit into the original state. So Alice phones him with her two classical bits. This is the reason teleportation does not break causality: Bob's qubit changes the instant Alice measures, but he cannot get any use out of it until her message arrives, and that message cannot go faster than light. The video also highlights that the original state at Alice's side is destroyed, and she does not need to know where Bob is.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 323,
+    "end": 428
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n18",
+   "heading": "Running it in Qiskit and checking it worked",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 7:08 to 10:20.\nThe circuit uses three qubits. A Hadamard and a CNOT make the e-bit. A random unitary, drawn as a box U, prepares Alice's qubit in an unknown state. Then the CNOT, the Hadamard and the two measurements, followed by Bob's conditional X and Z gates (applied only if the matching measurement was 1). To check it, the video adds the inverse of U on Bob's qubit at the end. If teleportation worked, Bob's qubit should now read 0. The video points out that this check is only a diagnostic, since it undoes the very state you teleported.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 428,
+    "end": 620
+   }
+  },
+  {
+   "lessonId": "module_5b",
+   "lessonTitle": "Entanglement as a Resource (Teleportation)",
+   "where": "Module 5B",
+   "order": 6,
+   "part": 1,
+   "tag": "Accurate",
+   "id": "module_5b#n19",
+   "heading": "The real-hardware result, and teleporting across the chip",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Teleportation Really Works\" (Qiskit), 10:20 to 14:38.\nOn a real IBM processor, noise and imperfect gates mean Bob does not always read 0, but he does the large majority of the time, which counts as success. In that first run Alice and Bob were neighbours, so swap gates would have done the same job. To make it more impressive, the video moves them far apart on the chip with swap gates after creating the e-bit. It still works, but the success rate is lower, because the extra swaps cost accuracy and weaken the e-bit. The video ends by saying the 1993 protocol is a basis for gate teleportation and quantum networks, and that states have been teleported to a satellite 1,400 km up.",
+   "from": "notes",
+   "video": {
+    "id": "jxqnzltpDdE",
+    "start": 620,
+    "end": 878
+   }
   },
   {
    "lessonId": "module_6",
@@ -2001,6 +2937,132 @@
    "kind": "misconception",
    "text": "They use an oracle on a superposition, but the key work is done by interference, which cancels wrong answers and strengthens the right one. Without that, measuring would just give a random item.",
    "from": "notes"
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n12",
+   "heading": "What does the second part of the 3Blue1Brown video cover?",
+   "kind": "faq",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 15:52 to 29:30.\nThis part of 3Blue1Brown's \"But what is quantum computing?\" turns the state-vector idea into an algorithm. It introduces quantum gates as flips and rotations of the vector, explains why a quick-to-check problem can be turned into a \"flip the sign of the right answer\" gate, and then shows Grover's search as a geometric picture: two reflections in a plane that together rotate the vector towards the answer. It ends by working out how many rotations are needed, about pi/4 times the square root of the number of options.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 952,
+    "end": 1770
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n13",
+   "heading": "Quantum gates are flips and rotations of the state vector",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 15:52 to 17:42.\nAs classical computing has AND, OR and NOT, quantum computing has quantum gates, basic operations on one qubit or several. They always flip or rotate the state vector. The Hadamard gate is the standard example: it sends the \"0\" direction to a diagonal and the \"1\" direction to the opposite diagonal, so a definite 0 or 1 becomes a 50/50 balance, and back. Writing an algorithm means composing many gates so the vector gradually ends up pointing almost entirely along one direction, the one that holds the answer. With k qubits there are 2^k directions, one for every bit string, so more interesting answers fit.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 952,
+    "end": 1062
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n14",
+   "heading": "A huge vector you cannot look at",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 17:42 to 19:33.\nThe video says the size of the state vector growing exponentially is a real source of quantum computing's potential, even though the power has often been exaggerated: just 100 qubits already means an enormous vector. The catch is that you cannot look at its values directly. It is useful only if you can steer all, or most, of the probability onto one single component that happens to be the answer you care about. Grover's algorithm is the clearest example of doing exactly this. In outline: start with equal probability on every outcome, flip the sign of the key's component, then alternate that with another operation, until almost all of the probability sits on the secret key.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1062,
+    "end": 1173
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n15",
+   "heading": "Why \"flip the sign of the answer\" is an available operation",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 19:33 to 21:27.\nGrover's algorithm applies to any problem where a solution can be checked quickly even if finding it is hard: solving a sudoku, colouring a map so neighbours differ, and many tasks in cryptography. Such a check is built from classical logic gates. Grover knew that any set of logic gates can be translated into quantum gates that act on the state vector so that the entry for each input the check accepts gets its sign flipped and the entries it rejects are left alone. So, for any quick-to-verify problem, you can build an operation that flips the sign at the position of the solution. At first that seems useless, because flipping a sign does not change the probabilities.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1173,
+    "end": 1287
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n16",
+   "heading": "The geometric picture: a 2D slice and a small angle",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 21:27 to 24:43.\nThe video shows the algorithm with a three-direction example and notes it works the same way for any size. The vector stays inside a flat plane spanned by two directions: the secret key direction (drawn upwards) and the equal mix of all non-key states (drawn along the horizontal). The starting vector, the equal balance of everything, is not quite perpendicular to the key direction because it contains a little of the key. Taking the dot product, the balance state's overlap with the key is 1 over the square root of n, so the angle theta between the balance state and the horizontal is about 1 over the square root of n radians. That small angle is where the square root in Grover's runtime comes from.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1287,
+    "end": 1483
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n17",
+   "heading": "Two reflections push the vector towards the key",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 24:43 to 27:13.\nThe procedure is simple. First, flip the sign of the key component: in the diagram that is a reflection across the horizontal axis. Second, reflect the vector across the equal-balance direction. After one round the vector points slightly more towards the key, so a measurement would have a slightly larger chance of showing it. The video shows the numbers for n equal to 100, where the key's component grows a little with every round. The video asks you to take it on trust that such a reflection about a known state is possible; the intuition comes from the geometry.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1483,
+    "end": 1633
+   }
+  },
+  {
+   "lessonId": "module_6",
+   "lessonTitle": "Circuits, Oracles, and Search",
+   "where": "Module 6A & 6B",
+   "order": 7,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_6#n18",
+   "heading": "How many rounds, and what you do at the end",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the search part\" (3Blue1Brown), 27:13 to 29:30.\nTwo reflections in a row are the same as one rotation by twice the angle between the two mirror lines, so each round turns the vector by 2 theta. To get from the start to the key direction takes a turn of about a quarter of a full circle, which means about pi/4 times the square root of n rounds. For a million options (2 to the 20th) that is around 804 rounds, and it needs at least 20 qubits. The result is not guaranteed: there is a small chance of seeing a wrong value, but because answers are quick to check you just check on a classical computer and rerun if needed. The video then says it will own up to a simplification it made and reflect on where the speed-up comes from.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1633,
+    "end": 1770
+   }
   },
   {
    "lessonId": "module_7",
@@ -2235,6 +3297,132 @@
    "kind": "misconception",
    "text": "Measuring the data qubits ruins the superposition. Parity checks on ancillas find errors without learning the encoded state.",
    "from": "notes"
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n13",
+   "heading": "What do the two videos in the noise and error-correction module cover?",
+   "kind": "faq",
+   "text": "From the video \"How Quantum Computers Become Fault Tolerant\" (Qiskit), 0:00 to 6:39.\nThe first one, from Qiskit, explains why quantum circuits go wrong and sorts the fixes into three families: error suppression, error mitigation and error correction. It ends with where IBM aims to take fault tolerance. The second, from IBM Technology, describes one big experiment (127 qubits, about 60 layers of two-qubit gates) in which zero-noise extrapolation, a mitigation method, gave results that could be checked against classical calculations.",
+   "from": "notes",
+   "video": {
+    "id": "vja_KmolxAU",
+    "start": 0,
+    "end": 399
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n14",
+   "heading": "What fault tolerance means and why errors build up",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Become Fault Tolerant\" (Qiskit), 0:00 to 1:47.\nFault tolerance means a computer keeps giving accurate results despite errors. Classical computers are so reliable that we take it for granted, but even the best quantum computers have much higher error rates. In a circuit diagram each block is a gate, and circuit depth is how many gates run one after another. Errors come from imperfect gates, imprecise readout, unwanted coupling between qubits and interaction with the environment. Every gate adds a small chance of error, so deeper circuits collect more and the final state gets worse. Algorithms that need long circuits, such as factoring and quantum phase estimation for chemistry, therefore need a large fault-tolerant machine.",
+   "from": "notes",
+   "video": {
+    "id": "vja_KmolxAU",
+    "start": 0,
+    "end": 107
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n15",
+   "heading": "Suppression and mitigation",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Become Fault Tolerant\" (Qiskit), 1:47 to 3:33.\nThe video names three approaches. Error suppression avoids the processes that cause errors. For instance, a qubit sitting idle while others work picks up errors, so you can insert a gate and then its inverse, which the algorithm does not need, and splitting the idle time like this reverses one kind of error. That technique is called dynamical decoupling. Error mitigation analyses how errors affect the result and adjusts the answer. Zero-noise extrapolation runs the circuit normally and then with deliberately increased noise, and uses how the result degrades to estimate the error-free value. It needs a known noise factor and several runs, but it can improve accuracy.",
+   "from": "notes",
+   "video": {
+    "id": "vja_KmolxAU",
+    "start": 107,
+    "end": 213
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n16",
+   "heading": "Error correction, the gross code and the roadmap",
+   "kind": "explain",
+   "text": "From the video \"How Quantum Computers Become Fault Tolerant\" (Qiskit), 3:33 to 6:39.\nError correction stores one robust logical qubit redundantly across several physical qubits so errors on single physical qubits can be detected and fixed. It needs many physical qubits per logical one and a demanding layout for checks. It can be done today only on one or a few qubits. The video describes an IBM code, the gross code, which it says puts 12 logical qubits into 144 physical qubits, around ten times more efficient than earlier codes. It expects the first fault-tolerant machines to mix all three methods. Last, it points to IBM's published roadmap, with a machine called Starling for 100 million operations on 200 logical qubits and a later one for a billion operations on 1000 logical qubits. These are plans stated in the video and may change.",
+   "from": "notes",
+   "video": {
+    "id": "vja_KmolxAU",
+    "start": 213,
+    "end": 399
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n17",
+   "heading": "The experiment: a 127-qubit simulation with mitigation",
+   "kind": "explain",
+   "text": "From the video \"Quantum Error Mitigation and the Path to Useful Quantum Computing\" (IBM Technology), 0:00 to 1:39.\nAn IBM Quantum researcher describes a paper with UC Berkeley. A 127-qubit processor simulated 127 interacting spins, one qubit per spin, with circuits of up to 60 layers of two-qubit CNOT gates, roughly double the previous record, and still gave results that can be trusted at the end. Noise was not removed. Instead a family of methods called error mitigation was used so that useful results could be extracted before the era of fault tolerance.",
+   "from": "notes",
+   "video": {
+    "id": "JCrvxWZEtSY",
+    "start": 0,
+    "end": 99
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n18",
+   "heading": "How zero-noise extrapolation works in this experiment",
+   "kind": "explain",
+   "text": "From the video \"Quantum Error Mitigation and the Path to Useful Quantum Computing\" (IBM Technology), 1:39 to 4:15.\nRun the circuit and estimate the quantity of interest, such as the average of some property. Noise makes that estimate inaccurate. To correct it, first learn what the noise is doing by splitting the circuit into layers, each made of an ideal part and a noise part, and measuring the noise parts. It is hard to turn the hardware noise down, but with that knowledge you can turn it up by known amounts and repeat the experiment. Then you extrapolate the results back to what you would get with no noise.",
+   "from": "notes",
+   "video": {
+    "id": "JCrvxWZEtSY",
+    "start": 99,
+    "end": 255
+   }
+  },
+  {
+   "lessonId": "module_7",
+   "lessonTitle": "Noise & Error Correction",
+   "where": "Module 7",
+   "order": 8,
+   "part": 1,
+   "tag": "Simplified model",
+   "id": "module_7#n19",
+   "heading": "How the results were checked, and what could not be",
+   "kind": "explain",
+   "text": "From the video \"Quantum Error Mitigation and the Path to Useful Quantum Computing\" (IBM Technology), 4:15 to 10:49.\nThe model was a spin lattice (the transverse-field Ising model) mapped on to the chip's own connection pattern. For some settings the circuit is a special kind that classical computers can simulate efficiently, so the answer was known exactly and matched. For shallower circuits, the Berkeley collaborators computed exact answers by brute force and then with an approximation method called tensor networks, and again there was reasonable agreement. Pushing to deeper circuits and more qubits, exact classical answers were no longer possible, so those results are unverifiable for now. The researchers hope classical methods will catch up, which would be welcome either way, and say better hardware will allow even deeper circuits on the way to useful problems.",
+   "from": "notes",
+   "video": {
+    "id": "JCrvxWZEtSY",
+    "start": 255,
+    "end": 649
+   }
   },
   {
    "lessonId": "hw_module_0",
@@ -2484,6 +3672,132 @@
    "from": "notes"
   },
   {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n10",
+   "heading": "What do the two videos in this module explain?",
+   "kind": "faq",
+   "text": "From the video \"Measuring decoherence\" (QuTech Academy), 0:00 to 5:55.\nThe first, from QuTech Academy, shows how a qubit's lifetime is actually measured. A microwave pulse makes the qubit swing between 0 and 1 (Rabi oscillations), the swings die away because of noise, and two standard experiments (the Hahn echo and the Ramsey experiment) pull out the numbers T2 and T2*. The second, a short QuEra clip, defines gate fidelity: how often a gate does exactly what it should, and why error correction needs it to be above roughly 99%.",
+   "from": "notes",
+   "video": {
+    "id": "RRvzE_430DY",
+    "start": 0,
+    "end": 355
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n11",
+   "heading": "Rabi oscillations, pi pulses and detuning",
+   "kind": "explain",
+   "text": "From the video \"Measuring decoherence\" (QuTech Academy), 0:00 to 1:33.\nTo run a gate on a real qubit you shine electromagnetic radiation on it. If its frequency matches the energy gap between 0 and 1, the qubit oscillates between the two states: these are Rabi oscillations. On the Bloch sphere they are rotations about the X or Y axis. Flipping the qubit from 0 to 1 (an X gate) means applying a pulse of exactly half a Rabi cycle, called a pi pulse. If the frequency does not match exactly, the difference is called detuning. The video says some detuning is always present, which keeps the oscillations from reaching the poles fully.",
+   "from": "notes",
+   "video": {
+    "id": "RRvzE_430DY",
+    "start": 0,
+    "end": 93
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n12",
+   "heading": "Why Rabi oscillations fade and what T1 and T2 mean",
+   "kind": "explain",
+   "text": "From the video \"Measuring decoherence\" (QuTech Academy), 1:33 to 3:10.\nThe video explains the fading with an uncertainty-principle argument: a state that lives only briefly has a poorly defined energy, so there is always some random detuning, and the oscillations decay. The time for the decay to reach 1/e of its size is a measure of the qubit's lifetime. Two kinds of process limit it. Longitudinal relaxation, with timescale T1, is the qubit losing energy and falling back to its ground state. Transverse decoherence, with timescale T2, is the loss of phase information. What you observe is the combination of T2 and a slowly varying static contribution from the environment, called T2 prime, which together give the aggregate T2 star: 1 over T2 star equals 1 over T2 plus 1 over T2 prime.",
+   "from": "notes",
+   "video": {
+    "id": "RRvzE_430DY",
+    "start": 93,
+    "end": 190
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n13",
+   "heading": "The Hahn echo measures T2",
+   "kind": "explain",
+   "text": "From the video \"Measuring decoherence\" (QuTech Academy), 3:10 to 4:35.\nBecause the static part (T2 prime) does not change in time, its effect can be undone. The Hahn echo starts with a pi/2 pulse that tips the spin into the x-y plane. During a wait time t the spin dephases, mainly due to the static effect. A pi pulse then flips the spin over, so the same dephasing continues in the direction that refocuses it. After another wait of exactly t, the static effect has cancelled and a measurement shows only T2. Repeating with longer waits, the signal decays exponentially with decay constant T2.",
+   "from": "notes",
+   "video": {
+    "id": "RRvzE_430DY",
+    "start": 190,
+    "end": 275
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n14",
+   "heading": "The Ramsey experiment measures T2 star",
+   "kind": "explain",
+   "text": "From the video \"Measuring decoherence\" (QuTech Academy), 4:35 to 5:55.\nFor the aggregate effect, the Ramsey experiment uses two pi/2 pulses with a wait in between, and then a measurement. The spin precesses around the x-y plane during the wait. With a wait close to zero the spin ends in state 1, and with a wait of half a precession period it ends in state 0, so the measurement oscillates as a function of wait time. The oscillations decay because of both T2 and T2 prime, and the time at which the decay reaches 1/e is T2 star.",
+   "from": "notes",
+   "video": {
+    "id": "RRvzE_430DY",
+    "start": 275,
+    "end": 355
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n15",
+   "heading": "What gate fidelity means, in the QuEra clip",
+   "kind": "explain",
+   "text": "From the video \"What is Gate Fidelity\" (QuEra Computing), 0:00 to 1:06.\nGate fidelity measures how closely a real gate matches the ideal one. If a CNOT does the right thing 99 times out of 100, its fidelity is 99%. Noise and imperfect hardware make perfect fidelity practically impossible, and imperfect gates limit how long and complex a computation can be. The video says single- and two-qubit gates need fidelities above about 99% for error correction to work. Error correction then groups several physical qubits into a logical qubit, which stores the information redundantly and keeps checking it.",
+   "from": "notes",
+   "video": {
+    "id": "ehDUE0SdcTE",
+    "start": 0,
+    "end": 66
+   }
+  },
+  {
+   "lessonId": "hw_module_0",
+   "lessonTitle": "What Makes a Good Qubit?",
+   "where": "Hardware module 0",
+   "order": 9,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_0#n16",
+   "heading": "Trade-offs of high fidelity, and the vendor's point of view",
+   "kind": "explain",
+   "text": "From the video \"What is Gate Fidelity\" (QuEra Computing), 1:06 to 2:28.\nHigh fidelity and error correction come with costs: more physical qubits, a harder design to scale, and in some implementations extra delay. The clip, made by a company that builds neutral-atom computers, adds that atoms may have an advantage because they can be packed densely and shuttled around inside the machine, so groups of physical qubits that form a logical qubit can move together. Treat that part as the company's claim about its own approach, not a neutral comparison.",
+   "from": "notes",
+   "video": {
+    "id": "ehDUE0SdcTE",
+    "start": 66,
+    "end": 148
+   }
+  },
+  {
    "lessonId": "hw_module_1",
    "lessonTitle": "Superconducting Qubits",
    "where": "Hardware module 1",
@@ -2729,6 +4043,132 @@
    "kind": "glossary",
    "text": "Superconductor: a material that conducts with no resistance when cold. Josephson junction: the component that gives the circuit its atom-like levels. Transmon: the common qubit design. Dilution refrigerator: a fridge that reaches millikelvin temperatures. Microwave pulse: the signal that controls the qubit. Resonator: a circuit used to read the qubit out.",
    "from": "notes"
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n10",
+   "heading": "What do the two superconducting-qubit videos cover?",
+   "kind": "faq",
+   "text": "From the video \"The transmon qubit\" (QuTech Academy), 0:00 to 6:03.\nThe QuTech video explains what a transmon is as a circuit: a pair of superconducting islands joined by a Josephson junction, which works like an oscillator whose levels are not evenly spaced, so that two levels can serve as the qubit. The Google video starts from \"information is physical\", explains why a quantum bit cannot be stored the way a computer stores a classical bit in memory, and why cooling a circuit until it becomes superconducting gets rid of most quantum errors.",
+   "from": "notes",
+   "video": {
+    "id": "cb_f9KpYipk",
+    "start": 0,
+    "end": 363
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n11",
+   "heading": "Superconducting qubits are circuits we make ourselves",
+   "kind": "explain",
+   "text": "From the video \"The transmon qubit\" (QuTech Academy), 0:00 to 2:16.\nThe QuTech presenter points out two differences from natural two-level systems such as an electron's spin. First, a superconducting qubit has many energy levels, like an atom, and is made into a qubit by keeping the dynamics in the lowest two. Second, it is a circuit that people fabricate, which allows freedom of design (the video calls these artificial atoms) but also means no two qubits come out identical, so each has an individual personality. The circuits consist of superconducting islands joined by Josephson junctions, in many varieties: charge, flux and phase qubits, fluxonium and others.",
+   "from": "notes",
+   "video": {
+    "id": "cb_f9KpYipk",
+    "start": 0,
+    "end": 136
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n12",
+   "heading": "Why the transmon uses a Josephson junction",
+   "kind": "explain",
+   "text": "From the video \"The transmon qubit\" (QuTech Academy), 2:16 to 5:39.\nSuperconducting qubits typically work at about 4 to 8 GHz, and the same frequency is that of the microwave pulses used to drive them. A transmon in its simplest form looks like a capacitor in parallel with an inductor, an LC oscillator. The trouble is that an LC oscillator has evenly spaced levels, so it is hard to confine it to just two and the qubit \"leaks\" into higher levels. Replacing the coil by a Josephson junction, whose energy is a cosine of the flux and not quadratic, breaks the even spacing. At typical values, with a 6 GHz qubit, the next transition is lower by about 300 MHz, which is enough to keep the dynamics in two levels during 20-nanosecond pulses.",
+   "from": "notes",
+   "video": {
+    "id": "cb_f9KpYipk",
+    "start": 136,
+    "end": 339
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n13",
+   "heading": "Two junctions make the frequency tunable",
+   "kind": "explain",
+   "text": "From the video \"The transmon qubit\" (QuTech Academy), 5:39 to 6:03.\nIn practice a transmon is built with two Josephson junctions in parallel. Threading magnetic flux through the loop between them tunes the inductance and therefore the qubit's frequency, independently for each qubit and on nanosecond timescales. The presenter calls this the workhorse that makes two-qubit gates possible, which a later video in the QuTech course covers.",
+   "from": "notes",
+   "video": {
+    "id": "cb_f9KpYipk",
+    "start": 339,
+    "end": 363
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n14",
+   "heading": "Why a bit stored in a normal circuit cannot just be put in superposition",
+   "kind": "explain",
+   "text": "From the video \"Building a quantum computer with superconducting qubits (QuantumCasts)\" (Google Quantum AI), 0:00 to 5:42.\nThe Google presenter starts with states: a classical computer is in one memory state at a time, while a quantum algorithm builds complex superpositions of many. In an ordinary memory chip a bit is the presence or absence of about 300,000 electrons, which makes it robust, because a few leaking out does not matter and the chip keeps topping them up. But checking the level for errors forces the bit to be 0 or 1, and even a single stray photon interacting with one electron can carry away the information, which is what we call collapse. Classical information survives being peeked at, quantum information does not.",
+   "from": "notes",
+   "video": {
+    "id": "uPw9nkJAwDY",
+    "start": 0,
+    "end": 342
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n15",
+   "heading": "Why more electrons do not help, and how superconductivity does",
+   "kind": "explain",
+   "text": "From the video \"Building a quantum computer with superconducting qubits (QuantumCasts)\" (Google Quantum AI), 5:42 to 8:35.\nIn classical memory, redundancy fixes errors. In a quantum system the video says this backfires, because an error happens whenever nature observes any one of the physical parts, so a bigger system has more chances. Google's approach is a circuit with a huge number of electrons whose quantum errors are suppressed by superconductivity: when certain metals are cooled, their electrons join into one unit and stop scattering, so errors drop to nearly zero. The qubits are aluminium oscillators holding either no energy or a single quantum of energy, at about 6 GHz, in a fridge at 15 millikelvin or so, colder than deep space.",
+   "from": "notes",
+   "video": {
+    "id": "uPw9nkJAwDY",
+    "start": 342,
+    "end": 515
+   }
+  },
+  {
+   "lessonId": "hw_module_1",
+   "lessonTitle": "Superconducting Qubits",
+   "where": "Hardware module 1",
+   "order": 10,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_1#n16",
+   "heading": "The layout and the remaining challenge",
+   "kind": "explain",
+   "text": "From the video \"Building a quantum computer with superconducting qubits (QuantumCasts)\" (Google Quantum AI), 8:35 to 10:46.\nUnlike a conventional computer, where data moves between memory and processor, superconducting qubits sit still in a grid, each connected to its neighbours, and logic is done by sending control signals to single qubits or pairs, because moving data would add errors. Errors remain: the current of electrons in the oscillator couples to charged particles and defects nearby, for instance a charged ion inside the metal could absorb the energy and flip the qubit. Cleaning up these atomic imperfections through better fabrication is a main research aim, and the video says improvements over several years have lowered error rates a lot.",
+   "from": "notes",
+   "video": {
+    "id": "uPw9nkJAwDY",
+    "start": 515,
+    "end": 646
+   }
   },
   {
    "lessonId": "hw_module_2",
@@ -2991,6 +4431,114 @@
    "from": "notes"
   },
   {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n11",
+   "heading": "What do the two trapped-ion videos in this module say?",
+   "kind": "faq",
+   "text": "From the video \"Learn Quantum: What is Trapped Ion Quantum Computing?\" (IonQ), 0:00 to 8:40.\nBoth videos are made by companies that build trapped-ion computers (Quantinuum and IonQ), so they describe their own approach in a favourable light. The short Quantinuum clip shows ions being moved around a chip and controlled with lasers. The longer IonQ video explains what an ion trap is, why counting qubits is a poor way of comparing machines, and how fidelity, coherence and connectivity matter more.",
+   "from": "notes",
+   "video": {
+    "id": "f80y85GGyfE",
+    "start": 0,
+    "end": 520
+   }
+  },
+  {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n12",
+   "heading": "Quantinuum: ions that move, and lasers that do everything",
+   "kind": "explain",
+   "text": "From the video \"How Trapped-Ion Quantum Computers Work\" (Quantinuum), 0:00 to 2:02.\nThe clip says the qubit is a single charged atom, an ion, which nature provides. Electromagnetic fields trap the ions above a chip in a vacuum chamber and can also move them, so any two ions can be brought together. That gives all-to-all connectivity, meaning any pair can interact, which the company says helps error correction and algorithm design. Lasers initialise, gate, entangle and measure the qubits, and measurement works by checking whether an ion absorbs or does not absorb photons from the laser light. The clip claims the machine can measure at any time during a circuit and reuse the measured qubit. Claims such as \"outperforming supercomputers\" are the company's own marketing.",
+   "from": "notes",
+   "video": {
+    "id": "ec3Bs6Wam8w",
+    "start": 0,
+    "end": 122
+   }
+  },
+  {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n13",
+   "heading": "IonQ: why the qubits are atoms and how a trap works",
+   "kind": "explain",
+   "text": "From the video \"Learn Quantum: What is Trapped Ion Quantum Computing?\" (IonQ), 0:00 to 2:56.\nMany makers fabricate synthetic atoms (superconducting circuits, quantum dots). In an ion trap the qubits are real atoms supplied by nature, and the video points out that every atom of a given kind is exactly identical. A laser knocks an electron off a neutral atom to make a charged ion, which is then held (levitated) above electrodes on a chip inside a vacuum chamber. The ions line up in a chain, and precise lasers and optics reset each qubit, apply gates that create entanglement and read out the result. The hardware can also shuttle atoms around to grow the system.",
+   "from": "notes",
+   "video": {
+    "id": "f80y85GGyfE",
+    "start": 0,
+    "end": 176
+   }
+  },
+  {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n14",
+   "heading": "Why counting qubits is not enough, with the compounding-error example",
+   "kind": "explain",
+   "text": "From the video \"Learn Quantum: What is Trapped Ion Quantum Computing?\" (IonQ), 2:56 to 4:44.\nThe presenter says that comparing computers by qubit count alone is like comparing cars by counting the bolts in the engine. A better benchmark is fidelity, how close the real result is to the ideal one. Errors compound. With a two-qubit gate accuracy of 96%, ten such gates in a row leave only about 66% accuracy, and fifteen leave about 54%, which is barely better than a coin toss. That is why error rates, and what is done to reduce them, matter when you compare machines.",
+   "from": "notes",
+   "video": {
+    "id": "f80y85GGyfE",
+    "start": 176,
+    "end": 284
+   }
+  },
+  {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n15",
+   "heading": "Fidelity and coherence claims, and the vendor caveat",
+   "kind": "explain",
+   "text": "From the video \"Learn Quantum: What is Trapped Ion Quantum Computing?\" (IonQ), 4:44 to 6:09.\nThe video claims that in 2022 the company's average two-qubit fidelity was already well above 99.5%, with a roadmap beyond 99.9%. It also says ion qubits stay coherent for a very long time because they float in a vacuum, much longer than a typical computation, whereas superconducting circuits have coherence times that it describes as short. These are the company's statements from 2022, so check current figures before relying on them. The general point stands: high fidelity and long coherence are two of the main quality measures.",
+   "from": "notes",
+   "video": {
+    "id": "f80y85GGyfE",
+    "start": 284,
+    "end": 369
+   }
+  },
+  {
+   "lessonId": "hw_module_2",
+   "lessonTitle": "Trapped Ions",
+   "where": "Hardware module 2",
+   "order": 11,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_2#n16",
+   "heading": "Connectivity: all-to-all versus a limited layout",
+   "kind": "explain",
+   "text": "From the video \"Learn Quantum: What is Trapped Ion Quantum Computing?\" (IonQ), 6:09 to 8:40.\nEntanglement is what lets a quantum computer do logic, but which qubits can be directly entangled depends on the layout, called connectivity. The video compares a limited layout with an organisation where people can email only a few colleagues and rely on them to forward messages. In its design any ion in a chain can be entangled with any other, and with adjacent chains. It ends by saying benchmarks are not standardised yet, so one should look at coherence time, how fidelities compound, how many qubits are available, and connectivity, and that application-based benchmarks would be fairer.",
+   "from": "notes",
+   "video": {
+    "id": "f80y85GGyfE",
+    "start": 369,
+    "end": 520
+   }
+  },
+  {
    "lessonId": "hw_module_3",
    "lessonTitle": "Neutral Atoms",
    "where": "Hardware module 3",
@@ -3251,6 +4799,114 @@
    "from": "notes"
   },
   {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n11",
+   "heading": "What do the two videos in the neutral-atoms module explain?",
+   "kind": "faq",
+   "text": "From the video \"Neutral Atom Quantum Computers - Concept of Operation\" (QuEra Computing), 0:00 to 3:16.\nA short QuEra clip walks through how a neutral-atom computer works: trapped, laser-cooled atoms are arranged by \"optical tweezers\", gates are laser pulses and a camera reads the result. Then a physics explainer (Atoms and Sporks) explains the idea behind optical tweezers, the technology that won part of the 2018 Nobel Prize in Physics, in terms of the push light gives to what it passes through.",
+   "from": "notes",
+   "video": {
+    "id": "JmnZVhQc-H8",
+    "start": 0,
+    "end": 196
+   }
+  },
+  {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n12",
+   "heading": "The QuEra clip: trapping atoms and arranging them",
+   "kind": "explain",
+   "text": "From the video \"Neutral Atom Quantum Computers - Concept of Operation\" (QuEra Computing), 0:00 to 1:46.\nThe qubits are individual neutral atoms, with 0 and 1 stored as different energy levels of the atom. First, a cloud of ultra-cold atoms is made in a vacuum chamber, which isolates them from disturbances, and the atoms are trapped and cooled with lasers to microkelvin temperatures. Then a spatial light modulator creates optical tweezers that hold the atoms in a structured array, and an acousto-optic deflector can move the tweezers so individual atoms can be repositioned for an algorithm.",
+   "from": "notes",
+   "video": {
+    "id": "JmnZVhQc-H8",
+    "start": 0,
+    "end": 106
+   }
+  },
+  {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n13",
+   "heading": "The QuEra clip: gates, readout and claimed advantages",
+   "kind": "explain",
+   "text": "From the video \"Neutral Atom Quantum Computers - Concept of Operation\" (QuEra Computing), 1:46 to 3:16.\nLaser pulses change the atoms' energy states and make them interact, which creates entanglement, and quantum gates are carefully controlled laser pulses. At the end a sensitive camera records the light the atoms give off to reveal their states. The company lists scalability (tweezers can position large arrays), connectivity (any atom can be moved next to any other) and room-temperature operation as advantages. Remember it is the vendor's own summary. The atoms are cooled by lasers to microkelvin, so the \"room temperature\" refers to the surrounding equipment not needing a cryogenic fridge, and the clip admits the technology is still in development.",
+   "from": "notes",
+   "video": {
+    "id": "JmnZVhQc-H8",
+    "start": 106,
+    "end": 196
+   }
+  },
+  {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n14",
+   "heading": "What optical tweezers are, and how the video builds up the idea",
+   "kind": "explain",
+   "text": "From the video \"The 2018 Physics Nobel Prize: What ARE Optical Tweezers?\" (Atoms and Sporks), 0:00 to 4:13.\nThe Nobel Prize in Physics 2018 was split between pulse-generation methods and, for the second half, optical tweezers, which the presenter likens to tractor beams made of light for tiny objects such as DNA molecules and proteins. The explanation rests on one fact: light carries momentum. To get there, the video first uses a ball bouncing off a box. A perfect bounce reverses the ball's direction, so its momentum changes sign and the box must receive twice the ball's original momentum. The take-home is that anything bouncing back from something is pushing it.",
+   "from": "notes",
+   "video": {
+    "id": "UAmdoOX3870",
+    "start": 0,
+    "end": 253
+   }
+  },
+  {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n15",
+   "heading": "Light pushes mirrors and lenses, and a bright centre holds them in place",
+   "kind": "explain",
+   "text": "From the video \"The 2018 Physics Nobel Prize: What ARE Optical Tweezers?\" (Atoms and Sporks), 4:13 to 7:22.\nLight reflecting off a mirror changes direction, so it pushes the mirror. Light bending through a lens pushes the lens in the opposite direction to the bend. If a lens is lit evenly the sideways pushes cancel, but if the beam is brightest in the middle and weaker at the edges, a lens that drifts off-centre is lit unevenly and gets pushed back to the centre, so it is held in the beam. Focusing the beam so its brightness also varies front to back holds a small glass sphere in all directions. That is the principle of optical tweezers.",
+   "from": "notes",
+   "video": {
+    "id": "UAmdoOX3870",
+    "start": 253,
+    "end": 442
+   }
+  },
+  {
+   "lessonId": "hw_module_3",
+   "lessonTitle": "Neutral Atoms",
+   "where": "Hardware module 3",
+   "order": 12,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_3#n16",
+   "heading": "What tweezers are used for and what the video leaves open",
+   "kind": "explain",
+   "text": "From the video \"The 2018 Physics Nobel Prize: What ARE Optical Tweezers?\" (Atoms and Sporks), 7:22 to 8:41.\nBecause a molecule or a cell or a bacterium's tail can be chemically attached to a tiny bead, you can move the bead with light and thereby move that object, which earned the Nobel Prize. The presenter admits a simplification: he glossed over how light can have momentum despite having no mass, and over why we do not feel its push in everyday life, and promises to cover them in a later video. In a neutral-atom computer, a related light force holds single atoms in place, as the QuEra clip shows.",
+   "from": "notes",
+   "video": {
+    "id": "UAmdoOX3870",
+    "start": 442,
+    "end": 521
+   }
+  },
+  {
    "lessonId": "hw_module_4",
    "lessonTitle": "Photonic Qubits",
    "where": "Hardware module 4",
@@ -3496,6 +5152,96 @@
    "kind": "glossary",
    "text": "Photon: a particle of light. Waveguide: a channel that guides light on a chip. Beam splitter: a component that splits a light path in two. Loss: photons absorbed or scattered. Probabilistic gate: a gate that works only some of the time. Detector: a device that registers single photons.",
    "from": "notes"
+  },
+  {
+   "lessonId": "hw_module_4",
+   "lessonTitle": "Photonic Qubits",
+   "where": "Hardware module 4",
+   "order": 13,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_4#n11",
+   "heading": "What do the two photonic-computer videos show?",
+   "kind": "faq",
+   "text": "From the video \"Introduction to Photonic Quantum Computing\" (Quantum Source), 0:00 to 2:14.\nBoth are short company explainers. Quantum Source describes a design where the entangled photons that form a huge computation are produced a few at a time and stitched together over time, so that only hundreds of qubits exist at any one instant even for a million-qubit calculation. Xanadu describes an actual chip that squeezes laser light into special quantum states, sends them through a programmable network of beam splitters and phase shifters, and counts the photons that come out.",
+   "from": "notes",
+   "video": {
+    "id": "ustVvxJ8t-s",
+    "start": 0,
+    "end": 134
+   }
+  },
+  {
+   "lessonId": "hw_module_4",
+   "lessonTitle": "Photonic Qubits",
+   "where": "Hardware module 4",
+   "order": 13,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_4#n12",
+   "heading": "Quantum Source: spreading qubits over time",
+   "kind": "explain",
+   "text": "From the video \"Introduction to Photonic Quantum Computing\" (Quantum Source), 0:00 to 1:35.\nThe video starts from the point that a useful universal quantum computer would need millions of entangled qubits plus error correction, and that having so many at the same moment is not feasible. Using photons as qubits lets the machine spread them over the timeline of the computation. Resource state generators repeatedly produce small clusters of entangled photons, stitching devices entangle those clusters into larger ones, and long fibres act as delay loops, a kind of quantum memory, so photons can wait and be entangled with clusters produced later.",
+   "from": "notes",
+   "video": {
+    "id": "ustVvxJ8t-s",
+    "start": 0,
+    "end": 95
+   }
+  },
+  {
+   "lessonId": "hw_module_4",
+   "lessonTitle": "Photonic Qubits",
+   "where": "Hardware module 4",
+   "order": 13,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_4#n13",
+   "heading": "Quantum Source: measuring the cluster to compute",
+   "kind": "explain",
+   "text": "From the video \"Introduction to Photonic Quantum Computing\" (Quantum Source), 1:35 to 2:14.\nThe huge entangled cluster is fed slice by slice to an array of detectors, and a classical computer decides the exact sequence of measurements that carries out the chosen algorithm. The video compares it to weaving a fabric of quantum information, adding photonic clusters like threads. Its claim is that a million-qubit error-corrected calculation needs only hundreds of qubits at a time. This is the company's design vision, not something already built.",
+   "from": "notes",
+   "video": {
+    "id": "ustVvxJ8t-s",
+    "start": 95,
+    "end": 134
+   }
+  },
+  {
+   "lessonId": "hw_module_4",
+   "lessonTitle": "Photonic Qubits",
+   "where": "Hardware module 4",
+   "order": 13,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_4#n14",
+   "heading": "Xanadu: squeezers, interferometer and detectors",
+   "kind": "explain",
+   "text": "From the video \"How Xanadu’s Photonic Quantum Computers Work\" (Xanadu), 0:04 to 1:08.\nThe chips are made of silicon and silicon nitride and have three parts: squeezers as the input, an interferometer as the logic, and photon detectors as the output. Classical laser light goes to an array of tiny ring-shaped resonators that make squeezed states, a particular quantum state of light, which the video describes as the company's version of a qubit and as a superposition of different photon numbers. The states are carried by waveguides to the interferometer, a network of beam splitters and phase shifters. The user's instructions are turned into voltages on the chip's components.",
+   "from": "notes",
+   "video": {
+    "id": "v7iAqcFCTQQ",
+    "start": 4,
+    "end": 68
+   }
+  },
+  {
+   "lessonId": "hw_module_4",
+   "lessonTitle": "Photonic Qubits",
+   "where": "Hardware module 4",
+   "order": 13,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_4#n15",
+   "heading": "Xanadu: reading out photon counts and what it is for",
+   "kind": "explain",
+   "text": "From the video \"How Xanadu’s Photonic Quantum Computers Work\" (Xanadu), 1:08 to 2:22.\nInside the interferometer the squeezed states interact and become entangled, and the interferometer acts like a sequence of quantum gates. Each output goes to a transition-edge sensor, a detector that counts how many photons are present, giving a list of integers. The result of the computation is in the statistics of these counts. The video says these chips suit graph-theory problems with uses in finance, chemistry and logistics, and are available on the company's cloud. That is the company's description of the usefulness, which is still being tested.",
+   "from": "notes",
+   "video": {
+    "id": "v7iAqcFCTQQ",
+    "start": 68,
+    "end": 142
+   }
   },
   {
    "lessonId": "hw_module_5",
@@ -3758,6 +5504,150 @@
    "from": "notes"
   },
   {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n11",
+   "heading": "What do the two QuTech videos on spin qubits explain?",
+   "kind": "faq",
+   "text": "From the video \"Spin qubits\" (QuTech Academy), 0:00 to 10:31.\nThe first (\"Spin qubits\") starts with the transistor and shows how electrodes on a chip isolate single electrons in quantum dots, how you detect them one at a time, and how this could scale up using ideas from the chip industry. The second (\"Quantum dot qubits\") shows ways to define a qubit in such dots: the electron's charge, which is fast but fragile, or its spin, which lives much longer, plus several other variants and how two-qubit gates work.",
+   "from": "notes",
+   "video": {
+    "id": "y9dt5uTvsEM",
+    "start": 0,
+    "end": 631
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n12",
+   "heading": "From the transistor to a single electron in a dot",
+   "kind": "explain",
+   "text": "From the video \"Spin qubits\" (QuTech Academy), 0:00 to 2:03.\nThe video recalls the first transistor in 1947 and the first integrated circuit in 1958. Quantum bits can use the same core technology: a transistor is a switch controlling electrons between two contacts with the voltage on one gate. With several gates side by side, you can pull electrons in or push them away and isolate small puddles of electrons. A quantum dot is a small space where electrons are held under one gate. The community now routinely goes to the extreme of a single electron under each electrode, and the spin of that electron is the qubit.",
+   "from": "notes",
+   "video": {
+    "id": "y9dt5uTvsEM",
+    "start": 0,
+    "end": 123
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n13",
+   "heading": "Why single electrons can be counted, and Coulomb blockade",
+   "kind": "explain",
+   "text": "From the video \"Spin qubits\" (QuTech Academy), 2:03 to 5:19.\nAdding an electron to a tiny island costs charging energy because of the repulsion between electrons, and for a small enough island this energy exceeds the thermal energy. The video's example is an island of 100 nanometre radius, with a charging energy of about 3 meV, ten times the thermal energy at 4 kelvin. Electrons can then be added one at a time. When no energy level of the dot lines up with the source and drain, no current flows, which is Coulomb blockade. Tuning the gate voltage lines a level up in the window and current flows, so the current shows sharp peaks, each one an extra electron.",
+   "from": "notes",
+   "video": {
+    "id": "y9dt5uTvsEM",
+    "start": 123,
+    "end": 319
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n14",
+   "heading": "Charge sensing and neighbouring dots",
+   "kind": "explain",
+   "text": "From the video \"Spin qubits\" (QuTech Academy), 5:19 to 7:31.\nA second way to detect a single electron is charge sensing. A dot's current depends sharply on its gate voltage, and a charge added to a neighbouring dot acts like a small change in that gate voltage through capacitive coupling, so the current changes in a measurable way. With two dots and a gate between them to control the coupling, plotting the gate voltages shows charge transitions as lines. Two effects appear when dots are close: crosstalk, where one gate also affects the other dot, tilting the lines, and shifts in the transitions when an electron is added next door.",
+   "from": "notes",
+   "video": {
+    "id": "y9dt5uTvsEM",
+    "start": 319,
+    "end": 451
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n15",
+   "heading": "Scaling up: industry fabrication, crossbars and links",
+   "kind": "explain",
+   "text": "From the video \"Spin qubits\" (QuTech Academy), 7:31 to 10:31.\nTo scale up, quantum dots must be as uniform as possible, which needs industrial clean rooms and not just university ones. The video says a collaboration with Intel began in 2015 to make quantum dot arrays with 300 mm technology. Because wiring every qubit in a two-dimensional array is hard, it proposes a crossbar scheme like in displays and memories, where a few horizontal and vertical wires address many dots, imagining roughly 1024 qubits in an array of about 30 by 30 micrometres. Beyond that, quantum links would join local arrays on a chip, with classical control electronics integrated alongside. These are plans and visions, and the presenter calls it a phenomenal challenge.",
+   "from": "notes",
+   "video": {
+    "id": "y9dt5uTvsEM",
+    "start": 451,
+    "end": 631
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n16",
+   "heading": "Charge qubits and why they decohere quickly",
+   "kind": "explain",
+   "text": "From the video \"Quantum Dot Qubits\" (QuTech Academy), 0:08 to 2:02.\nThe simplest quantum dot qubit uses the electron's charge: in a double dot the electron can be left, right or a superposition, and the detuning energy between the two dots sets and controls the state. It is fast and all-electric. But a charge couples easily to other charges around it. Solids have traps and impurities where charges get stuck and fluctuate, which moves the electron and changes the energy, which shifts the qubit's phase. That is decoherence, and it happens quickly for charge qubits.",
+   "from": "notes",
+   "video": {
+    "id": "vQnA05VnGis",
+    "start": 8,
+    "end": 122
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n17",
+   "heading": "Spin qubits, gates and lifetimes",
+   "kind": "explain",
+   "text": "From the video \"Quantum Dot Qubits\" (QuTech Academy), 2:02 to 3:55.\nSo the spin of the electron is used instead. In a magnetic field the spin-up and spin-down states split in energy (the Zeeman splitting) and form the qubit, and a microwave magnetic field in resonance with the splitting gives Rabi rotations for single-qubit gates. Coupling neighbouring dots gives an exchange interaction that allows two-qubit gates, and the video names the native gates SWAP, CROT and CPhase. The attraction of spin is long life: T1 can be well beyond a second and T2 up to tens of milliseconds.",
+   "from": "notes",
+   "video": {
+    "id": "vQnA05VnGis",
+    "start": 122,
+    "end": 235
+   }
+  },
+  {
+   "lessonId": "hw_module_5",
+   "lessonTitle": "Silicon Spin Qubits",
+   "where": "Hardware module 5",
+   "order": 14,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_5#n18",
+   "heading": "Other quantum-dot qubit types and the current state of the art",
+   "kind": "explain",
+   "text": "From the video \"Quantum Dot Qubits\" (QuTech Academy), 3:55 to 5:42.\nA single electron in a single dot is the Loss-DiVincenzo qubit, named after its inventors. Others use several electrons or dots: singlet-triplet qubits, which may resist magnetic-field noise better and can be controlled all-electrically (two have been entangled), and more exotic hybrid and exchange-only qubits, which are fast and all-electric. The video says the state of the art is the Loss-DiVincenzo qubit, with four-qubit logic shown in a two-by-two array that uses holes in planar germanium.",
+   "from": "notes",
+   "video": {
+    "id": "vQnA05VnGis",
+    "start": 235,
+    "end": 342
+   }
+  },
+  {
    "lessonId": "hw_module_6",
    "lessonTitle": "Quantum Annealing",
    "where": "Hardware module 6",
@@ -4018,6 +5908,114 @@
    "from": "notes"
   },
   {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n11",
+   "heading": "What do the two D-Wave videos in this module cover?",
+   "kind": "faq",
+   "text": "From the video \"What is Quantum Annealing?\" (D-Wave), 0:00 to 5:58.\nBoth are explainers from D-Wave, a company that builds quantum annealers, so they present annealing from the maker's viewpoint. The first says what annealing is for (optimisation and sampling problems) and how it differs from gate-model quantum computing. The second shows how a chip actually works: each qubit settles into one of two valleys of an energy landscape, biases tilt the valleys, couplers link qubits, and the user programs the machine by choosing the biases and couplings.",
+   "from": "notes",
+   "video": {
+    "id": "zvfkXjzzYOo",
+    "start": 0,
+    "end": 358
+   }
+  },
+  {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n12",
+   "heading": "What annealing is for: optimisation and sampling",
+   "kind": "explain",
+   "text": "From the video \"What is Quantum Annealing?\" (D-Wave), 0:00 to 2:54.\nThe video says quantum annealing uses quantum effects to help solve optimisation problems, finding the best configuration among very many, and the related task of sampling. Its example is spending a fixed budget on a house to get the most happiness out of the things you can afford. These can be written as energy-minimisation problems, and physics always tries to reach the lowest energy: things roll downhill and hot things cool. Sampling means collecting many low-energy states to describe the shape of the energy landscape, useful in machine learning for building a probabilistic model. Both kinds of problem are hard on classical computers, which is why alternatives are of interest.",
+   "from": "notes",
+   "video": {
+    "id": "zvfkXjzzYOo",
+    "start": 0,
+    "end": 174
+   }
+  },
+  {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n13",
+   "heading": "Annealing versus gate-model computing",
+   "kind": "explain",
+   "text": "From the video \"What is Quantum Annealing?\" (D-Wave), 2:54 to 5:58.\nIn annealing you set up the problem and let the quantum system evolve naturally, and the final configuration is the answer, with no control over the evolution in between. Gate-model machines aim to control and manipulate that evolution, which is much more ambitious and delicate, but lets them solve a bigger class of problems. The video says that is why annealers had been scaled past a thousand qubits while gate-model machines were around ten. That comparison is from the video's time and counts different things, so do not read it as one being ahead. Annealing is not a universal quantum computer, but adiabatic quantum computing, which is universal, is closely related to it.",
+   "from": "notes",
+   "video": {
+    "id": "zvfkXjzzYOo",
+    "start": 174,
+    "end": 358
+   }
+  },
+  {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n14",
+   "heading": "A single qubit as a valley that splits in two",
+   "kind": "explain",
+   "text": "From the video \"How The Quantum Annealing Process Works\" (D-Wave), 0:00 to 2:07.\nIn the annealing chip a qubit is a circulating current with an associated magnetic field, and can be in a superposition of the 0 and 1 states. At the start of the anneal the energy diagram has one valley whose bottom is the superposition. As the anneal runs, a barrier is raised and the diagram becomes a double well: the left valley bottom is 0 and the right one is 1. With nothing else, the qubit has an even chance of ending in either. Applying an external magnetic field, called a bias, tilts the double well and makes the lower valley more likely.",
+   "from": "notes",
+   "video": {
+    "id": "UV_RlCAc5Zs",
+    "start": 0,
+    "end": 127
+   }
+  },
+  {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n15",
+   "heading": "Couplers, entanglement and how you program the machine",
+   "kind": "explain",
+   "text": "From the video \"How The Quantum Annealing Process Works\" (D-Wave), 2:07 to 4:13.\nA coupler defines how two qubits influence each other. It can make them prefer the same value (both 0 or both 1) or opposite values. Coupled qubits are entangled and must be treated as a single object with four states, and what the coupler \"wants\" means that it lowers the energy of those states. The user chooses every bias and every coupler, including its sign and strength, and that set of numbers defines an energy landscape. Programming the machine means choosing that landscape, and the annealer then finds its lowest-energy point.",
+   "from": "notes",
+   "video": {
+    "id": "UV_RlCAc5Zs",
+    "start": 127,
+    "end": 253
+   }
+  },
+  {
+   "lessonId": "hw_module_6",
+   "lessonTitle": "Quantum Annealing",
+   "where": "Hardware module 6",
+   "order": 15,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_6#n16",
+   "heading": "Why the number of states explodes, and the whole sequence",
+   "kind": "explain",
+   "text": "From the video \"How The Quantum Annealing Process Works\" (D-Wave), 4:13 to 5:56.\nEach added qubit doubles the number of states the landscape is defined over: 4 for two qubits, 8 for three, 2 to the n for n. The summary the video gives: start with qubits each in a superposition and not yet connected, introduce the biases and couplings during the anneal so the qubits become entangled as one large quantum object, which shifts the probability of each qubit ending as 0 or 1, and at the end each qubit is 0 or 1. The end result is the lowest-energy state of your problem, or one very close to it, and this takes around 20 microseconds on their chips, according to the video.",
+   "from": "notes",
+   "video": {
+    "id": "UV_RlCAc5Zs",
+    "start": 253,
+    "end": 356
+   }
+  },
+  {
    "lessonId": "hw_module_7",
    "lessonTitle": "Frontier Ideas",
    "where": "Hardware module 7",
@@ -4250,6 +6248,150 @@
    "kind": "glossary",
    "text": "Topological qubit: a qubit stored in global properties of a material. Majorana mode: an exotic quasi-particle proposed for topological qubits. Cat qubit: a qubit encoded in a resonator that suppresses bit-flips. Bosonic: using states of a harmonic oscillator such as a resonator. Modular: made of linked smaller machines. Experimental/Contested: the honesty tag for ideas not yet proven.",
    "from": "notes"
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n10",
+   "heading": "What do the three frontier videos in this module cover?",
+   "kind": "faq",
+   "text": "From the video \"Majorana fermions and where to find them (topological qubits)\" (QuTech Academy), 0:00 to 6:28.\nThey cover three ideas that are still at the research stage. A QuTech lecture explains Majorana states, the building block of topological qubits, and why superconductors are the place to look for them. An Alice & Bob video explains cat qubits and an error-correcting code built for them that the company says needs far fewer qubits. A short QuTech video shows the first small network of three connected quantum nodes, a step towards a quantum internet. The module is tagged Experimental/Contested, so treat the claims as targets and company statements.",
+   "from": "notes",
+   "video": {
+    "id": "_otDRv7IN28",
+    "start": 0,
+    "end": 388
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n11",
+   "heading": "What a Majorana fermion is",
+   "kind": "explain",
+   "text": "From the video \"Majorana fermions and where to find them (topological qubits)\" (QuTech Academy), 0:09 to 2:29.\nIn high-energy physics, every particle has an antiparticle (electron and positron, proton and antiproton), and those are called Dirac fermions. A Majorana fermion is a particle that is its own antiparticle. The idea comes from Ettore Majorana, and the video says no elementary Majorana particle has been found in nature, though neutrinos are candidates in some extensions. In condensed matter physics the aim is different: to realise a Majorana-like quasi-particle. What shows up there is more properly called a Majorana bound state, \"Majoranas\" for short, and not quite the particle high-energy physicists search for.",
+   "from": "notes",
+   "video": {
+    "id": "_otDRv7IN28",
+    "start": 9,
+    "end": 149
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n12",
+   "heading": "Two Majoranas make one ordinary fermion state",
+   "kind": "explain",
+   "text": "From the video \"Majorana fermions and where to find them (topological qubits)\" (QuTech Academy), 2:29 to 4:00.\nIn a solid, a state can be filled (an electron) or empty (a hole), the counterparts of particle and antiparticle. The video shows that an equal superposition of the creation and annihilation operators gives two operators that each equal their own conjugate, which makes them Majorana operators. It stresses this is a change of mathematical basis: one ordinary fermionic state can always be described by two Majorana operators. It becomes interesting only when the two can be separated in space and told apart. Majoranas in a solid always come in pairs.",
+   "from": "notes",
+   "video": {
+    "id": "_otDRv7IN28",
+    "start": 149,
+    "end": 240
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n13",
+   "heading": "Why a pair of Majoranas could make a protected qubit",
+   "kind": "explain",
+   "text": "From the video \"Majorana fermions and where to find them (topological qubits)\" (QuTech Academy), 4:00 to 5:07.\nA fermionic state, empty or filled, can be a qubit's 0 or 1, like a charge qubit, but charge qubits are very sensitive to local disturbances. If the two Majoranas that make up one fermion are far apart, the information is stored non-locally, so no local disturbance can reach it. The video calls that a topological qubit: two Majorana bound states form one qubit, which it says is protected against almost all kinds of perturbation and should stay coherent for a very long time. That is the reason people look for them, and it is still an expectation, not a demonstrated qubit.",
+   "from": "notes",
+   "video": {
+    "id": "_otDRv7IN28",
+    "start": 240,
+    "end": 307
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n14",
+   "heading": "Why superconductors are the place to look",
+   "kind": "explain",
+   "text": "From the video \"Majorana fermions and where to find them (topological qubits)\" (QuTech Academy), 5:07 to 6:28.\nA Majorana state would need a superposition of an electron and a hole, but they have opposite charge, which normally forbids a superposition. In a superconductor, there is a sea of Cooper pairs, which are pairs of electrons. A hole together with a Cooper pair taken out of that sea looks just like a single electron, so the line between electron and hole is blurred. That makes superconductors the natural place to look for these states.",
+   "from": "notes",
+   "video": {
+    "id": "_otDRv7IN28",
+    "start": 307,
+    "end": 388
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n15",
+   "heading": "Why error correction is costly and what cat qubits change (Alice & Bob)",
+   "kind": "explain",
+   "text": "From the video \"Cat Qubits and LDPC Codes, a New Step Towards Quantum Error Correction\" (Alice & Bob), 0:11 to 1:41.\nAlice & Bob's video says error correction is the biggest resource problem: about a thousand qubits to make one error-free logical qubit, like using a whole orchestra to play one flawless note, and, for the first useful applications, hundreds of logical qubits would be needed. Its company's answer is the cat qubit, which is protected by design against one of the two kinds of noise, leaving only one kind to correct. It claims that for demanding algorithms such as factoring this could cut the number of qubits needed by up to 60 times compared with standard qubits. These are the company's claims.",
+   "from": "notes",
+   "video": {
+    "id": "nI0Yg-QRAns",
+    "start": 11,
+    "end": 101
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n16",
+   "heading": "LDPC codes, folding a line and the claimed saving",
+   "kind": "explain",
+   "text": "From the video \"Cat Qubits and LDPC Codes, a New Step Towards Quantum Error Correction\" (Alice & Bob), 1:41 to 4:49.\nLow-density parity-check codes are an older type of error-correcting code used in Wi-Fi and 5G, and theory suggests a quantum version could need about 15 times less hardware. The catch is the long-range connections between qubits, and nobody had a convincing way to run logic gates on such codes. Cat qubits sit in a line, so the video's idea is to fold the line, bringing distant qubits next to each other so the extra connections are easy. After searching through billions of designs, the team says it found a simple pattern that runs error correction with five times fewer qubits, and the company argues this makes useful machines nearer. Both numbers are company statements from the video.",
+   "from": "notes",
+   "video": {
+    "id": "nI0Yg-QRAns",
+    "start": 101,
+    "end": 289
+   }
+  },
+  {
+   "lessonId": "hw_module_7",
+   "lessonTitle": "Frontier Ideas",
+   "where": "Hardware module 7",
+   "order": 16,
+   "part": 2,
+   "tag": "Experimental/Contested",
+   "id": "hw_module_7#n17",
+   "heading": "The first multi-node quantum network",
+   "kind": "explain",
+   "text": "From the video \"A Multinode Quantum Network explained (networked machines)\" (QuTech), 0:05 to 2:42.\nQuTech is working on a quantum internet: a network that connects quantum devices over long distances using qubits. Two connected devices do not make a network, so they linked three nodes called Alice, Bob and Charlie. Bob has two qubits: a communication qubit for creating entanglement and a memory qubit to hold it, so the communication qubit can be reused to entangle with Charlie. They then showed an entangled state across all three nodes, and teleported entanglement so that the outer two nodes, with no direct link, became entangled. The video calls it the world's first rudimentary quantum network.",
+   "from": "notes",
+   "video": {
+    "id": "DRGT5ZgGrEc",
+    "start": 5,
+    "end": 162
+   }
   },
   {
    "lessonId": "hw_module_8_9",
@@ -4510,6 +6652,114 @@
    "kind": "glossary",
    "text": "Physical qubit: a real device that makes errors. Logical qubit: a protected qubit made from many physical ones. Surface code: an error-correcting code on a grid. Threshold: the error rate below which a bigger code helps. Decoder: the software that works out the correction from the check results. Overhead: the extra qubits needed for protection. Architecture: the combination of choices that makes up a machine.",
    "from": "notes"
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n11",
+   "heading": "What do the two error-correction videos in this module show?",
+   "kind": "faq",
+   "text": "From the video \"Quantum error correction codes\" (QuTech Academy), 0:00 to 5:20.\nThe QuTech lecture explains the theory: why error correction is necessary, how a logical qubit is built from many physical qubits using helper qubits, which errors can be corrected, and how a bigger code gives a smaller failure rate, with the surface code as a candidate. The Google Quantum AI video tells the story of an experiment that, for the first time according to the video, showed that making the error-correcting system bigger made the errors go down slightly instead of up.",
+   "from": "notes",
+   "video": {
+    "id": "4hWUIGZh6WE",
+    "start": 0,
+    "end": 320
+   }
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n12",
+   "heading": "Why error correction is needed in the first place",
+   "kind": "explain",
+   "text": "From the video \"Quantum error correction codes\" (QuTech Academy), 0:09 to 1:45.\nA big computation breaks into many gates and a final measurement. If each gate fails with some probability, the failures accumulate, and the more gates there are, the more likely the answer is garbage. Qubits that sit idle also drift and relax to a thermal state. Useful calculations would need a failure probability per gate as low as about one in 10^15. The video says no qubit technology has that: at best a gate fails less than about 1% of the time, and getting to 10^-15 by better hardware alone seems implausible, even after 20 years of progress.",
+   "from": "notes",
+   "video": {
+    "id": "4hWUIGZh6WE",
+    "start": 9,
+    "end": 105
+   }
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n13",
+   "heading": "How a logical qubit watches for errors without measuring the data",
+   "kind": "explain",
+   "text": "From the video \"Quantum error correction codes\" (QuTech Academy), 1:45 to 3:39.\nThe idea is to represent one logical qubit redundantly, for example with 7 physical qubits. You cannot just measure them to look for errors, because that would destroy the state. Instead, helper (ancilla) qubits are coupled to the data qubits and only the helpers are read, and from that information you infer what error happened and undo it. A single qubit can suffer a bit flip or a phase flip, and every other error is a combination of these. A code corrects only errors on small sets of qubits: with the seven-qubit code any single-qubit error is fixed but not errors on two or more qubits. So it helps when single errors are much more likely than pairs.",
+   "from": "notes",
+   "video": {
+    "id": "4hWUIGZh6WE",
+    "start": 105,
+    "end": 219
+   }
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n14",
+   "heading": "More redundancy, the surface code and how codes are described",
+   "kind": "explain",
+   "text": "From the video \"Quantum error correction codes\" (QuTech Academy), 3:39 to 5:20.\nAdding redundancy lets you correct bigger sets of errors, so the logical failure rate, set by the errors that are not corrected, can become very small. For example, 49 qubits per logical qubit instead of 7. The video says that roughly 10,000 qubits might bring the failure rate down to 10^-15 using a code called the surface code, which has the practical advantage that its qubits lie on a flat 2D chip with only local connections. There is no single best code. A code encodes k logical qubits into n physical ones and has a distance d, correcting up to about d/2 errors; the seven-qubit Steane code has distance 3 and corrects one error. In practice, how you gather the error information fault-tolerantly matters even more.",
+   "from": "notes",
+   "video": {
+    "id": "4hWUIGZh6WE",
+    "start": 219,
+    "end": 320
+   }
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n15",
+   "heading": "Why it is hard: making a bigger system better, not worse",
+   "kind": "explain",
+   "text": "From the video \"Demonstrating Quantum Error Correction\" (Google Quantum AI), 0:01 to 2:05.\nGoogle's team says its latest chip is its most powerful but would need to be thousands of times larger for the applications people are excited about, and that bigger machines mean more errors. Error correction promises to let you build bigger, less error-prone systems, but nobody had made the real system good enough that scaling it up reduces the errors. The experiment needs the chip, the fridge, the electronics and the cables all working together. The first attempt performed terribly, and the team had to develop new ways of making the chip do what they wanted. Part of the difficulty is that qubits must be shielded from the environment yet still listen to control signals and report back.",
+   "from": "notes",
+   "video": {
+    "id": "_ugJLuJ1_gM",
+    "start": 1,
+    "end": 125
+   }
+  },
+  {
+   "lessonId": "hw_module_8_9",
+   "lessonTitle": "Physical to Logical & Capstone",
+   "where": "Hardware module 8 & 9",
+   "order": 17,
+   "part": 2,
+   "tag": "Simplified model",
+   "id": "hw_module_8_9#n16",
+   "heading": "The break-even result, as told by the team",
+   "kind": "explain",
+   "text": "From the video \"Demonstrating Quantum Error Correction\" (Google Quantum AI), 2:05 to 3:59.\nAfter months of work on better operations and better decoders, which work out what errors happened from the readout, the team says it passed the break-even point: even though a larger array of data qubits was used, the error rate came slightly down. They present this as evidence that quantum error correction works in practice and not only on paper, opening the door to very large machines. The closing statements about the roadmap and a large useful quantum computer being close are the team's confidence, and a prediction, not a result.",
+   "from": "notes",
+   "video": {
+    "id": "_ugJLuJ1_gM",
+    "start": 125,
+    "end": 239
+   }
   },
   {
    "lessonId": "math_week_0",
@@ -5017,6 +7267,60 @@
    "kind": "glossary",
    "text": "Ket: the symbol |ψ⟩, a column vector. Basis state: |0⟩ or |1⟩. Amplitude: a number that goes with a basis state. Normalisation: the squared sizes add to 1. Born rule: probability equals squared size. Superposition: a state with more than one non-zero amplitude.",
    "from": "notes"
+  },
+  {
+   "lessonId": "math_lesson_1",
+   "lessonTitle": "State Vectors & Dirac Notation",
+   "where": "Math lesson 1",
+   "order": 19,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_1#n11",
+   "heading": "What does the 3Blue1Brown segment in this lesson show?",
+   "kind": "faq",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the state vector\" (3Blue1Brown), 6:03 to 12:00.\nThis is the part of 3Blue1Brown's \"But what is quantum computing?\" where the state vector is introduced. It says that what a quantum computer reads out is random, that a program fixes a probability distribution and not a single output, and that the computer's state is a vector whose entries, squared in size, give those probabilities. It is the same material as the first part of Module 2 but told more slowly and with the maths in focus.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 363,
+    "end": 720
+   }
+  },
+  {
+   "lessonId": "math_lesson_1",
+   "lessonTitle": "State Vectors & Dirac Notation",
+   "where": "Math lesson 1",
+   "order": 19,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_1#n12",
+   "heading": "The video's picture: a random readout from a hidden distribution",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the state vector\" (3Blue1Brown), 6:03 to 9:17.\nThe presenter separates layers: at the top the readout is a string of bits, in the middle is a mathematical description, and underneath is the physics. In a classical computer the stored state and the readout are the same bits. In a quantum computer the thing being operated on is the state vector, which is continuous, and the readout is random. A program does not give one output but a probability distribution over all 2^k outputs of a k-qubit machine. You never see that distribution. You see one string, drawn at random from it, and you infer the distribution from running the program.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 363,
+    "end": 557
+   }
+  },
+  {
+   "lessonId": "math_lesson_1",
+   "lessonTitle": "State Vectors & Dirac Notation",
+   "where": "Math lesson 1",
+   "order": 19,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_1#n13",
+   "heading": "The squaring rule, an example and negative entries",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), the state vector\" (3Blue1Brown), 9:17 to 12:00.\nAfter you read a value the state changes so all of the probability sits on it, so reading again gives the same value. The state vector has one entry for each possible readout, and the rule is that squaring the size of an entry gives the probability of that readout. If the entry for 0011 is 0.5, the probability is 0.25. Entries may be negative. A sign change does not alter any probability, but the video stresses that it is a different state, and that sign flips matter a great deal later. The presenter also notes that a subtlety is deferred to the end of the video.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 557,
+    "end": 720
+   }
   },
   {
    "lessonId": "math_lesson_2",
@@ -6044,6 +8348,60 @@
    "kind": "glossary",
    "text": "Oracle: the part that marks the answer by flipping its sign. Diffusion: reflection of all amplitudes about their average. Reflection: a flip about a line. Rotation: two reflections in a row. Iteration: one Grover round. Quadratic speed-up: needing the square root of the classical number of steps.",
    "from": "notes"
+  },
+  {
+   "lessonId": "math_lesson_5",
+   "lessonTitle": "Grover's Algorithm in 2D",
+   "where": "Math lesson 5",
+   "order": 23,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_5#n12",
+   "heading": "Where does the speed-up in Grover's algorithm come from, according to the video?",
+   "kind": "faq",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), why square root?\" (3Blue1Brown), 31:27 to 34:01.\nThe presenter argues it is not \"trying everything in parallel\". The first step, which makes the equal-balance state, reveals nothing about the key by itself. His one-word answer is Pythagoras: allowing diagonal directions in the state space gives a shortcut, like walking across a square diagonally instead of along its edges, and the state vector follows a quarter-circle arc towards the answer. He says to take the analogy with a grain of salt.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1887,
+    "end": 2041
+   }
+  },
+  {
+   "lessonId": "math_lesson_5",
+   "lessonTitle": "Grover's Algorithm in 2D",
+   "where": "Math lesson 5",
+   "order": 23,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_5#n13",
+   "heading": "Why \"parallel\" is the wrong summary",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), why square root?\" (3Blue1Brown), 31:27 to 32:12.\nAfter the walk-through, the video says it is hard to point at one step that creates the speed-up. It is tempting to blame the first operation, applied to the equal-balance state, as a computation on every input at once. But by itself that step gives no information about where the key is. The presenter leaves open whether to call it parallel processing, or to say the balance state is a new kind of input and the function is still applied to one input at a time.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1887,
+    "end": 1932
+   }
+  },
+  {
+   "lessonId": "math_lesson_5",
+   "lessonTitle": "Grover's Algorithm in 2D",
+   "where": "Math lesson 5",
+   "order": 23,
+   "part": 3,
+   "tag": "Accurate",
+   "id": "math_lesson_5#n14",
+   "heading": "The Pythagoras picture of the shortcut",
+   "kind": "explain",
+   "text": "From the video \"But what is quantum computing? (Grover's Algorithm), why square root?\" (3Blue1Brown), 32:12 to 34:01.\nTo get across a unit square when you may only move along the x and y directions, you walk two units, but diagonally it is the square root of two. In n dimensions, walking along edges to the opposite corner of a cube takes n units, but going diagonally takes the square root of n. In quantum mechanics different observable outcomes are perpendicular directions in the state space, so a classical computer is restricted to the pure coordinate directions, while a quantum one also has all the diagonal directions available. Following the state vector in Grover's algorithm, it slowly walks along a quarter-circle arc, a path a classical state could not take, and that gives a square-root-sized shortcut. The presenter warns that runtime is not literally a distance in this space.",
+   "from": "notes",
+   "video": {
+    "id": "RQWpF2Gb-gU",
+    "start": 1932,
+    "end": 2041
+   }
   },
   {
    "id": "game:hype_check#1",

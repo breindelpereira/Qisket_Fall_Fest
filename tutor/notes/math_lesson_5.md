@@ -35,3 +35,15 @@ They do not. The state is rotating, so after the best round the chance of findin
 
 ## Glossary: Key words
 Oracle: the part that marks the answer by flipping its sign. Diffusion: reflection of all amplitudes about their average. Reflection: a flip about a line. Rotation: two reflections in a row. Iteration: one Grover round. Quadratic speed-up: needing the square root of the classical number of steps.
+
+## FAQ: Where does the speed-up in Grover's algorithm come from, according to the video?
+Video: RQWpF2Gb-gU 31:27-34:01
+The presenter argues it is not "trying everything in parallel". The first step, which makes the equal-balance state, reveals nothing about the key by itself. His one-word answer is Pythagoras: allowing diagonal directions in the state space gives a shortcut, like walking across a square diagonally instead of along its edges, and the state vector follows a quarter-circle arc towards the answer. He says to take the analogy with a grain of salt.
+
+## Explain: Why "parallel" is the wrong summary
+Video: RQWpF2Gb-gU 31:27-32:12
+After the walk-through, the video says it is hard to point at one step that creates the speed-up. It is tempting to blame the first operation, applied to the equal-balance state, as a computation on every input at once. But by itself that step gives no information about where the key is. The presenter leaves open whether to call it parallel processing, or to say the balance state is a new kind of input and the function is still applied to one input at a time.
+
+## Explain: The Pythagoras picture of the shortcut
+Video: RQWpF2Gb-gU 32:12-34:01
+To get across a unit square when you may only move along the x and y directions, you walk two units, but diagonally it is the square root of two. In n dimensions, walking along edges to the opposite corner of a cube takes n units, but going diagonally takes the square root of n. In quantum mechanics different observable outcomes are perpendicular directions in the state space, so a classical computer is restricted to the pure coordinate directions, while a quantum one also has all the diagonal directions available. Following the state vector in Grover's algorithm, it slowly walks along a quarter-circle arc, a path a classical state could not take, and that gives a square-root-sized shortcut. The presenter warns that runtime is not literally a distance in this space.

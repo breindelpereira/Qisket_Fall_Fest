@@ -42,3 +42,31 @@ Circuit: gates in time order. Oracle: a black-box function. Query: one use of th
 
 ## Misconception: Quantum algorithms try every answer at once
 They use an oracle on a superposition, but the key work is done by interference, which cancels wrong answers and strengthens the right one. Without that, measuring would just give a random item.
+
+## FAQ: What does the second part of the 3Blue1Brown video cover?
+Video: RQWpF2Gb-gU 15:52-29:30
+This part of 3Blue1Brown's "But what is quantum computing?" turns the state-vector idea into an algorithm. It introduces quantum gates as flips and rotations of the vector, explains why a quick-to-check problem can be turned into a "flip the sign of the right answer" gate, and then shows Grover's search as a geometric picture: two reflections in a plane that together rotate the vector towards the answer. It ends by working out how many rotations are needed, about pi/4 times the square root of the number of options.
+
+## Explain: Quantum gates are flips and rotations of the state vector
+Video: RQWpF2Gb-gU 15:52-17:42
+As classical computing has AND, OR and NOT, quantum computing has quantum gates, basic operations on one qubit or several. They always flip or rotate the state vector. The Hadamard gate is the standard example: it sends the "0" direction to a diagonal and the "1" direction to the opposite diagonal, so a definite 0 or 1 becomes a 50/50 balance, and back. Writing an algorithm means composing many gates so the vector gradually ends up pointing almost entirely along one direction, the one that holds the answer. With k qubits there are 2^k directions, one for every bit string, so more interesting answers fit.
+
+## Explain: A huge vector you cannot look at
+Video: RQWpF2Gb-gU 17:42-19:33
+The video says the size of the state vector growing exponentially is a real source of quantum computing's potential, even though the power has often been exaggerated: just 100 qubits already means an enormous vector. The catch is that you cannot look at its values directly. It is useful only if you can steer all, or most, of the probability onto one single component that happens to be the answer you care about. Grover's algorithm is the clearest example of doing exactly this. In outline: start with equal probability on every outcome, flip the sign of the key's component, then alternate that with another operation, until almost all of the probability sits on the secret key.
+
+## Explain: Why "flip the sign of the answer" is an available operation
+Video: RQWpF2Gb-gU 19:33-21:27
+Grover's algorithm applies to any problem where a solution can be checked quickly even if finding it is hard: solving a sudoku, colouring a map so neighbours differ, and many tasks in cryptography. Such a check is built from classical logic gates. Grover knew that any set of logic gates can be translated into quantum gates that act on the state vector so that the entry for each input the check accepts gets its sign flipped and the entries it rejects are left alone. So, for any quick-to-verify problem, you can build an operation that flips the sign at the position of the solution. At first that seems useless, because flipping a sign does not change the probabilities.
+
+## Explain: The geometric picture: a 2D slice and a small angle
+Video: RQWpF2Gb-gU 21:27-24:43
+The video shows the algorithm with a three-direction example and notes it works the same way for any size. The vector stays inside a flat plane spanned by two directions: the secret key direction (drawn upwards) and the equal mix of all non-key states (drawn along the horizontal). The starting vector, the equal balance of everything, is not quite perpendicular to the key direction because it contains a little of the key. Taking the dot product, the balance state's overlap with the key is 1 over the square root of n, so the angle theta between the balance state and the horizontal is about 1 over the square root of n radians. That small angle is where the square root in Grover's runtime comes from.
+
+## Explain: Two reflections push the vector towards the key
+Video: RQWpF2Gb-gU 24:43-27:13
+The procedure is simple. First, flip the sign of the key component: in the diagram that is a reflection across the horizontal axis. Second, reflect the vector across the equal-balance direction. After one round the vector points slightly more towards the key, so a measurement would have a slightly larger chance of showing it. The video shows the numbers for n equal to 100, where the key's component grows a little with every round. The video asks you to take it on trust that such a reflection about a known state is possible; the intuition comes from the geometry.
+
+## Explain: How many rounds, and what you do at the end
+Video: RQWpF2Gb-gU 27:13-29:30
+Two reflections in a row are the same as one rotation by twice the angle between the two mirror lines, so each round turns the vector by 2 theta. To get from the start to the key direction takes a turn of about a quarter of a full circle, which means about pi/4 times the square root of n rounds. For a million options (2 to the 20th) that is around 804 rounds, and it needs at least 20 qubits. The result is not guaranteed: there is a small chance of seeing a wrong value, but because answers are quick to check you just check on a classical computer and rerun if needed. The video then says it will own up to a simplification it made and reflect on where the speed-up comes from.

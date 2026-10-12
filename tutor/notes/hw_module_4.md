@@ -31,3 +31,23 @@ Only part of the system runs at room temperature. The detectors typically need t
 
 ## Glossary: Key words
 Photon: a particle of light. Waveguide: a channel that guides light on a chip. Beam splitter: a component that splits a light path in two. Loss: photons absorbed or scattered. Probabilistic gate: a gate that works only some of the time. Detector: a device that registers single photons.
+
+## FAQ: What do the two photonic-computer videos show?
+Video: ustVvxJ8t-s 0:00-2:14
+Both are short company explainers. Quantum Source describes a design where the entangled photons that form a huge computation are produced a few at a time and stitched together over time, so that only hundreds of qubits exist at any one instant even for a million-qubit calculation. Xanadu describes an actual chip that squeezes laser light into special quantum states, sends them through a programmable network of beam splitters and phase shifters, and counts the photons that come out.
+
+## Explain: Quantum Source: spreading qubits over time
+Video: ustVvxJ8t-s 0:00-1:35
+The video starts from the point that a useful universal quantum computer would need millions of entangled qubits plus error correction, and that having so many at the same moment is not feasible. Using photons as qubits lets the machine spread them over the timeline of the computation. Resource state generators repeatedly produce small clusters of entangled photons, stitching devices entangle those clusters into larger ones, and long fibres act as delay loops, a kind of quantum memory, so photons can wait and be entangled with clusters produced later.
+
+## Explain: Quantum Source: measuring the cluster to compute
+Video: ustVvxJ8t-s 1:35-2:14
+The huge entangled cluster is fed slice by slice to an array of detectors, and a classical computer decides the exact sequence of measurements that carries out the chosen algorithm. The video compares it to weaving a fabric of quantum information, adding photonic clusters like threads. Its claim is that a million-qubit error-corrected calculation needs only hundreds of qubits at a time. This is the company's design vision, not something already built.
+
+## Explain: Xanadu: squeezers, interferometer and detectors
+Video: v7iAqcFCTQQ 0:04-1:08
+The chips are made of silicon and silicon nitride and have three parts: squeezers as the input, an interferometer as the logic, and photon detectors as the output. Classical laser light goes to an array of tiny ring-shaped resonators that make squeezed states, a particular quantum state of light, which the video describes as the company's version of a qubit and as a superposition of different photon numbers. The states are carried by waveguides to the interferometer, a network of beam splitters and phase shifters. The user's instructions are turned into voltages on the chip's components.
+
+## Explain: Xanadu: reading out photon counts and what it is for
+Video: v7iAqcFCTQQ 1:08-2:22
+Inside the interferometer the squeezed states interact and become entangled, and the interferometer acts like a sequence of quantum gates. Each output goes to a transition-edge sensor, a detector that counts how many photons are present, giving a list of integers. The result of the computation is in the statistics of these counts. The video says these chips suit graph-theory problems with uses in finance, chemistry and logistics, and are available on the company's cloud. That is the company's description of the usefulness, which is still being tested.

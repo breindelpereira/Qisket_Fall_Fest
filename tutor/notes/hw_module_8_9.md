@@ -31,3 +31,27 @@ It is not simulated in software. It is real information stored across real physi
 
 ## Glossary: Key words
 Physical qubit: a real device that makes errors. Logical qubit: a protected qubit made from many physical ones. Surface code: an error-correcting code on a grid. Threshold: the error rate below which a bigger code helps. Decoder: the software that works out the correction from the check results. Overhead: the extra qubits needed for protection. Architecture: the combination of choices that makes up a machine.
+
+## FAQ: What do the two error-correction videos in this module show?
+Video: 4hWUIGZh6WE 0:00-5:20
+The QuTech lecture explains the theory: why error correction is necessary, how a logical qubit is built from many physical qubits using helper qubits, which errors can be corrected, and how a bigger code gives a smaller failure rate, with the surface code as a candidate. The Google Quantum AI video tells the story of an experiment that, for the first time according to the video, showed that making the error-correcting system bigger made the errors go down slightly instead of up.
+
+## Explain: Why error correction is needed in the first place
+Video: 4hWUIGZh6WE 0:09-1:45
+A big computation breaks into many gates and a final measurement. If each gate fails with some probability, the failures accumulate, and the more gates there are, the more likely the answer is garbage. Qubits that sit idle also drift and relax to a thermal state. Useful calculations would need a failure probability per gate as low as about one in 10^15. The video says no qubit technology has that: at best a gate fails less than about 1% of the time, and getting to 10^-15 by better hardware alone seems implausible, even after 20 years of progress.
+
+## Explain: How a logical qubit watches for errors without measuring the data
+Video: 4hWUIGZh6WE 1:45-3:39
+The idea is to represent one logical qubit redundantly, for example with 7 physical qubits. You cannot just measure them to look for errors, because that would destroy the state. Instead, helper (ancilla) qubits are coupled to the data qubits and only the helpers are read, and from that information you infer what error happened and undo it. A single qubit can suffer a bit flip or a phase flip, and every other error is a combination of these. A code corrects only errors on small sets of qubits: with the seven-qubit code any single-qubit error is fixed but not errors on two or more qubits. So it helps when single errors are much more likely than pairs.
+
+## Explain: More redundancy, the surface code and how codes are described
+Video: 4hWUIGZh6WE 3:39-5:20
+Adding redundancy lets you correct bigger sets of errors, so the logical failure rate, set by the errors that are not corrected, can become very small. For example, 49 qubits per logical qubit instead of 7. The video says that roughly 10,000 qubits might bring the failure rate down to 10^-15 using a code called the surface code, which has the practical advantage that its qubits lie on a flat 2D chip with only local connections. There is no single best code. A code encodes k logical qubits into n physical ones and has a distance d, correcting up to about d/2 errors; the seven-qubit Steane code has distance 3 and corrects one error. In practice, how you gather the error information fault-tolerantly matters even more.
+
+## Explain: Why it is hard: making a bigger system better, not worse
+Video: _ugJLuJ1_gM 0:01-2:05
+Google's team says its latest chip is its most powerful but would need to be thousands of times larger for the applications people are excited about, and that bigger machines mean more errors. Error correction promises to let you build bigger, less error-prone systems, but nobody had made the real system good enough that scaling it up reduces the errors. The experiment needs the chip, the fridge, the electronics and the cables all working together. The first attempt performed terribly, and the team had to develop new ways of making the chip do what they wanted. Part of the difficulty is that qubits must be shielded from the environment yet still listen to control signals and report back.
+
+## Explain: The break-even result, as told by the team
+Video: _ugJLuJ1_gM 2:05-3:59
+After months of work on better operations and better decoders, which work out what errors happened from the readout, the team says it passed the break-even point: even though a larger array of data qubits was used, the error rate came slightly down. They present this as evidence that quantum error correction works in practice and not only on paper, opening the door to very large machines. The closing statements about the roadmap and a large useful quantum computer being close are the team's confidence, and a prediction, not a result.

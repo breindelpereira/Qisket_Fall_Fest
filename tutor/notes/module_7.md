@@ -39,3 +39,31 @@ Decoherence: loss of the quantum state to the environment. Bit-flip and phase-fl
 
 ## Misconception: To check for errors you must measure the data
 Measuring the data qubits ruins the superposition. Parity checks on ancillas find errors without learning the encoded state.
+
+## FAQ: What do the two videos in the noise and error-correction module cover?
+Video: vja_KmolxAU 0:00-6:39
+The first one, from Qiskit, explains why quantum circuits go wrong and sorts the fixes into three families: error suppression, error mitigation and error correction. It ends with where IBM aims to take fault tolerance. The second, from IBM Technology, describes one big experiment (127 qubits, about 60 layers of two-qubit gates) in which zero-noise extrapolation, a mitigation method, gave results that could be checked against classical calculations.
+
+## Explain: What fault tolerance means and why errors build up
+Video: vja_KmolxAU 0:00-1:47
+Fault tolerance means a computer keeps giving accurate results despite errors. Classical computers are so reliable that we take it for granted, but even the best quantum computers have much higher error rates. In a circuit diagram each block is a gate, and circuit depth is how many gates run one after another. Errors come from imperfect gates, imprecise readout, unwanted coupling between qubits and interaction with the environment. Every gate adds a small chance of error, so deeper circuits collect more and the final state gets worse. Algorithms that need long circuits, such as factoring and quantum phase estimation for chemistry, therefore need a large fault-tolerant machine.
+
+## Explain: Suppression and mitigation
+Video: vja_KmolxAU 1:47-3:33
+The video names three approaches. Error suppression avoids the processes that cause errors. For instance, a qubit sitting idle while others work picks up errors, so you can insert a gate and then its inverse, which the algorithm does not need, and splitting the idle time like this reverses one kind of error. That technique is called dynamical decoupling. Error mitigation analyses how errors affect the result and adjusts the answer. Zero-noise extrapolation runs the circuit normally and then with deliberately increased noise, and uses how the result degrades to estimate the error-free value. It needs a known noise factor and several runs, but it can improve accuracy.
+
+## Explain: Error correction, the gross code and the roadmap
+Video: vja_KmolxAU 3:33-6:39
+Error correction stores one robust logical qubit redundantly across several physical qubits so errors on single physical qubits can be detected and fixed. It needs many physical qubits per logical one and a demanding layout for checks. It can be done today only on one or a few qubits. The video describes an IBM code, the gross code, which it says puts 12 logical qubits into 144 physical qubits, around ten times more efficient than earlier codes. It expects the first fault-tolerant machines to mix all three methods. Last, it points to IBM's published roadmap, with a machine called Starling for 100 million operations on 200 logical qubits and a later one for a billion operations on 1000 logical qubits. These are plans stated in the video and may change.
+
+## Explain: The experiment: a 127-qubit simulation with mitigation
+Video: JCrvxWZEtSY 0:00-1:39
+An IBM Quantum researcher describes a paper with UC Berkeley. A 127-qubit processor simulated 127 interacting spins, one qubit per spin, with circuits of up to 60 layers of two-qubit CNOT gates, roughly double the previous record, and still gave results that can be trusted at the end. Noise was not removed. Instead a family of methods called error mitigation was used so that useful results could be extracted before the era of fault tolerance.
+
+## Explain: How zero-noise extrapolation works in this experiment
+Video: JCrvxWZEtSY 1:39-4:15
+Run the circuit and estimate the quantity of interest, such as the average of some property. Noise makes that estimate inaccurate. To correct it, first learn what the noise is doing by splitting the circuit into layers, each made of an ideal part and a noise part, and measuring the noise parts. It is hard to turn the hardware noise down, but with that knowledge you can turn it up by known amounts and repeat the experiment. Then you extrapolate the results back to what you would get with no noise.
+
+## Explain: How the results were checked, and what could not be
+Video: JCrvxWZEtSY 4:15-10:49
+The model was a spin lattice (the transverse-field Ising model) mapped on to the chip's own connection pattern. For some settings the circuit is a special kind that classical computers can simulate efficiently, so the answer was known exactly and matched. For shallower circuits, the Berkeley collaborators computed exact answers by brute force and then with an approximation method called tensor networks, and again there was reasonable agreement. Pushing to deeper circuits and more qubits, exact classical answers were no longer possible, so those results are unverifiable for now. The researchers hope classical methods will catch up, which would be welcome either way, and say better hardware will allow even deeper circuits on the way to useful problems.

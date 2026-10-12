@@ -25,6 +25,8 @@ export interface TutorChunk {
    * and then they ignore the learner's position in the course, because they explain the game the learner is looking at.
    */
   activityId?: string;
+  /** Set on notes about a stretch of one of the lesson's videos: the video's id and the seconds they cover. */
+  video?: { id: string; start: number; end: number };
 }
 
 export interface CourseMapEntry {

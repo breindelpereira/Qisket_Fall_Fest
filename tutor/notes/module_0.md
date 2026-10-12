@@ -42,3 +42,51 @@ A qubit is the quantum version of a bit. Superposition means a qubit's state is 
 
 ## Misconception: A quantum computer checks every answer at once
 It sounds right and appears in many headlines, but it is not how quantum computers work. They do not read out all the answers. The gain comes from using interference to boost the right answer and cancel the wrong ones, followed by one measurement. If you remember one thing from this course, remember that.
+
+## FAQ: What does the Map of Quantum Computing video cover?
+Video: -UlxHPIEVqA 0:00-33:28
+It is a long overview from Domain of Science. First it explains the three ideas behind every quantum computer (superposition, entanglement and interference). Then it covers what quantum algorithms are for, and why simulating nature is the application the presenter likes best. Then it compares the different models of quantum computing, and ends with the many physical ways of building qubits and the obstacles they all share: noise, decoherence and scale. The presenter's own conclusion is that nobody knows yet which hardware approach will end up on top.
+
+## Explain: The video's three ideas: superposition, entanglement, interference
+Video: -UlxHPIEVqA 0:00-2:45
+The presenter says that to understand a quantum computer you need three things. Superposition comes first. A classical bit is a switch that is 0 or 1 and gives you exactly what it holds when you read it. A qubit is pictured as an arrow in 3D space: up means 0, down means 1, and any other direction is a superposition of the two. When you measure, you still only get 0 or 1, but the direction of the arrow sets the odds. Pointing mostly up makes 0 likely, mostly down makes 1 likely, and on the equator it is 50/50. This arrow picture is the Bloch sphere from Module 1.
+
+## Explain: Entanglement and why n qubits give 2^n possibilities
+Video: -UlxHPIEVqA 2:45-4:23
+In a classical computer each bit is independent. Entangled qubits are not: they become parts of one shared state, so you describe the group with one set of probabilities over all the outcomes (00, 01, 10 and 11 for two qubits) instead of separate odds for each. Changing one qubit then changes the odds for the whole system. The video points out that the number of outcomes doubles with every qubit you add (2, 4, 8 and so on, so 2^n for n qubits). It calls this the core difference: a classical machine holds one state at a time, a quantum one can hold a superposition over all of them.
+
+## Explain: Interference is how a quantum algorithm gets its answer
+Video: -UlxHPIEVqA 4:23-6:30
+The video says the Bloch sphere is only a convenient picture. What really describes a qubit is a wavefunction, and the wavefunctions of the qubits add together, like ripples on water: they can reinforce (constructive interference) or cancel (destructive interference). The final wavefunction sets the probability of each outcome. A useful algorithm is a recipe that steers constructive interference onto the correct answer and destructive interference onto wrong ones, so that the one result you get when you measure is very likely the right one. Having a superposition of millions of states does not help by itself, because a measurement returns only one.
+
+## Explain: Why factoring made people take quantum computing seriously
+Video: -UlxHPIEVqA 6:30-10:25
+Multiplying two big numbers is easy, but working backwards (finding the factors of a big number) has no known fast classical method, and a lot of internet encryption relies on that. In 1994 Peter Shor published a fast quantum method for factoring, the first practical application with serious security consequences, and that is when many people began to take quantum computers seriously. The video explains it through complexity: the best classical method scales exponentially as the number gets longer, while the quantum one scales polynomially. It then calms the worry: breaking real encryption would need about a million qubits (the video's estimate) and the best machines then had around a hundred, and people are already working on post-quantum encryption and on quantum cryptography.
+
+## Explain: Classical and quantum machines compute the same things, at different cost
+Video: -UlxHPIEVqA 10:25-12:36
+The presenter is careful not to oversell. A clever classical way of factoring is unlikely but not ruled out, and anything that is impossible for a classical computer (such as the halting problem) is impossible for a quantum one too. In terms of what can be computed at all, the two kinds of machine are equivalent, and a classical computer can simulate a quantum one. The catch is cost. Simulating a quantum system on a classical machine gets exponentially harder with every extra qubit, while a quantum computer is already a quantum system, which is why the video calls simulation its favourite application.
+
+## Explain: What quantum simulation could be used for, and a warning about hype
+Video: -UlxHPIEVqA 12:36-15:00
+Simulating chemistry or materials with only about 30 particles already strains the best supercomputers. The video lists hoped-for payoffs: understanding why some materials superconduct, a more energy-efficient way to make fertiliser (fertiliser production is around 2% of global carbon emissions, the video says), better batteries and solar panels, new drugs and aerospace materials, all tested inside a computer before anyone builds them. Other proposed uses are optimisation, machine learning, finance, weather and security. The presenter adds two cautions: these are potential uses, since no quantum computer yet beats an ordinary one on a practical problem, and many claims come from people raising money, so treat them with care.
+
+## Explain: The circuit (gate) model, and why the video mentions Qiskit
+Video: -UlxHPIEVqA 15:00-19:23
+The video separates two layers: the model of computing (how you manipulate the qubits) and the physical qubit you build it from. The most common model is the circuit or gate model: a set of qubits, a sequence of gates that rotate the arrows without measuring, and a measurement at the end. A classical computer can be built from just bits and NOR gates, and the quantum circuit model is the same kind of idea. The video is sponsored by Qiskit, which is free and open source, and the presenter states plainly that Qiskit is funded by IBM and that they used to work for another quantum company, so you know where the speaker is coming from.
+
+## Explain: The other models of quantum computing the video mentions
+Video: -UlxHPIEVqA 19:23-24:15
+Measurement-based (one-way) computing starts from a large entangled state and measures qubits one at a time; it has been shown equivalent to the circuit model. Adiabatic computing encodes the problem as an energy landscape whose lowest point is the answer, and changes the landscape slowly so the system stays in the lowest state; it is also equivalent to the circuit model. A related but less general scheme keeps the energy-landscape idea and is used for optimisation problems. The most theoretical model builds its qubits from exotic quasi-particles that are expected to be protected from noise; the video notes that it is still debated whether they have really been observed.
+
+## Explain: Why building one is hard: decoherence, error correction and scale
+Video: -UlxHPIEVqA 24:15-27:15
+A qubit only needs two states, such as spin up and spin down, but every design shares the same problems. Decoherence is information leaking into the environment because your qubits entangle with whatever is nearby. Noise from heat, radiation and stray particles pushes them off course, and it gets worse as you add qubits. Quantum error correction spreads one reliable qubit over many physical ones, and the video quotes a range of 100 to 1000 physical qubits per fault-tolerant qubit. Scalability is the other obstacle: every qubit needs its own control and readout wiring, which becomes a huge engineering task. The video says that whether big working machines are possible is still an open question.
+
+## Explain: The physical approaches the video surveys
+Video: -UlxHPIEVqA 27:15-31:49
+The video walks through how a qubit can be made. Superconducting circuits are currently the most popular. Silicon and other semiconductor chips can hold a qubit in the spin or charge of electrons. Photonic computers use particles of light steered through chips. Trapped ions are charged atoms held by electromagnetic fields and controlled with lasers or microwaves. Colour-centre qubits sit inside diamond or silicon carbide. Neutral atoms are held in a lattice made of laser beams. The video adds that other designs exist but are less developed. Each of these gets its own lesson in Part 2 (Hardware).
+
+## Explain: The video's conclusion: no clear front-runner yet
+Video: -UlxHPIEVqA 31:49-33:28
+After the tour, the presenter's point is that nobody knows yet which approach will come out on top in the long run. The video does not cover the companies and their roadmaps, which it says would come in a follow-up, and then ends with credits.

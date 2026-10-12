@@ -1,6 +1,7 @@
 import type { ConceptRecord, HonestyTag, LessonBlock, LessonRecord } from '../../content/types.ts';
 import type { GameHelp } from '../../content/gameHelp.ts';
 import { mathToText } from '../../content/lessonText.ts';
+import { formatClock } from '../learn/video.ts';
 import { wordCount } from './search.ts';
 import type { ParsedNotes } from './notes.ts';
 import type { ChunkKind, CourseMapEntry, TutorChunk, TutorIndex } from './types.ts';
@@ -165,7 +166,23 @@ export function buildIndex(input: BuildInput): BuildResult {
       const key = `${s.kind}:${s.heading.toLowerCase()}`;
       if (seen.has(key)) errors.push(`${where}: this heading is used twice`);
       seen.add(key);
-      chunks.push({ ...base, id: `${lesson.id}#n${i + 1}`, heading: s.heading, kind: s.kind, text: s.text, from: 'notes' });
+      let text = s.text;
+      if (s.video) {
+        const ref = lesson.references.find((r) => r.kind === 'video' && r.youtubeId === s.video?.id);
+        if (!ref) {
+          errors.push(`${where}: video "${s.video.id}" is not one of this lesson's videos`);
+        } else {
+          if (s.video.end <= s.video.start) errors.push(`${where}: the video time range must end after it starts`);
+          if (ref.startSeconds !== undefined && s.video.start < ref.startSeconds) errors.push(`${where}: starts before the part of the video this lesson plays (${formatClock(ref.startSeconds)})`);
+          if (ref.endSeconds !== undefined && s.video.end > ref.endSeconds) errors.push(`${where}: ends after the part of the video this lesson plays (${formatClock(ref.endSeconds)})`);
+          // the model reads the passage on its own, so it has to say which video it is about and where
+          text = `From the video "${ref.title}" (${ref.source}), ${formatClock(s.video.start)} to ${formatClock(s.video.end)}.\n${s.text}`;
+        }
+      }
+      chunks.push({
+        ...base, id: `${lesson.id}#n${i + 1}`, heading: s.heading, kind: s.kind, text, from: 'notes',
+        ...(s.video ? { video: s.video } : {}),
+      });
     });
   });
 
