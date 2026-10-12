@@ -54,7 +54,7 @@ export function withGameBasics(hits: SearchHit[], index: Pick<TutorIndex, 'chunk
   if (!looksLikeGameHelp(question) && !vague) return hits;
   if (hits.some((h) => h.chunk.activityId === activity.id)) return hits;
   const intro = gameIntro(index, activity.id);
-  return intro ? [...hits, { chunk: intro, score: 0, matched: 0, coverage: 0 }] : hits;
+  return intro ? [...hits, { chunk: intro, score: 0, matched: 0, coverage: 0, strength: 1, specific: true }] : hits;
 }
 
 const STATUS_LINE: Record<ActivityKind, Record<ActivityRef['status'], (title: string) => string>> = {

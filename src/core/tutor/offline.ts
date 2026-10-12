@@ -22,6 +22,13 @@ export type OfflineInput = Pick<TutorRequest, 'question' | 'order' | 'lessonId' 
 
 /** A later passage must contain at least this share of the question's words before we say the question is about it. */
 const LATER_MIN_COVERAGE = 0.6;
+/**
+ * An answer built from the notes alone (no model to judge relevance) must match at least this share of what the question is
+ * really about, with rare words counting for more. Below it the only thing shared is a word like "quantum" or "computer",
+ * and quoting a passage about something else is worse than saying the notes do not cover it.
+ */
+export const WEAK_MATCH = 0.5;
+// ...unless it matched a word that is not in nearly every passage (a name for something, such as clone or transmon)
 /** If a passage the learner can already see contains this many of the question's words, it can answer, even if a later one matches too. */
 const EARLY_GOOD_ENOUGH = 2;
 
@@ -84,7 +91,9 @@ export function offlineAnswer(searcher: Searcher, input: OfflineInput, index: Tu
   // a question about the game on screen is never "covered later"
   const later = top?.chunk.activityId ? undefined : laterTopic(searcher, input, top);
   if (later) return laterAnswer(later, index);
-  if (top) {
+  // a game's own passages and a part of the page the learner pointed at are already about the right thing
+  const weak = top !== undefined && !top.chunk.activityId && !input.focus && top.strength < WEAK_MATCH && !top.specific;
+  if (top && !weak) {
     const c = top.chunk;
     const source: TutorSource = { lessonId: c.lessonId, heading: c.heading, where: c.where };
     const tagNote = c.tag === 'Analogy' || c.tag === 'Simplified model' ? ` (This is ${c.tag === 'Analogy' ? 'an analogy' : 'a simplified model'}.)` : '';

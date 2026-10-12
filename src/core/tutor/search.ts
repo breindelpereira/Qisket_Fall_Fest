@@ -70,6 +70,12 @@ const SYNONYMS: Record<string, string[]> = {
   speed: ['faster'],
 };
 
+/** What the learner typed, word by word, each with the other names we know for it (stemmed like the notes are). */
+function askedWords(query: string): { term: string; alternates: string[] }[] {
+  const words = (normalise(query).match(/[a-z0-9]+/g) ?? []).filter((w) => !STOP_WORDS.has(w) && (w.length > 1 || KEEP_SINGLE.has(w)));
+  return words.map((w) => ({ term: stem(w), alternates: (SYNONYMS[w] ?? []).map(stem) }));
+}
+
 /** Applied to the raw text before splitting into words. */
 function normalise(text: string): string {
   return text
@@ -158,6 +164,14 @@ export interface SearchHit {
   matched: number;
   /** The same as a share of the question's words, 0 to 1. */
   coverage: number;
+  /**
+   * How much of what the question is really about the passage contains, 0 to 1: like `coverage`, but each word counts for
+   * as much as it is rare in the notes, and another name for a word (clone, copy) counts as the word. So matching "quantum"
+   * and "computer" (in nearly every passage) while missing "build" and "home" is a weak match, not a strong one.
+   */
+  strength: number;
+  /** True when at least one word (or other name for it) that the passage matched is NOT in nearly every passage. */
+  specific: boolean;
 }
 
 export interface Searcher {
@@ -168,6 +182,8 @@ const K1 = 1.2;
 const B = 0.75;
 const HEADING_WEIGHT = 3;
 const FOCUS_BOOST = 1.3;
+/** A word in at least this share of the passages is too common to say what a question is about. */
+const COMMON_SHARE = 0.1;
 const BOOSTS = { misconception: 1.2, faq: 1.15 } as const;
 const NOTES_BOOST = 1.1;
 /** What the learner is playing right now is what a doubt is most likely about. */
@@ -212,6 +228,9 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
       const { maxOrder, minOrder = 0, focusLessonId, allowPart3 = false, activityId, limit = 5, maxWords = 1800 } = options;
 
       const asked = [...terms].filter(([, weight]) => weight === 1).map(([term]) => term);
+      const groups = askedWords(query);
+      const askedWeight = groups.reduce((sum, g) => sum + idf(g.term), 0);
+      const isCommon = (term: string) => (docFreq.get(term) ?? 0) / Math.max(1, docs.length) >= COMMON_SHARE;
       const hits: SearchHit[] = [];
       for (const d of docs) {
         const c = d.chunk;
@@ -236,7 +255,18 @@ export function createSearcher(chunks: TutorChunk[]): Searcher {
         if (c.kind === 'faq') score *= BOOSTS.faq;
         if (c.from === 'notes') score *= NOTES_BOOST;
         const covered = asked.filter((term) => d.tf.has(term)).length;
-        hits.push({ chunk: c, score, matched: covered, coverage: asked.length ? covered / asked.length : 0 });
+        let coveredWeight = 0;
+        let specific = false;
+        for (const g of groups) {
+          const via = d.tf.has(g.term) ? g.term : g.alternates.find((a) => d.tf.has(a));
+          if (via === undefined) continue;
+          coveredWeight += idf(g.term);
+          if (!isCommon(via)) specific = true;
+        }
+        hits.push({
+          chunk: c, score, matched: covered, coverage: asked.length ? covered / asked.length : 0,
+          strength: askedWeight > 0 ? coveredWeight / askedWeight : 0, specific,
+        });
       }
       hits.sort((a, b) => b.score - a.score || a.chunk.order - b.chunk.order || a.chunk.id.localeCompare(b.chunk.id));
 

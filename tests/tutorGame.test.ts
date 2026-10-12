@@ -561,3 +561,33 @@ describe('Vague questions while a game is open', () => {
     expect(withGameBasics([], INDEX, act, 'What is the capital of France?')).toEqual([]);
   });
 });
+
+describe('A question that only shares "quantum computer" with the notes', () => {
+  const ask = (question: string, order = 0, lessonId = 'module_0') =>
+    offlineAnswer(SEARCHER, { question, order, lessonId, level: 'beginner' }, INDEX);
+
+  it('is answered from its own passage when the notes cover it: building one at home', () => {
+    const r = ask('How do I build a quantum computer at home?');
+    expect(r.answer).toMatch(/^From Module 0: Can I build a quantum computer at home\?/);
+    expect(r.answer).toMatch(/simulator/i);
+    expect(r.sources[0]).toMatchObject({ lessonId: 'module_0' });
+  });
+
+  it('is not answered with an unrelated passage when only the common words match', () => {
+    for (const q of ['Will quantum computers make me rich?', 'What is the price of a quantum computer?']) {
+      const r = ask(q);
+      expect(r.answer, q).toMatch(/could not find that in my notes/);
+      expect(r.sources, q).toEqual([]);
+    }
+  });
+
+  it('still answers a question that is mostly covered, and a part of the page the learner pointed at', () => {
+    const order = INDEX.courseMap.find((e) => e.lessonId === 'module_5b')!.order;
+    expect(ask('Can I clone a qubit so I have a backup?', order, 'module_5b').sources.length).toBe(1);
+    const pointed = offlineAnswer(SEARCHER, {
+      question: 'explain this', order: 2, lessonId: 'module_2', level: 'beginner',
+      focus: { label: 'Born rule', text: 'The Born rule says the probability is the squared size of the amplitude.' },
+    }, INDEX);
+    expect(pointed.sources.length).toBe(1);
+  });
+});

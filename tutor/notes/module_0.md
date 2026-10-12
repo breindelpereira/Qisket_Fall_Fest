@@ -22,6 +22,9 @@ Working out how a caffeine molecule behaves is different. The molecule's electro
 ## FAQ: Who is Dr. Milton Schrody?
 Dr. Milton Schrody, called Milton, is the cat who is the tutor and mascot of Qisket. His name is a joke on Schrödinger's cat. He is a cartoon character, not a physics claim: nobody has ever put a real cat in a quantum superposition. In the game Milton's Box he stands for one qubit, who is Awake or Asleep when the box is opened.
 
+## FAQ: Can I build a quantum computer at home?
+Not a real one. Quantum computers need very specialised equipment: ultra-high vacuum chambers and lasers for atoms and ions, or refrigerators that reach millikelvin temperatures for superconducting circuits, together with precise control electronics and years of research. That is why they are built in labs and companies, not in a garage. What you can do at home is learn the ideas and try them on a simulator. This app runs small quantum circuits on an ordinary phone, and free open-source software such as Qiskit lets you write circuits and run them on a simulator on your own computer. A laptop can simulate a few dozen qubits at most, because the memory needed doubles with every qubit. Some companies also let people run small circuits on their real machines over the internet, and you should check their current terms.
+
 ## FAQ: Will a quantum computer replace my laptop or phone?
 No. Quantum computers are not meant to replace everyday computers. They are specialised machines for certain problems, and they currently need extreme conditions such as very low temperatures or vacuum chambers. Think of one as a special tool that sits next to normal computers, not instead of them.
 
