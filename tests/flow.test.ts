@@ -10,6 +10,8 @@ import type { ActivityLink } from '../src/content/types';
 const GAMES = [
   'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'miltons_box', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
   'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
+  'coherence_race', 'cool_down', 'ion_chain_conductor', 'tweezer_shuffle', 'photon_factory',
+  'dot_tuner', 'valley_roll', 'logical_qubit_builder', 'quantum_architect',
 ];
 const SIMS = [
   'single_qubit_lab', 'shots_histogram_lab', 'circuit_lab', 'mach_zehnder_lab', 'two_qubit_lab', 'bell_chsh_explorer',
@@ -85,15 +87,19 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
     expect(flow('module_7', GAMES_BEFORE, SIMS_BEFORE).soon.map((a) => a.id)).toEqual(['qubit_surgeon', 'noise_lab']);
   });
 
-  it('Part 2 and Part 3 lessons start with their video, then any lab that is built, and the unbuilt activities wait under "coming soon"', () => {
+  it('Part 2 and Part 3 lessons open with their game when it is built, then the video, then any lab, and nothing waits under "coming soon" once everything is built', () => {
     for (const lesson of LESSONS.filter((l) => l.part !== 1)) {
       const f = flow(lesson.id);
       const built = (id: string) => GAMES.includes(id) || SIMS.includes(id);
+      const openGames = lesson.activities.filter((a) => GAMES.includes(a.id));
       const openLabs = lesson.activities.filter((a) => SIMS.includes(a.id));
-      expect(f.stages.map((s) => s.step), lesson.id).toEqual(openLabs.length ? ['watch', 'explore'] : ['watch']);
-      expect(f.stages[0].videos.length).toBeGreaterThan(0);
+      const steps = [...(openGames.length ? ['discover'] : []), 'watch', ...(openLabs.length ? ['explore'] : [])];
+      expect(f.stages.map((s) => s.step), lesson.id).toEqual(steps);
+      expect(f.stages.find((s) => s.step === 'watch')!.videos.length).toBeGreaterThan(0);
+      expect(f.stages.find((s) => s.step === 'discover')?.activities.map((a) => a.id) ?? [], lesson.id).toEqual(openGames.map((a) => a.id));
       expect(f.stages.find((s) => s.step === 'explore')?.activities.map((a) => a.id) ?? [], lesson.id).toEqual(openLabs.map((a) => a.id));
       expect(f.soon.map((a) => a.id), lesson.id).toEqual(lesson.activities.filter((a) => !built(a.id)).map((a) => a.id));
+      expect(f.soon, lesson.id).toEqual([]);
     }
   });
 

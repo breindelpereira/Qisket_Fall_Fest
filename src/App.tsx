@@ -28,6 +28,15 @@ import { TeleportRelay } from './components/games/TeleportRelay';
 import { GateDeck } from './components/games/GateDeck';
 import { OracleDetective } from './components/games/OracleDetective';
 import { QubitSurgeon } from './components/games/QubitSurgeon';
+import { CoherenceRace } from './components/games/CoherenceRace';
+import { CoolDown } from './components/games/CoolDown';
+import { IonChainConductor } from './components/games/IonChainConductor';
+import { TweezerShuffle } from './components/games/TweezerShuffle';
+import { PhotonFactory } from './components/games/PhotonFactory';
+import { DotTuner } from './components/games/DotTuner';
+import { ValleyRoll } from './components/games/ValleyRoll';
+import { LogicalQubitBuilder } from './components/games/LogicalQubitBuilder';
+import { QuantumArchitect } from './components/games/QuantumArchitect';
 import { SingleQubitLab } from './components/simulations/SingleQubitLab';
 import { ShotsHistogramLab } from './components/simulations/ShotsHistogramLab';
 import { CircuitLab } from './components/simulations/CircuitLab';
@@ -206,6 +215,105 @@ const GAMES: GameEntry[] = [
     btn: 'btn-pink',
     accent: 'var(--pink)',
     Component: QubitSurgeon,
+  },
+  {
+    id: 'coherence_race',
+    title: 'Coherence Race',
+    emoji: '🏁',
+    kicker: 'Qubit quality · 5 laps',
+    blurb: "Pick how fast to run the gates of a circuit: too slow and the qubit forgets, too fast and the gates are sloppy. Finish inside the coherence time with a clean run.",
+    tag: 'Simplified model',
+    btn: 'btn',
+    accent: 'var(--yellow)',
+    Component: CoherenceRace,
+  },
+  {
+    id: 'cool_down',
+    title: 'Cool Down',
+    emoji: '🧊',
+    kicker: 'Cryogenics · 5 fridges',
+    blurb: "Fit more and more qubits into a dilution refrigerator without overloading any temperature stage. The coldest stage has almost no cooling power: choose your wiring wisely.",
+    tag: 'Simplified model',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: CoolDown,
+  },
+  {
+    id: 'ion_chain_conductor',
+    title: 'Ion Chain Conductor',
+    emoji: '🔗',
+    kicker: 'Trapped ions · 5 zones',
+    blurb: "Ions can only interact in the same trap, and shuttling costs a move. Run a list of gates across several traps with as few moves as you can.",
+    tag: 'Simplified model',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: IonChainConductor,
+  },
+  {
+    id: 'tweezer_shuffle',
+    title: 'Tweezer Shuffle',
+    emoji: '🪤',
+    kicker: 'Neutral atoms · 5 arrays',
+    blurb: "Move atoms one site at a time with optical tweezers into a target pattern, around blocked sites and in as few moves as you can.",
+    tag: 'Simplified model',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
+    Component: TweezerShuffle,
+  },
+  {
+    id: 'photon_factory',
+    title: 'Photon Factory',
+    emoji: '🏭',
+    kicker: 'Photonic · 5 lines',
+    blurb: "Photonic steps only work some of the time. Spend sources on copies to make the chain dependable, but every switch layer costs light.",
+    tag: 'Simplified model',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: PhotonFactory,
+  },
+  {
+    id: 'dot_tuner',
+    title: 'Dot Tuner',
+    emoji: '🎛️',
+    kicker: 'Silicon spins · 5 devices',
+    blurb: "Set the gate voltages so each quantum dot holds one electron, then tune the barrier until a pulse makes a swap or half a swap. Every device is a little different.",
+    tag: 'Simplified model',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: DotTuner,
+  },
+  {
+    id: 'valley_roll',
+    title: 'Valley Roll',
+    emoji: '⛰️',
+    kicker: 'Annealing · 5 landscapes',
+    blurb: "Spend a time budget on annealing runs to find the lowest valley of a landscape. Quick runs are cheap and slow runs are sure: find the balance.",
+    tag: 'Simplified model',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: ValleyRoll,
+  },
+  {
+    id: 'logical_qubit_builder',
+    title: 'Logical Qubit Builder',
+    emoji: '🧱',
+    kicker: 'Error correction · 5 builds',
+    blurb: "Turn noisy physical qubits into one good logical qubit. Below the threshold a bigger code wins; above it, nothing helps until the hardware does.",
+    tag: 'Simplified model',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: LogicalQubitBuilder,
+  },
+  {
+    id: 'quantum_architect',
+    title: 'Quantum Architect',
+    emoji: '📐',
+    kicker: 'Capstone · 5 briefs',
+    blurb: "Read a client's brief, choose the kind of machine that fits, and defend the choice. Sometimes the honest answer is an annealer, sometimes several machines will do.",
+    tag: 'Simplified model',
+    btn: 'btn',
+    accent: 'var(--yellow)',
+    Component: QuantumArchitect,
   },
 ];
 

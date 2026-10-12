@@ -8,6 +8,8 @@ import {
 const GAMES = [
   'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'miltons_box', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
   'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
+  'coherence_race', 'cool_down', 'ion_chain_conductor', 'tweezer_shuffle', 'photon_factory',
+  'dot_tuner', 'valley_roll', 'logical_qubit_builder', 'quantum_architect',
 ];
 const SIMS = [
   'single_qubit_lab', 'shots_histogram_lab', 'circuit_lab', 'mach_zehnder_lab', 'two_qubit_lab', 'bell_chsh_explorer',
@@ -39,7 +41,12 @@ describe('Starting a module: play first, or choose the video', () => {
     const before = (id: string) => offer(id, GAMES.filter((g) => g !== 'hype_check' && g !== 'qubit_surgeon'), SIMS.filter((s) => s !== 'noise_lab'));
     expect(before('module_0')).toBeNull(); // until its game exists
     expect(before('module_7')).toBeNull();
-    for (const l of LESSONS.filter((x) => x.part !== 1)) expect(startOffer(l, GAMES, SIMS), l.id).toBeNull();
+    // Part 3 has only labs, which come after the video; Part 2 now opens with its game, so it does offer a choice
+    for (const l of LESSONS.filter((x) => x.part === 3)) expect(startOffer(l, GAMES, SIMS), l.id).toBeNull();
+    for (const l of LESSONS.filter((x) => x.part === 2 && x.activities.some((a) => a.kind === 'game'))) {
+      expect(startOffer(l, GAMES, SIMS)?.activity.kind, l.id).toBe('game');
+    }
+    expect(startOffer(LESSONS.find((l) => l.id === 'hw_module_7')!, GAMES, SIMS)).toBeNull(); // no activities by design
     expect(offer('module_1', [], [])).toBeNull(); // nothing built, so the video is the start
   });
 
