@@ -10,6 +10,7 @@ import type { ActivityLink } from '../src/content/types';
 const GAMES = [
   'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'miltons_box', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
   'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
+  'hold_bloch_sphere', 'shake_to_measure', 'entangled_pair',
   'coherence_race', 'cool_down', 'ion_chain_conductor', 'tweezer_shuffle', 'photon_factory',
   'dot_tuner', 'valley_roll', 'logical_qubit_builder', 'quantum_architect',
 ];
@@ -43,8 +44,10 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
   });
 
   it('a normal Part 1 module plays the game first, then the video, then the lab', () => {
+    // module 1, 2 and 5A also end with a game that uses the phone's sensors (role: apply), which only the app shows
+    const withSensorGame = ['module_1', 'module_2', 'module_5a'];
     for (const id of ['module_1', 'module_2', 'module_4', 'module_5a']) {
-      expect(steps(id), id).toEqual(['discover', 'watch', 'explore']);
+      expect(steps(id), id).toEqual(withSensorGame.includes(id) ? ['discover', 'watch', 'explore', 'apply'] : ['discover', 'watch', 'explore']);
     }
     expect(ids('module_1', 'discover')).toEqual(['quantum_heist', 'coin_flip']);
     expect(ids('module_1', 'explore')).toEqual(['single_qubit_lab']);
@@ -115,7 +118,13 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
       for (const lesson of LESSONS) {
         const f = lessonFlow(lesson, games, sims);
         const placed = [...f.stages.flatMap((s) => s.activities), ...f.soon].map((a: ActivityLink) => `${a.kind}:${a.id}`).sort();
-        expect(placed, lesson.id).toEqual(lesson.activities.map((a) => `${a.kind}:${a.id}`).sort());
+        // a game that only exists in the installed app is either playable or simply absent: never "coming soon"
+        const expected = lesson.activities
+          .filter((a) => !ACTIVITIES[a.id].appOnly || (a.kind === 'game' ? games : sims).includes(a.id))
+          .map((a) => `${a.kind}:${a.id}`)
+          .sort();
+        expect(placed, lesson.id).toEqual(expected);
+        for (const a of f.soon) expect(ACTIVITIES[a.id].appOnly, `${lesson.id}: ${a.id} is not promised on the website`).toBeFalsy();
       }
     }
   });
@@ -136,11 +145,13 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
     expect(flowOrder({})).toEqual(DEFAULT_FLOW);
   });
 
-  it('only the three lessons that need it override the default flow or use the apply role', () => {
+  it('only a few lessons override the default flow or use the apply role: the practice games, teleportation and the three sensor games', () => {
     const custom = LESSONS.filter((l) => l.flow).map((l) => l.id);
     expect(custom).toEqual(['module_5b']);
     const apply = LESSONS.flatMap((l) => l.activities.filter((a) => a.role === 'apply').map((a) => `${l.id}:${a.id}`));
-    expect(apply.sort()).toEqual(['module_3:gate_deck', 'module_5b:teleport_relay', 'module_6:gate_deck']);
+    expect(apply.sort()).toEqual([
+      'module_1:hold_bloch_sphere', 'module_2:shake_to_measure', 'module_3:gate_deck', 'module_5a:entangled_pair', 'module_5b:teleport_relay', 'module_6:gate_deck',
+    ]);
     for (const a of LESSONS.flatMap((l) => l.activities)) expect(ACTIVITIES[a.id]).toBeDefined();
   });
 });

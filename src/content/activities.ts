@@ -7,9 +7,12 @@ export interface ActivityInfo {
   id: string;
   kind: 'game' | 'sim';
   title: string;
+  /** Only built into the installed app (it needs the phone's sensors), so the website neither lists nor promises it. */
+  appOnly?: boolean;
 }
 
 const game = (id: string, title: string): ActivityInfo => ({ id, kind: 'game', title });
+const appGame = (id: string, title: string): ActivityInfo => ({ id, kind: 'game', title, appOnly: true });
 const sim = (id: string, title: string): ActivityInfo => ({ id, kind: 'sim', title });
 
 const LIST: ActivityInfo[] = [
@@ -26,6 +29,10 @@ const LIST: ActivityInfo[] = [
   game('gate_deck', 'Gate Deck'),
   game('oracle_detective', 'Oracle Detective'),
   game('qubit_surgeon', 'Qubit Surgeon'),
+  // Part 1 games that use the phone's sensors (app only)
+  appGame('hold_bloch_sphere', 'Hold the Bloch Sphere'),
+  appGame('shake_to_measure', 'Shake to Measure'),
+  appGame('entangled_pair', 'Entangled Pair'),
   // Part 1 labs
   sim('single_qubit_lab', 'Single-Qubit Lab'),
   sim('shots_histogram_lab', 'Shots + Histogram Lab'),

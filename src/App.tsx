@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import type { ComponentType } from 'react';
 import {
   Home,
@@ -28,6 +29,9 @@ import { TeleportRelay } from './components/games/TeleportRelay';
 import { GateDeck } from './components/games/GateDeck';
 import { OracleDetective } from './components/games/OracleDetective';
 import { QubitSurgeon } from './components/games/QubitSurgeon';
+import { HoldBlochSphere } from './components/games/HoldBlochSphere';
+import { ShakeToMeasure } from './components/games/ShakeToMeasure';
+import { EntangledPair } from './components/games/EntangledPair';
 import { CoherenceRace } from './components/games/CoherenceRace';
 import { CoolDown } from './components/games/CoolDown';
 import { IonChainConductor } from './components/games/IonChainConductor';
@@ -63,6 +67,7 @@ import { AfterGameSheet } from './components/learn/AfterGameSheet';
 import { TutorDrawer } from './components/tutor/TutorDrawer';
 import { ProgressView } from './components/progress/ProgressView';
 import { useBadges } from './hooks/useBadges';
+import { isAppBuild } from './utils/motion';
 import { tutorPosition } from './core/tutor/position';
 import type { TutorFocus } from './core/tutor/types';
 import { LESSONS, LESSON_BY_ID, QUIZZES } from './content/lessons';
@@ -83,6 +88,8 @@ interface GameEntry {
   btn: string; // .btn variant class
   accent: string;
   Component: ComponentType;
+  /** Needs the phone's sensors, so it is only listed in the installed app. */
+  appOnly?: boolean;
 }
 
 const GAMES: GameEntry[] = [
@@ -317,7 +324,46 @@ const GAMES: GameEntry[] = [
     accent: 'var(--yellow)',
     Component: QuantumArchitect,
   },
+  {
+    id: 'hold_bloch_sphere',
+    title: 'Hold the Bloch Sphere',
+    emoji: '🧭',
+    kicker: 'Phone tilt · app only',
+    blurb: "Tilt your phone to steer a qubit around the Bloch sphere and hold it on the glowing target. Your tilt is only a control: the quantum state is computed by the app's engine.",
+    tag: 'Analogy',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: HoldBlochSphere,
+    appOnly: true,
+  },
+  {
+    id: 'shake_to_measure',
+    title: 'Shake to Measure',
+    emoji: '📳',
+    kicker: 'Phone shake · app only',
+    blurb: "Shake the phone to measure a hidden qubit again and again, and find its odds from the histogram. Then see why measuring the same qubit twice gives the same answer.",
+    tag: 'Analogy',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: ShakeToMeasure,
+    appOnly: true,
+  },
+  {
+    id: 'entangled_pair',
+    title: 'Entangled Pair',
+    emoji: '🤝',
+    kicker: 'Pass the phone · app only',
+    blurb: "Two players, one entangled pair, no talking. Tilt to choose your measurement angle, pass the phone and see if you can beat the 75% that fixed answers allow.",
+    tag: 'Analogy',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: EntangledPair,
+    appOnly: true,
+  },
 ];
+
+/** What this build shows: the sensor games only exist in the installed app (and the development server). */
+const SHOWN_GAMES = GAMES.filter((g) => !g.appOnly || isAppBuild(Capacitor.isNativePlatform(), import.meta.env.DEV));
 
 const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'home', label: 'Home', icon: Home },
@@ -593,7 +639,7 @@ export default function App() {
   const modulesDone = partProgress(LESSONS, QUIZZES, progress).done;
   const activitiesTried = new Set([...progress.completedGames, ...progress.exploredSims]).size;
 
-  const { earned: earnedBadges, fresh: freshBadges, badges: allBadges, rank } = useBadges(GAMES.map((g) => g.id), AVAILABLE_SIM_IDS);
+  const { earned: earnedBadges, fresh: freshBadges, badges: allBadges, rank } = useBadges(SHOWN_GAMES.map((g) => g.id), AVAILABLE_SIM_IDS);
 
   const progressPercent = courseProgressPercent(LESSONS, QUIZZES, progress);
   const nextLesson = nextUpLesson(LESSONS, QUIZZES, progress);
@@ -643,7 +689,7 @@ export default function App() {
     [originLesson],
   );
 
-  const activeGame = GAMES.find(g => g.id === selectedGame);
+  const activeGame = SHOWN_GAMES.find(g => g.id === selectedGame);
   const activeSim = SIMS.find(x => x.id === selectedSim);
 
   const stats = [
@@ -704,7 +750,7 @@ export default function App() {
               </h1>
               <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.45, marginBottom: 18 }}>
                 {nextLesson
-                  ? (startOffer(nextLesson, GAMES.map((g) => g.id), AVAILABLE_SIM_IDS) ? 'Play first, then watch, then try the lab, then check yourself.' : 'Watch the video, read the notes, then check yourself.')
+                  ? (startOffer(nextLesson, SHOWN_GAMES.map((g) => g.id), AVAILABLE_SIM_IDS) ? 'Play first, then watch, then try the lab, then check yourself.' : 'Watch the video, read the notes, then check yourself.')
                   : 'You finished every module. Revisit any lesson from the Learn tab.'}
               </p>
 
@@ -786,7 +832,7 @@ export default function App() {
           <LearnTab
             view={learnView}
             onNavigate={setLearnView}
-            availableGameIds={GAMES.map((g) => g.id)}
+            availableGameIds={SHOWN_GAMES.map((g) => g.id)}
             availableSimIds={AVAILABLE_SIM_IDS}
             onOpenGame={openGames}
             onOpenSim={openSims}
@@ -817,7 +863,7 @@ export default function App() {
                   </p>
                 </div>
 
-                {GAMES.map(g => (
+                {SHOWN_GAMES.map(g => (
                   <article key={g.id} className="card" style={{
                     padding: 18, display: 'flex', flexDirection: 'column', gap: 12, borderColor: g.accent,
                   }}>
@@ -886,7 +932,7 @@ export default function App() {
 
         {activeTab === 'progress' && (
           <ProgressView
-            games={GAMES.map((g) => ({ id: g.id, title: g.title, emoji: g.emoji }))}
+            games={SHOWN_GAMES.map((g) => ({ id: g.id, title: g.title, emoji: g.emoji }))}
             sims={SIMS.map((x) => ({ id: x.id, title: x.title, emoji: x.emoji }))}
             onOpenGame={(id) => openGames(id)}
             onOpenSim={(id) => openSims(id)}
@@ -899,7 +945,7 @@ export default function App() {
         <AfterGameSheet
           lesson={LESSON_BY_ID[afterGame.lessonId]}
           gameId={afterGame.gameId}
-          availableGameIds={GAMES.map((g) => g.id)}
+          availableGameIds={SHOWN_GAMES.map((g) => g.id)}
           availableSimIds={AVAILABLE_SIM_IDS}
           onClose={() => setAfterGame(null)}
           onWatch={() => { setAfterGame(null); openLearn({ kind: 'lesson', lessonId: afterGame.lessonId, focus: 'watch' }); }}

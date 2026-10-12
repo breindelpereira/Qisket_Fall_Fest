@@ -47,7 +47,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     misconceptionToFix: `A qubit isn't "both at once."`,
     linkedConceptId: 'concept_qubits',
     quizId: 'quiz_module_1',
-    activities: [game('quantum_heist'), game('coin_flip'), sim('single_qubit_lab')],
+    activities: [game('quantum_heist'), game('coin_flip'), sim('single_qubit_lab'), game('hold_bloch_sphere', 'apply')],
     blocks: [
       {
         type: 'paragraph',
@@ -81,7 +81,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     misconceptionToFix: 'The value is not pre-determined. The act of measurement forces the qubit to choose.',
     linkedConceptId: 'concept_measurement',
     quizId: 'quiz_module_2',
-    activities: [game('schrodingers_stealth'), game('miltons_box'), sim('shots_histogram_lab')],
+    activities: [game('schrodingers_stealth'), game('miltons_box'), sim('shots_histogram_lab'), game('shake_to_measure', 'apply')],
     blocks: [
       {
         type: 'paragraph',
@@ -205,7 +205,7 @@ export const PART1_LESSONS: LessonRecord[] = [
     misconceptionToFix: 'You cannot use entanglement to send an instant text message.',
     linkedConceptId: 'concept_entanglement',
     quizId: 'quiz_module_5a',
-    activities: [game('alice_and_bob'), sim('two_qubit_lab'), sim('bell_chsh_explorer')],
+    activities: [game('alice_and_bob'), sim('two_qubit_lab'), sim('bell_chsh_explorer'), game('entangled_pair', 'apply')],
     blocks: [
       {
         type: 'paragraph',

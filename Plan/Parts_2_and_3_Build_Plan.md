@@ -19,7 +19,7 @@ Read "Ground rules" once, then jump to your workstream.
 | **C** Part 3 practice | **Done**: deeper lessons, the answer checker (`src/core/math`), 32 problems, the practice screen, "New numbers" variants for ten of the problems, and the Maths Workbench lab (C4). Not done: more variant families, and links to external courses. |
 | **B** Part 2 games and labs | **Done (B0 to B2)**: the sourced data file (`src/content/hardwareData.ts`), all nine labs and all nine games, with tests, tutor help and notes. Not done: the optional Module 7 "Claim check" card sort (B3). Still open: a second person must read the lab and game text against the code, and the illustrative numbers in Cool Down and the qualitative ratings in Quantum Architect deserve a check by someone who knows the hardware. |
 | **Progress and badges** | **Done**: a Progress tab with a rank, 19 badges, the parts, quizzes, games and labs (`core/learn/badges.ts`, `components/progress/ProgressView.tsx`). |
-| **D** Phone-sensor games | **Planned, not started.** Waiting for the team to confirm the three games (section 4B). |
+| **D** Phone-sensor games | **Built, not yet tried on a phone.** Hold the Bloch Sphere, Shake to Measure and Entangled Pair (pass-the-phone) are in, app only, each with a touch fallback, tests with made-up sensor readings, and tutor help. The permission, the tilt and the shake were exercised with simulated events in the browser; drift, jitter and the shake threshold must be judged on a real phone. Decisions taken: D1 sits beside the other games (not replacing Bloch Runner), D3 is pass-the-phone only, and there is no iOS build. |
 
 ---
 
@@ -333,9 +333,9 @@ D1 (also builds the shared sensor helper) → D2 (reuses it) → D3 pass-the-pho
 
 ### Open questions
 
-1. Add D1 beside the existing drag control, or replace it? (Recommendation: beside, with a toggle, because the drag control is more precise.)
-2. Is a two-phone D3 worth the networking work, or is pass-the-phone enough for the competition?
-3. Do we need the iOS build? The app is Android only today, so iOS permission handling can wait.
+1. Add D1 beside the existing drag control, or replace it? (Decided: beside, as its own game.)
+2. Is a two-phone D3 worth the networking work, or is pass-the-phone enough for the competition? (Decided: pass-the-phone is enough.)
+3. Do we need the iOS build? The app is Android only today. (The permission tap for iOS is already handled in `hooks/useMotion.ts`, but nothing has been tried on an iPhone.)
 
 ---
 

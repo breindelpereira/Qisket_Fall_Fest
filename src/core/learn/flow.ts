@@ -1,3 +1,4 @@
+import { ACTIVITIES } from '../../content/activities';
 import type { ActivityLink, ActivityRole, LessonRecord, LessonStep, ReferenceLink } from '../../content/types';
 
 /**
@@ -47,7 +48,8 @@ export function lessonFlow(
       if (activities.length > 0) stages.push({ step, activities, videos: [], readings: [] });
     }
   }
-  return { stages, soon: lesson.activities.filter((a) => !ready(a)) };
+  // a game that only exists in the installed app is simply absent from the website: it is not "coming soon"
+  return { stages, soon: lesson.activities.filter((a) => !ready(a) && !ACTIVITIES[a.id]?.appOnly) };
 }
 
 export const STEP_TITLES: Record<LessonStep, string> = {

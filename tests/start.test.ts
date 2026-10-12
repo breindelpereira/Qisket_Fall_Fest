@@ -8,6 +8,7 @@ import {
 const GAMES = [
   'hype_check', 'quantum_heist', 'coin_flip', 'schrodingers_stealth', 'miltons_box', 'bloch_runner', 'photon_escape_room', 'alice_and_bob',
   'teleport_relay', 'gate_deck', 'oracle_detective', 'qubit_surgeon',
+  'hold_bloch_sphere', 'shake_to_measure', 'entangled_pair',
   'coherence_race', 'cool_down', 'ion_chain_conductor', 'tweezer_shuffle', 'photon_factory',
   'dot_tuner', 'valley_roll', 'logical_qubit_builder', 'quantum_architect',
 ];
@@ -135,7 +136,7 @@ describe('After a game: what to offer next', () => {
   });
 
   it('a lesson that has no quiz, or a game that is not in the lesson, goes back to the lesson page', () => {
-    expect(nextAfterActivity({ ...LESSON_BY_ID.module_1, quizId: undefined }, 'single_qubit_lab', GAMES, SIMS)).toEqual({ kind: 'lesson' });
+    expect(nextAfterActivity({ ...LESSON_BY_ID.module_4, quizId: undefined }, 'mach_zehnder_lab', GAMES, SIMS)).toEqual({ kind: 'lesson' });
     expect(next('module_1', 'gate_deck')).toEqual({ kind: 'lesson' });
   });
 
