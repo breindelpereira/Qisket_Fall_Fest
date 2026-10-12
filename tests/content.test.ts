@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { 
   validateConcept, 
   validateQuiz, 
-  validateLesson, 
   validateSimulation, 
   validateGame 
 } from '../src/content/validator';

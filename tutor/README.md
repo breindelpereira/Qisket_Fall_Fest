@@ -13,7 +13,7 @@ Dr. Milton Schrody (the AI tutor) answers only from the files in this folder (th
 
 Every lesson is searchable even without a notes file, because the lesson's own text is split into passages automatically. A notes file just makes answers better. Quiz questions are never included, so the tutor cannot leak an answer.
 
-Written so far: `module_0` to `module_7` (all of Part 1). Part 2 (`hw_module_0` to `hw_module_8_9`) and Part 3 (`math_week_0`, `math_lesson_1` to `math_lesson_5`) still use their lesson text only. Writing those is a good job for teammates.
+Written so far: every lesson has a notes file (`module_0` to `module_7`, `hw_module_0` to `hw_module_8_9`, `math_week_0` and `math_lesson_1` to `math_lesson_5`). A second person checking each claim against the lesson and the videos is still a good job for teammates.
 
 ## Notes about the lesson videos
 

@@ -6,26 +6,32 @@ Everything quantum runs on small physics engines written in this repo (no quantu
 
 ## For judges: what to look at (3 minutes)
 
-**Try it:** `LIVE_APP_LINK` (opens in any browser, on a computer or a phone) or install the Android app from the latest GitHub Release (`app-debug.apk`). No account, no sign-in.
+**Try it:** the website at `LIVE_APP_LINK` (works on a computer or a phone) or the Android app (`app-debug.apk` in the latest GitHub Release). No account, no sign-in. The Android app also has three phone-sensor games that a website cannot offer.
 
-**What it is:** a complete beginner course in quantum computing that you learn by playing. 11 games, 10 hands-on labs, lessons with short videos, quizzes, and an AI tutor that knows what you are looking at.
+**What it is:** a complete beginner course in quantum computing that you learn by playing. 24 lessons in three parts (concepts, hardware, maths), 24 games (21 on the website), 20 hands-on labs, 40 short lesson videos, 11 quizzes, 32 maths practice problems, a Progress screen with 19 badges, and an AI tutor, Dr. Milton Schrody (a cat), who knows which game, lab, paragraph or video you are looking at.
 
 **A good path:**
 
-1. **Home → Start.** Each module opens with a game (for example *Quantum Heist* or *Bloch Runner*), then a short video, then a lab, then a quiz.
-2. **Open a game, then tap "Ask Tutor".** Dr. Milton Schrody sees which level you are on and gives a hint, not the answer. Try "I'm stuck".
+1. **Home → Start.** Each module opens with a game or a lab (for example *Quantum Heist* or *Bloch Runner*), then a short video, then the notes and a quiz.
+2. **Open a game, then tap "Ask Tutor".** Milton sees which level you are on and gives a hint, not the answer. Try "I'm stuck".
 3. **Labs tab → Mach-Zehnder Lab.** Change the phase and fire photons: the interference pattern appears.
 4. **Learn → any lesson → "Ask about this".** The tutor explains that exact paragraph.
-5. **Games → Hype Check.** Sort real, maybe-someday and hype claims about quantum computers.
+5. **Under any lesson video → "Ask about this video".** The tutor uses our notes for the moment you have reached.
+6. **Games → Hype Check**, or **Cool Down** and **Quantum Architect** from the hardware part.
+7. **Progress tab.** Your rank and badges, worked out from what you have actually done.
 
 **What we are proud of**
 
-- **Honest.** Every game and lab carries a tag (Analogy, Simplified model, Accurate, Experimental/Contested) and says what it leaves out. We audited the games for physics mistakes and fixed the ones we found.
-- **Real physics, not animations.** Our own state-vector and optical engines run every game and lab, with 400+ automated tests that check textbook results (Bell states, teleportation, Grover, error correction).
-- **A tutor that does not spoil.** It answers only from the course notes, never reveals quiz answers, hides later modules, works offline, and the API key never reaches the app.
-- **Mobile-first and accessible.** 44px touch targets, no timers without an untimed mode, nothing relies on colour alone.
+- **Honest.** Every game and lab carries a tag (Analogy, Simplified model, Accurate, Experimental/Contested) and says what it leaves out. Hardware figures have a source and a date, and a company's claims about its own product are labelled as the company's.
+- **Real physics, not animations.** Our own state-vector and optical engines run every game and lab, with 680+ automated tests that check textbook results (Bell states, teleportation, Grover, error correction, hardware maths).
+- **A tutor that does not spoil.** It answers only from the course notes (including our own summaries of each video, never transcripts), never reveals quiz answers, hides later modules, works offline, and the API key never reaches the app.
+- **Mobile-first and accessible.** 44px touch targets, no timers without an untimed mode, nothing relies on colour alone, and a separate desktop layout for the website.
 
-**Honest status:** Part 1 (concepts) is complete. Parts 2 (hardware) and 3 (maths) have lessons and quizzes; their games, labs and practice are planned in `Plan/Parts_2_and_3_Build_Plan.md`.
+**Honest status:** all three parts are built (lessons, quizzes, games, labs and practice), and the tutor, the Progress screen and the website layout are done. Still open, and we would rather say so:
+
+- The tutor has notes for 32 of the 40 lesson videos. The 8 videos in the maths part are listed in `tests/videoNotes.test.ts` and still need theirs.
+- The Android app has been installed and used on a real phone (including full-screen video). The three sensor games and the hardware back button were checked with simulated input and on an emulator, not yet on a range of phones.
+- The hardware and maths text was written and tested by its author. A second person should still check every claim, and the hardware figures are dated snapshots (`src/content/hardwareData.ts`).
 
 **Team and contact:** `TEAM_NAMES`
 

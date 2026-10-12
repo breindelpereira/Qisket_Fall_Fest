@@ -37,3 +37,10 @@ android/local.properties
 !.env.example
 .dev.vars
 .wrangler
+
+# Claude Code: local settings and worktrees
+.claude/
+
+# Planning screenshots (chat captures, a poster with phone numbers): kept on the team's disks, not in the repository
+Plan/WhatsApp Image*
+Plan/Screenshot*

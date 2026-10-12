@@ -16,4 +16,4 @@ TUTOR_MODEL = "gemini-3.5-flash-lite"
 # Web addresses allowed to call the function from a browser. https://localhost is the Android app
 # (capacitor.config.ts uses androidScheme "https"); http://localhost on any port (npm run dev) is always allowed.
 # Add your website's address, with no trailing slash.
-ALLOWED_ORIGINS = "https://localhost"
+ALLOWED_ORIGINS = "https://localhost,https://breindelpereira.github.io"
