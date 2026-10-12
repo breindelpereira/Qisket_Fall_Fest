@@ -14,6 +14,8 @@ const GAMES = [
 const SIMS = [
   'single_qubit_lab', 'shots_histogram_lab', 'circuit_lab', 'mach_zehnder_lab', 'two_qubit_lab', 'bell_chsh_explorer',
   'teleportation_lab', 'deutsch_jozsa_explorer', 'grover_explorer', 'noise_lab',
+  'qubit_metrics_lab', 'transmon_lab', 'topology_compiler', 'rydberg_blockade_lab', 'loss_budget_lab',
+  'exchange_coupling_lab', 'annealing_lab', 'overhead_calculator', 'comparison_dashboard',
 ];
 /** The same lists from before Module 0 and Module 7 had their games and labs, to test a module whose activities are not built yet. */
 const GAMES_BEFORE = GAMES.filter((g) => g !== 'hype_check' && g !== 'qubit_surgeon');
@@ -82,12 +84,15 @@ describe('Lesson flow: game, then video, then lab, then practice', () => {
     expect(flow('module_7', GAMES_BEFORE, SIMS_BEFORE).soon.map((a) => a.id)).toEqual(['qubit_surgeon', 'noise_lab']);
   });
 
-  it('Part 2 and Part 3 lessons start with their video, and the unbuilt games and labs wait under "coming soon"', () => {
+  it('Part 2 and Part 3 lessons start with their video, then any lab that is built, and the unbuilt activities wait under "coming soon"', () => {
     for (const lesson of LESSONS.filter((l) => l.part !== 1)) {
       const f = flow(lesson.id);
-      expect(f.stages.map((s) => s.step), lesson.id).toEqual(['watch']);
+      const built = (id: string) => GAMES.includes(id) || SIMS.includes(id);
+      const openLabs = lesson.activities.filter((a) => SIMS.includes(a.id));
+      expect(f.stages.map((s) => s.step), lesson.id).toEqual(openLabs.length ? ['watch', 'explore'] : ['watch']);
       expect(f.stages[0].videos.length).toBeGreaterThan(0);
-      expect(f.soon.map((a) => a.id)).toEqual(lesson.activities.map((a) => a.id));
+      expect(f.stages.find((s) => s.step === 'explore')?.activities.map((a) => a.id) ?? [], lesson.id).toEqual(openLabs.map((a) => a.id));
+      expect(f.soon.map((a) => a.id), lesson.id).toEqual(lesson.activities.filter((a) => !built(a.id)).map((a) => a.id));
     }
   });
 

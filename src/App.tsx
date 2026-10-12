@@ -38,6 +38,15 @@ import { TeleportationLab } from './components/simulations/TeleportationLab';
 import { DeutschJozsaExplorer } from './components/simulations/DeutschJozsaExplorer';
 import { GroverExplorer } from './components/simulations/GroverExplorer';
 import { NoiseLab } from './components/simulations/NoiseLab';
+import { QubitMetricsLab } from './components/simulations/QubitMetricsLab';
+import { TransmonLab } from './components/simulations/TransmonLab';
+import { TopologyCompiler } from './components/simulations/TopologyCompiler';
+import { RydbergBlockadeLab } from './components/simulations/RydbergBlockadeLab';
+import { LossBudgetLab } from './components/simulations/LossBudgetLab';
+import { ExchangeCouplingLab } from './components/simulations/ExchangeCouplingLab';
+import { AnnealingLab } from './components/simulations/AnnealingLab';
+import { OverheadCalculator } from './components/simulations/OverheadCalculator';
+import { ComparisonDashboard } from './components/simulations/ComparisonDashboard';
 import { LearnTab } from './components/learn/LearnTab';
 import type { LearnView } from './components/learn/learnView';
 import { AfterGameSheet } from './components/learn/AfterGameSheet';
@@ -328,6 +337,105 @@ const SIMS: SimEntry[] = [
     btn: 'btn-violet',
     accent: 'var(--violet)',
     Component: NoiseLab,
+  },
+  {
+    id: 'qubit_metrics_lab',
+    title: 'Qubit Metrics Lab',
+    emoji: '📏',
+    kicker: 'Coherence · gate budget',
+    blurb: 'Set T1, T2, gate time and error, and see how many gates fit before the answer is spoiled. Two limits compete: the smaller one is your budget.',
+    tag: 'Simplified model',
+    btn: 'btn',
+    accent: 'var(--yellow)',
+    Component: QubitMetricsLab,
+  },
+  {
+    id: 'transmon_lab',
+    title: 'Transmon Lab',
+    emoji: '〰️',
+    kicker: 'Superconducting · Rabi',
+    blurb: 'Drive a superconducting qubit with a microwave pulse. Watch it swing between 0 and 1, then fade as T1 and T2 wash the oscillation out.',
+    tag: 'Simplified model',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: TransmonLab,
+  },
+  {
+    id: 'topology_compiler',
+    title: 'Topology Compiler',
+    emoji: '🕸️',
+    kicker: 'Trapped ions · connectivity',
+    blurb: 'Route a circuit on a line, a grid or an all-to-all chain and count the SWAPs. Connectivity has a price in extra, noisy gates.',
+    tag: 'Simplified model',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: TopologyCompiler,
+  },
+  {
+    id: 'rydberg_blockade_lab',
+    title: 'Rydberg Blockade Lab',
+    emoji: '⚛️',
+    kicker: 'Neutral atoms · blockade',
+    blurb: 'Move two atoms together and watch the second one get blocked from exciting. That push is how neutral-atom entangling gates work.',
+    tag: 'Simplified model',
+    btn: 'btn-orange',
+    accent: '#ff9f1c',
+    Component: RydbergBlockadeLab,
+  },
+  {
+    id: 'loss_budget_lab',
+    title: 'Loss Budget Lab',
+    emoji: '💡',
+    kicker: 'Photonic · loss',
+    blurb: "Add components to a photon's path and watch the chance that every photon arrives collapse. Loss, not noise, is the photonic problem.",
+    tag: 'Simplified model',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: LossBudgetLab,
+  },
+  {
+    id: 'exchange_coupling_lab',
+    title: 'Exchange-Coupling Lab',
+    emoji: '🔁',
+    kicker: 'Silicon spins · √SWAP',
+    blurb: 'Lower the wall between two quantum dots and pulse it for exactly the right time to swap two spins, or half of it, to entangle them.',
+    tag: 'Simplified model',
+    btn: 'btn-mint',
+    accent: 'var(--mint)',
+    Component: ExchangeCouplingLab,
+  },
+  {
+    id: 'annealing_lab',
+    title: 'Annealing Lab',
+    emoji: '🌡️',
+    kicker: 'Annealing · energy gap',
+    blurb: 'Anneal a few spins from an equal mix into a problem. Go slowly and they find the best answer; rush and they get stuck behind a gap.',
+    tag: 'Simplified model',
+    btn: 'btn-violet',
+    accent: 'var(--violet)',
+    Component: AnnealingLab,
+  },
+  {
+    id: 'overhead_calculator',
+    title: 'Overhead Calculator',
+    emoji: '🧮',
+    kicker: 'Error correction · cost',
+    blurb: 'How many noisy qubits make one good one? Slide the physical error and the target and find the threshold where bigger codes stop helping.',
+    tag: 'Simplified model',
+    btn: 'btn-pink',
+    accent: 'var(--pink)',
+    Component: OverheadCalculator,
+  },
+  {
+    id: 'comparison_dashboard',
+    title: 'Comparison Dashboard',
+    emoji: '📊',
+    kicker: 'Capstone · side by side',
+    blurb: 'Put up to three real systems next to each other, each figure with its source and date, and see what a number does not tell you.',
+    tag: 'Simplified model',
+    btn: 'btn-sky',
+    accent: '#38c8ff',
+    Component: ComparisonDashboard,
   },
 ];
 
