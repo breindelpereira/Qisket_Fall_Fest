@@ -19,6 +19,7 @@ Everything quantum runs on small physics engines written in this repo (no quantu
 5. **Under any lesson video → "Ask about this video".** The tutor uses our notes for the moment you have reached.
 6. **Games → Hype Check**, or **Cool Down** and **Quantum Architect** from the hardware part.
 7. **Progress tab.** Your rank and badges, worked out from what you have actually done.
+8. **Labs → Circuit Lab → "Show as Qiskit code".** Build a circuit (or load Bell pair) and get the same circuit as IBM Qiskit Python, with bitstrings in Qiskit's order. A test replays the exported code and checks it gives the lab's own probabilities.
 
 **What we are proud of**
 

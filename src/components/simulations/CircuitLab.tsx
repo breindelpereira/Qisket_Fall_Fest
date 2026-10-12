@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useActivityReport } from '../../hooks/useActivityReport';
-import { Play, Trash2 } from 'lucide-react';
+import { Code2, Copy, Play, Trash2 } from 'lucide-react';
 import { ArcadeFrame, ArcadeHeader, Banner, Eyebrow, GameTitle } from '../shared/Arcade';
 import { RETRO, THEMES, groupChip, panelStyle, stageStyle } from '../shared/arcadeTheme';
 import {
@@ -8,6 +8,7 @@ import {
   resizeCircuit, runCircuit,
 } from '../../core/labs/circuitBuilder';
 import type { Circuit, GateName } from '../../core/labs/circuitBuilder';
+import { toQiskit } from '../../core/labs/qiskitExport';
 import { BarChart, InfoBox, MathBox } from './labKit';
 import { fmtAmp, useExplored } from './labUtils';
 
@@ -36,6 +37,8 @@ export const CircuitLab: React.FC = () => {
   const [counts, setCounts] = useState<Record<string, number> | null>(null);
   const [showMath, setShowMath] = useState(false);
   const [presetNote, setPresetNote] = useState<string | null>(null);
+  const [showQiskit, setShowQiskit] = useState(false);
+  const [copied, setCopied] = useState<'yes' | 'no' | null>(null);
 
   const state = useMemo(() => runCircuit(circuit), [circuit]);
   const probs = state.getProbabilities();
@@ -70,6 +73,16 @@ export const CircuitLab: React.FC = () => {
   const sample = () => {
     markExplored();
     setCounts(state.sampleCounts(1000));
+  };
+
+  const qiskitCode = useMemo(() => toQiskit(circuit), [circuit]);
+  const copyQiskit = async () => {
+    try {
+      await navigator.clipboard.writeText(qiskitCode);
+      setCopied('yes');
+    } catch {
+      setCopied('no'); // blocked clipboard: the code is on screen to select by hand
+    }
   };
 
   const total = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : 0;
@@ -197,6 +210,36 @@ export const CircuitLab: React.FC = () => {
         <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 8 }}>
           {n > 1 ? `Bitstrings read q${n - 1} … q0, the same order as Qiskit.` : 'One qubit: the bar for 0 and the bar for 1.'}
         </div>
+      </div>
+
+      <div style={panelStyle}>
+        <Eyebrow>TAKE IT TO QISKIT</Eyebrow>
+        <p style={{ fontSize: '0.84rem', lineHeight: 1.45, color: 'var(--text-secondary)', marginTop: 8 }}>
+          Qiskit is IBM's open-source toolkit for quantum circuits. Get this circuit as Qiskit code and run it there.
+        </p>
+        <button className="btn btn-orange" style={{ marginTop: 8, width: '100%' }} aria-expanded={showQiskit}
+          onClick={() => { setShowQiskit((v) => !v); setCopied(null); }}>
+          <Code2 size={18} /> <span>{showQiskit ? 'Hide Qiskit code' : 'Show as Qiskit code'}</span>
+        </button>
+        {showQiskit && (
+          <div style={{ marginTop: 10 }}>
+            <pre aria-label="Qiskit code for this circuit" style={{
+              margin: 0, padding: 10, borderRadius: 12, overflowX: 'auto', fontSize: '0.78rem', lineHeight: 1.5,
+              background: 'rgba(0,0,0,0.35)', color: '#f1eaff', userSelect: 'text',
+            }}>{qiskitCode}</pre>
+            <button className="chip" onClick={copyQiskit} style={{ ...groupChip, marginTop: 8, gap: 6 }}>
+              <Copy size={16} /> <span>{copied === 'yes' ? 'Copied' : 'Copy code'}</span>
+            </button>
+            {copied === 'no' && (
+              <p role="status" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>
+                Copying is blocked here, so select the code above and copy it by hand.
+              </p>
+            )}
+            <p style={{ fontSize: '0.78rem', lineHeight: 1.45, color: 'var(--text-secondary)', marginTop: 8 }}>
+              To run it: <code>pip install qiskit</code>, paste the code into a Python file and run it. The bitstrings it prints read in the same order as the bars above.
+            </p>
+          </div>
+        )}
       </div>
 
       {gates === 0 && <Banner tone="info">An empty circuit leaves every qubit at 0. Try an H gate on q0.</Banner>}
